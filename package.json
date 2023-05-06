@@ -1,7 +1,7 @@
 {
-    "name": "mojodojo.github.dev",
+    "name": "mojodojo.github.io",
     "version": "0.0.1",
-    "repository": "github:mojodojodev/mojodojo.github.dev",
+    "repository": "github:mojodojodev/mojodojo.dev",
     "author": "Mojo Dojo <mojodojodev@gmail.com>",
     "license": "MIT",
     "devDependencies": {
@@ -21,7 +21,6 @@
         "**/*": "prettier --write --ignore-unknown"
     },
     "scripts": {
-        "update": "nu make_docs.nu",
         "dev": "vuepress dev",
         "build": "vuepress build",
         "prepare": "husky install",
