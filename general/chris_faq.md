@@ -1,4 +1,3 @@
-
 ## Parametric algorithms
 Yes, Mojo provides guaranteed specialization of parametric algorihtms like Julia/Rust/C++.
 
@@ -113,8 +112,10 @@ This isn't fully documented yet, and there are a few missing pieces we want to w
 
 One way to say this is that Mojo is taking a lot of the power out of the compiler and putting it into libraries, allowing Mojo developers to radically extend the language.  Python already has this but does so with super dynamic reflective metaprogramming, so this is an old idea done in a new way
 
-
 ## CPython Compatibility
+### Classes
+You can import python packages and use their classes, you just can't define your own in Mojo yet.
+
 ### Adding features and syntactic sugar
 There are a gagillion (technical term there) theoretical features we could add to Python to make it better in various ways, but we're resisting the urge. We want Mojo to be a good member of the Python community, and the systems programming features and compatibility features need a lot continued development.
 
@@ -137,6 +138,45 @@ Also, we don't see Mojo as different than Python.  Mojo is a member of the Pytho
 
 we're very happy to be able to now work directly with the smart folk who have built Python 3 into such a beautiful thing.
 
+### Complex types
+I have literally the same experience about slow and overly complex type systems and too much sugar as you're pointing out. I've learned a lot from it, and the conclusion is "don't do it again". You can see a specific comment about this at the end of this section: https://docs.modular.com/mojo/notebooks/HelloMojo.html#overloaded-functions-methods
+
+It's also interesting that Rust et al made similar (but also different) mistakes and have compile time issues scaling. Mojo has a ton of core compiler improvements as well addressing the "LLVM is slow" sorts of issues that "zero abstraction" languages have when expecting LLVM to do all the work for them.
+
+## Compiler Speed
+### What makes Rust / Swift / C++ slow?
+1. Type system. If you go with a constraint based hindly milner (https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_sy...) type system and then add things like overloading etc, you quickly get into exponential behavior. Swift has been fighting this for years now to tamp down the worst cases. This isn't good; don't do that.
+
+2. Mid-level compilation model. "Zero cost abstraction" languages including C++ (but also more recent ones like Swift and Rust and now Mojo) rely in massive inlining and abstraction elimination to get "zero cost" behavior. LLVM can do inlining and simplification and all the other stuff, but it is a very low level of abstraction - generating a TON of IR and then asking LLVM to delete it for you is very slow, and shows up in the profile as "llvm is slow" because you're creating all the llvm ir nodes ("LLVM") and then asking llvm optimization passes to delete them for you. It is far better to not generate it in the first place.
+
+3. Code generation: Reasonable codegen is O(N^2) and worse in core algorithms like register allocation and scheduling. This is unavoidable if you want high quality of results (though of course, llvm is also far from perfect). LLVM is also very old and single threaded. If you don't do anything to address these issues, you'll be bottlenecked in this phase.
+
+## Language Features
+### Overloading Return Type
+Mojo doesn’t support overloading solely on result type, and doesn’t use result type or contextual type information for type inference, keeping things simple, fast, and predictable. Mojo will never produce an “expression too complex” error, because its type-checker is simple and fast by definition. ```
+
+### Nim uniform function call
+We're willing to extend Python when it is highly motivated (e.g. the struct keyword) but avoid syntactic sugar.
+
+We'll have to evaluate it when we get there (probably 2-3 months) but an alternative to the nim approach is to supprot "extensions" along the lines of what Swift did: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/extensions
+
+They solve the same problem without making "two ways to do things" and dovetails better into generics.
+
+## Syntax 
+### self keyword
+Dropping the `self` keyword would diverge from Python a lot.  it would also break orthogonality in the language.  Swift suffers from a ton of extra keywords by not making self be explicit.  It is better to just keep things consistent and explicit (also precedented in rust etc)
+
+### `self&` for borrowed
+We're likely to change the reference syntax to inout: https://github.com/modularml/mojo/issues/7
+
+the rationale is to get it away from the prefix * and ** sigils used for variadics. I agree with you though that it takes some getting used to. An alternate approach would be to dump the & sigil and switch to a keyword like inout. That would be more expressive and align better with borrowed and owned.
+
+### Owned and consumed
+They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
+
+### ^ consume postfix operator
+Because it composes properly with chained expressions: `x.foo().bar().baz^.do_thing()` vs something like `(move x.foo().bar().baz).do_thing()`
+
 ## ML Framework integration Pytorch/Tensorflow etc.
 We don't have any current language features to enable this in the works, but I'm very familiar with the work on tape based and SCT (Source Code Transformation) approaches for AD (automatic differentiation), I believe our metaprogramming features will be useful to explore that when we get to wanting to build it.  Tape based approaches will "just work" of course, because they dont' need language support.
 
@@ -148,7 +188,6 @@ I can't prove this today, but my intuition is that we will be able to automatica
 
 ## Mojo Financial
 Thank you for the kind words!   As explained in the launch video, we see mojo as a technology, not a product.  We are a company and need to make money, but will do so based on products.  We aren't sharing all the details on that right now, but you can follow our web page and newletters etc for updates.
-
 In terms of "betting on Mojo" right now, we are more focused on building Mojo to be the "right thing" rather that getting "hypergrowth" (something i've learned the hard way comes with down sides),  but we'll open things up progressively over time as it matures.  We would like to see Mojo go far and wide and are keenly aware of the need for OSS for adoption.
 
 ## AI term clarification
@@ -161,6 +200,10 @@ Yes, support for low-dependence zig-like deployment scenarios is important to us
 
 ## JIT
 We use JIT compilation for on-demand generation of code, but don't do any "devirtualization or specialization" tricks that dynamic languages use to get performance.  Instead we honor dynamism and give programmers the ability to express static things if they want it. This provides a simple and predictable programming model which scales.
+
+### Speed
+JIT performance is generally the same as AOT performance.
+It does take time to compile code, but once you do that, you get generally the same code.
 
 ## Parallelism  
 MPI is a C api IIRC so you can use it from Mojo in principle, but we haven't tried or put any effort into that.  Parallelism and distribution are not "optional" in the new world of compute, and we'd rather provide first class support for solving these age old problems.
@@ -190,10 +233,12 @@ In Mojo, that concept of unique ownership is orthogonal to copyability, which is
 
 Having implicit moves is super confusing to many programmers, and makes the error messages way more difficult to explain back when something goes wrong.
 
-
+### Rust-like syntax for lifetimes
+Yes, this is in the roadway
+coming soon, this is actually one of the next major features that will land
 
 ## si32/ui32 vs i32/u32
-Less ambiguity, but this isn't a closely held belief, we can change it if there is a reason to.  WDYT @Abdul ?
+Less ambiguity, but this isn't a closely held belief, we can change it if there is a reason to. WDYT @Abdul ?
 
 ## Investing in Modular
 On investment, no there isn't, I'm sorry.
@@ -202,6 +247,9 @@ On investment, no there isn't, I'm sorry.
 We support the existing Python raise/try syntax, and also support with blocks etc.
 
 We will also support an optional + result type as well for the usecases that benefit from it, e.g. functional patterns, we are missing some support in the generics system to do that right now, but that will get filled in in the next couple months
+
+## Error Message
+We still have a way to go in various departments (high quality error messages are super important) but we're off to a good start for such an early language.
 
 ## Compilation
 ### Building for different hardware
@@ -230,6 +278,10 @@ Mojo shifts the discussion on that a bit.  A lot of value prop of build systems 
 None of that really matters for Mojo, but it is still quite important to have package managers and manage when and where compilation happens though... this is something of a gravel road that is not fully paved.  We need to invest more in this in the future.
 
 Various existing languages have problems with "LLVM compilation time", particularly when they claim zero abstraction costs and then expect LLVM to provide that for them. Mojo deftly defines away both through some cool MLIR things and also because it knows about caching.
+
+## Package manager
+We don't have specific package manager plans and I am not an expert on the existing python ecosystem (other folks on our team know much more about it than me).  It would be great if we can avoid inventing something, and fit into existing systems, but if we need to innovate here to get somethign great then we will.
+
 
 ## GPUs
 We'll be sharing GPU numbers soon, I am pretty sure it will blow you away, but today is just our initial launch day. ML isn't one thing, and we are pretty excited about the full expanse of heterogenous compute.  We'll be sharing more soon.
@@ -267,7 +319,11 @@ Modular uses many of its own dialects internally, but the only mainline MLIR dia
 
 We use LLVM level dialects, and leverage LLVM for the targets it supports.
 
-### Opening the design docs
+## Open Source
+### Date to open source
+I would tell you if I knew :-).  Our priority is to build the "right thing" not build a demo and get stuck with the wrong thing.  My wild guess is that the language will be very usable for a lot of things in 18 months, but don't hold me to that.
+
+### Opening the MLIR design docs
 Our hands are pretty full at this point, and I don't think the general ML community would care much. That's something more that we'd talk at an LLVM event about or something. BTW, there is one next week.
 
 ### Could you write your own frontend to Mojo
@@ -278,12 +334,19 @@ Yep, Mojo has a bunch of dialects internally, but they aren't intended for use b
 ## C ABI
 We haven't designed this currently, but have a bunch of experience with native C/C++ interop from Swift using imported Clang modules.  We're surely learn a lot from that experience when we get here.
 
+We'll do something similar to the swift/clang integration, so it will use clang to parse the C/c++ headers, but it will use the same ABI so it will link to code built by gcc/msvc or whatever else you're using
+
 ## Optimizing for accelerators and hardware
 ### General
 We'll be sharing more about this soon (it has been quite a bit to get just to today) but you can read a bit about it on our web page here: https://www.modular.com/hardware
 
 Also check out some more technical content here:
 https://docs.modular.com/mojo/programming-manual.html#parameterization-compile-time-meta-programming
+
+### Adding a new Hardware Accelerator
+Totally depends on the arch, and the compiler system for the target hw that is a very complicated question.
+
+Similarly, that is an insanely complicated question.  Software is one of the hardest parts of AI HW.  This is one of the big problems modular is solving.  If you are interested, please check 'hardware' in get started. 
 
 ### Community Contributions
 Yes, community is super important to us, we definitely can't do everything ourselves!
@@ -329,4 +392,3 @@ let and var are just about safety/scoping etc. They are also helpful when using 
 
 ## General Purpose Language or AI/ML specific
 We're not locking into anything, but everything needs a starting point! There is an exciting journey ahead with many steps along the way
-
