@@ -1,4 +1,6 @@
 # Chris Lattner answers
+Collected from [Discord](https://discord.com/invite/modular) and [Hackernews](https://news.ycombinator.com)
+
 ## Language Features
 ### General
 There are many theoretical features we could add to Python to make it better in various ways, but we're resisting the urge. We want Mojo to be a good member of the Python community, and the systems programming features and compatibility features need a lot continued development.
