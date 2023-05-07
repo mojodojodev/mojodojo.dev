@@ -7,9 +7,9 @@ export default defineUserConfig({
     description: 'Learning Resources for 🔥',
     theme: defaultTheme({
         logo: '/hero.png',
-        repo: 'mojodojodev/mojodojo.github.dev',
+        repo: 'mojodojodev/mojodojo.dev',
         repoLabel: 'GitHub',
-        docsRepo: 'mojodojodev/mojodojo.github.dev',
+        docsRepo: 'mojodojodev/mojodojo.dev',
         docsBranch: 'main',
         lastUpdated: false,
         locales: {
@@ -17,7 +17,7 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
-                    { text: 'Chis Latter FAQ', link: '/general/chris_faqs' },
+                    { text: 'Chis Latter FAQ', link: '/general/chris_faq' },
                 ],
             },
         },
