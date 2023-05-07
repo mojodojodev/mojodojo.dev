@@ -6,7 +6,7 @@ actions:
     link: /general/why_mojo.html
     type: primary
   - text: Chris Lattner Answers
-    link: /general/chris_faq.html
+    link: /general/chris_answers.html
     type: primary
 footer: MIT Licensed
 ---

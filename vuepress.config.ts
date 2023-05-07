@@ -6,6 +6,7 @@ export default defineUserConfig({
     title: 'Mojo Dojo',
     description: 'Learning Resources for 🔥',
     theme: defaultTheme({
+        colorMode: 'dark',
         logo: '/hero.png',
         repo: 'mojodojodev/mojodojo.dev',
         repoLabel: 'GitHub',
@@ -17,7 +18,8 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
-                    { text: 'Chis Latter FAQ', link: '/general/chris_faq' },
+                    { text: 'Why Mojo', link: '/general/why_mojo' },
+                    { text: 'Chis Lattner Answers', link: '/general/chris_answers' },
                 ],
             },
         },
