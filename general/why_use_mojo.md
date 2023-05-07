@@ -1,7 +1,9 @@
 # Why Use Mojo?
 
 ## Intro
-The Mojo compiler is not yet available, you can visit [the official why mojo page](https://docs.modular.com/mojo/why-mojo.html) for insights into the Modular team's reasoning for creating Mojo, [and signup to get early preview access to a Mojo notebook](https://www.modular.com/get-started). This perspective is provided by an engineer who specializes in optimizing machine learning (ML) inference.
+This is my personal perspective on why I'm excited for the Mojo programming language,you can visit [the official why mojo page](https://docs.modular.com/mojo/why-mojo.html) for insights into the Modular team's reasoning for creating Mojo.
+
+The Mojo toolchain is not yet available, [but you can signup](https://www.modular.com/get-started) to get early preview access to a Mojo notebook.
 
 Mojo has been designed to address Python's limitations by incorporating additional proven language features, enabling performance enhancement at a low level. Developed by Chris Lattner and his experienced team, Mojo aims to be a fully compatible Python superset. Lattner is recognized amongst many other things for creating Low-Level Virtual Machine (LLVM), a prevalent compiler infrastructure that optimizes code performance across numerous hardware and platforms. LLVM is utilized by the majority of high-performance languages, including C/C++, Rust, Zig, and Swift.
 
