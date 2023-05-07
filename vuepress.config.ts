@@ -4,9 +4,9 @@ import { defineUserConfig } from 'vuepress'
 export default defineUserConfig({
     lang: 'en-US',
     title: 'Mojo Dojo',
-    description: 'Mojo Dojo - Learn about the new Mojo language',
+    description: 'Learning Resources for 🔥',
     theme: defaultTheme({
-        logo: '/images/logo_black.svg',
+        logo: '/hero.png',
         repo: 'mojodojodev/mojodojo.github.dev',
         repoLabel: 'GitHub',
         docsRepo: 'mojodojodev/mojodojo.github.dev',

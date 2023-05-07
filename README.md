@@ -1,8 +1,8 @@
 ---
 home: true
-heroImage: /images/hero.png
+heroImage: /hero.png
 actions:
-  - text: Chris Lattner FAQ
+  - text: Chris Lattner QA
     link: /general/chris_faq.html
     type: primary
 footer: MIT Licensed
