@@ -18,7 +18,7 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
-                    { text: 'Why Mojo', link: '/general/why_mojo' },
+                    { text: 'Why Use Mojo', link: '/general/why_use_mojo' },
                     { text: 'Chis Lattner Answers', link: '/general/chris_answers' },
                 ],
             },

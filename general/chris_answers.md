@@ -66,7 +66,7 @@ Julia is far more mature and advanced in many ways. Many folks have and will con
 EDIT: Just in case there is any confusion, I work for Modular, built LLVM, Swift, Clang, MLIR and a variety of other things. I wasn't trying to misrepresent as being unaffiliated.
 
 ### Codon
-Codon is a cool project, but fundamentally different and doesn't meet the objectives outlined on our "why mojo?" page. Codon (like PyPy and many other existing projects) are in the line of projects that try to use "sufficiently smart" [JITs and other compiler techniques to make python faster](https://docs.modular.com/mojo/why-mojo.html#related-work-other-approaches-to-improve-python)
+Codon is a cool project, but fundamentally different and doesn't meet the objectives outlined on our "why use mojo?" page. Codon (like PyPy and many other existing projects) are in the line of projects that try to use "sufficiently smart" [JITs and other compiler techniques to make python faster](https://docs.modular.com/mojo/why-mojo.html#related-work-other-approaches-to-improve-python)
 
 That is not our goal. Our goal isn't a somewhat faster Python, our goal is full performance on heterogenous hardware, and deployment to things that Python and C++ can't do. There is some overlap in goals of course, but Mojo is far more ambitious (and a much larger engineering investment) than something like Codon.
 
