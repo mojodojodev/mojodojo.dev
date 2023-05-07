@@ -1,5 +1,5 @@
 
-# Why Mojo?
+# Why Use Mojo?
 Visit [the official why mojo page](https://docs.modular.com/mojo/why-mojo.html) for insights into the Modular team's reasoning for creating Mojo. This perspective is provided by an engineer who specializes in optimizing machine learning (ML) inference.
 
 ## Intro

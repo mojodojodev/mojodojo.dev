@@ -2,7 +2,7 @@
 home: true
 heroImage: /hero.png
 actions:
-  - text: Why Mojo - User Perspective
+  - text: Why Use Mojo?
     link: /general/why_mojo.html
     type: primary
   - text: Chris Lattner Answers
