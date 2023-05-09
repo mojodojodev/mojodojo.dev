@@ -52,7 +52,7 @@ Rust has more UB than C in unsafe because it always assume pointers do not alias
 ### Error handling
 We support the existing Python raise/try syntax, and also support with blocks etc.
 
-We will also support an optional + result type as well for the usecases that benefit from it, e.g. functional patterns, we are missing some support in the generics system to do that right now, but that will get filled in in the next couple months
+We will also support an optional + result type as well for the usecases that benefit from it, e.g. functional patterns, although we are missing some support in the generics system to do that right now.
 
 
 Mojo doesn't actually have exceptions (stack unwinding, etc). Our error handling is like Rust's error handling, except sugared `fn foo() raises -> Int:` actually returns an `ErrorOr<Int>` type and the parser generates automatic error propagation, etc.
@@ -176,8 +176,7 @@ You can import python packages and use their classes, you just can't define your
 
 ## Tooling
 ### CLI
-There is a CLI to do all the stuff you'd expect, but we don't have the infra to build it for all the system configurations
-And since it's not open source (yet), we can't really put the code out to let people build from source...
+There is a CLI to do all the stuff you'd expect, but we're not ready to release that yet.
 
 ### Formatter
 We have a fork of Black that supports Mojo that we use in-house. I imagine that in due time we'll be releasing this or something like it, or contributing support to upstream Black if they want to add Mojo support.
@@ -191,6 +190,14 @@ We care a huge amount about tooling, and will definitely be investing a lot here
 ### Are objects RefCounted?
 Not really just RefCounted (since that adds overhead), but analysis is performed to figure out the lifetime of objects and a call to the destructor is added after the last use.
 
+### C++ and Mojo use at Modular
+There isn’t a simple answer here, it depends a lot on details.  For example, the kernel library is all written in Mojo, because C++ is not expressive enough to do what we need. No auto tuning, capable but ungainly meta programming system, doesn’t talk to mlir.
+
+For other parts of our stack, we need some missing features, the most important in the short term are lifetimes and traits/protocols. When those come in, we will be a lot more unblocked and can evaluate what makes sense to move over.
+
+Rewrites can be beneficial beyond the technical capabilities of the system btw.  It is a good step to take what you’ve learned in v1 and reconsider in v2.  Many tales of “we rewrote our system in X and got big benefits” are due to the new thing being architected better than the old thing.
+
+But to your meta point, yes, I fully expect Mojo to be >> C++ for our usecases across the stack.  It will take a bit of time, but I would really like to stop writing c++ some day 🙂
 
 ## Language comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
