@@ -187,9 +187,6 @@ Yep, we fully support this. Our VSCode experience is pretty great and many of us
 We care a huge amount about tooling, and will definitely be investing a lot here, the team member that built the Mojo LSP also built the MLIR LSP.
 
 ## Implementation Details
-### Are objects RefCounted?
-Not really just RefCounted (since that adds overhead), but analysis is performed to figure out the lifetime of objects and a call to the destructor is added after the last use.
-
 ### C++ and Mojo use at Modular
 There isn’t a simple answer here, it depends a lot on details.  For example, the kernel library is all written in Mojo, because C++ is not expressive enough to do what we need. No auto tuning, capable but ungainly meta programming system, doesn’t talk to mlir.
 
@@ -258,11 +255,7 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 1. You have to get the fundamentals right. Trying to build on top of something that wasn't designed at its core to do what you need it to do is going to lead to substandard solutions.
 2. The ML community really loves Python. Mojo is trying very hard to preserve most (but not all) of the Python programming model, with modern takes and advancements on the core ideas of the language -- Python has a ton of great ideas from a PL perspective, but suffers from being decades old
 
-As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language
-
-We had a system to solve a few problems we were having, and developing a programming language on top of that just seemed like the natural next step for it
-
-We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
+As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
 
 ## Syntax 
 ### self keyword
