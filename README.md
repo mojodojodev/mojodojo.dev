@@ -5,8 +5,8 @@ actions:
   - text: Why Use Mojo?
     link: /general/why_use_mojo.html
     type: primary
-  - text: Chris Lattner Answers
-    link: /general/chris_answers.html
+  - text: Mojo Team Answers
+    link: /general/mojo_team_answers.html
     type: primary
 footer: MIT Licensed
 ---
