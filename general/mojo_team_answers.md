@@ -129,10 +129,14 @@ We have a super strong story here, check out the launch demo and matmul notebook
 ### Ternary operator
 Python has a conditional (often called ternary) operator, so Mojo, as a superset of Python, will have the same functionality with the same syntax: x if y else z (similar to y ? x : z in other languages) 
 
+### Nim uniform function call
+We'll have to evaluate it when we get there (probably 2-3 months) but an alternative to the nim approach is to supported "extensions" [along the lines of what Swift did](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/extensions)
+
+They solve the same problem without making "two ways to do things" and dovetails better into generics.
+
 ## Standard Python
 ### Compatibility
-All Mojo code is compiled by the mojo compiler, including code that happens to be syntactically identical (by design) to Python
-The CPython implementation comes in when you import a CPython module into an object. That is exactly a CPython object with exactly the same runtime representation, and uses the CPython interpreter to implement support for it.
+All Mojo code is compiled by the mojo compiler, including code that happens to be syntactically identical (by design) to Python. The CPython implementation comes in when you import a CPython module into an object. That is exactly a CPython object with exactly the same runtime representation, and uses the CPython interpreter to implement support for it.
 
 (using the PyCall and PyAddRef etc apis under the hood)
 
@@ -164,16 +168,6 @@ Yep, they already just work, Check the website or the demo in the launch video f
 ### Classes
 You can import python packages and use their classes, you just can't define your own in Mojo yet.
 
-### Overloading Return Type
-Mojo doesn’t support overloading solely on result type, and doesn’t use result type or contextual type information for type inference, keeping things simple, fast, and predictable. Mojo will never produce an “expression too complex” error, because its type-checker is simple and fast by definition. ```
-
-### Nim uniform function call
-We're willing to extend Python when it is highly motivated (e.g. the struct keyword) but avoid syntactic sugar.
-
-We'll have to evaluate it when we get there (probably 2-3 months) but an alternative to the nim approach is to supported "extensions" [along the lines of what Swift did](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/extensions)
-
-They solve the same problem without making "two ways to do things" and dovetails better into generics.
-
 ## Tooling
 ### CLI
 There is a CLI to do all the stuff you'd expect, but we don't have the infra to build it for all the system configurations
@@ -201,8 +195,6 @@ That said, Mojo is a completely different thing. It is aligned with the Python c
 Mojo also has a bunch of technical advancements compared to Julia by virtue of it being a much newer development and being able to learn from it (and Swift and Rust, and C++ and many many other languages). Including things like ownership and no GC. We also think there is room for a new language that is easier to deploy, scales down to small envelopes, works directly with the full Python ecosystem, is designed for ML and for MLIR from first principles, etc.
 
 Julia is far more mature and advanced in many ways. Many folks have and will continue to push Julia forward and we wish them the best, it is a lovely ecosystem and language. There is room for more than one thing! :)
-
-EDIT: Just in case there is any confusion, I work for Modular, built LLVM, Swift, Clang, MLIR and a variety of other things. I wasn't trying to misrepresent as being unaffiliated.
 
 ### Codon
 Codon is a cool project, but fundamentally different and doesn't meet the objectives outlined on our "why use mojo?" page. Codon (like PyPy and many other existing projects) are in the line of projects that try to use "sufficiently smart" [JITs and other compiler techniques to make python faster](https://docs.modular.com/mojo/why-mojo.html#related-work-other-approaches-to-improve-python)
