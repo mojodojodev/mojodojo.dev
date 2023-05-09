@@ -4,7 +4,7 @@ import { defineUserConfig } from 'vuepress'
 export default defineUserConfig({
     lang: 'en-US',
     title: 'Mojo Dojo',
-    description: 'Learning Resources for 🔥',
+    description: 'Learning Resources for Mojo 🔥',
     theme: defaultTheme({
         colorMode: 'dark',
         logo: '/hero.png',
@@ -19,7 +19,7 @@ export default defineUserConfig({
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
                     { text: 'Why Use Mojo', link: '/general/why_use_mojo' },
-                    { text: 'Chis Lattner Answers', link: '/general/chris_answers' },
+                    { text: 'Mojo Team Answers', link: '/general/mojo_team_answers' },
                 ],
             },
         },
