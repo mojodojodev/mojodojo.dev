@@ -126,8 +126,8 @@ We'll need to build this out over time, if you're not familiar with it, you migh
 
 We have a super strong story here, check out the launch demo and matmul notebook, Jeremy shows a simple example there. We also fully support async/await like Python etc.
 
-
-
+### Ternary operator
+Python has a conditional (often called ternary) operator, so Mojo, as a superset of Python, will have the same functionality with the same syntax: x if y else z (similar to y ? x : z in other languages) 
 
 ## Standard Python
 ### Compatibility
@@ -185,8 +185,7 @@ We have a fork of Black that supports Mojo that we use in-house. I imagine that 
 ### VSCode and LSPs
 Yep, we fully support this. Our VSCode experience is pretty great and many of us live on it, we just haven't been able to expose it on day 1. Stay tuned.
 
-Our LSP support is actually based on MLIR's existing LSP implementation (entry point: https://github.com/llvm/llvm-project/blob/main/mlir/tools/mlir-lsp-server/mlir-lsp-server.cpp), so it's plausible that further improvements here could benefit other languages as well.
-
+We care a huge amount about tooling, and will definitely be investing a lot here, the team member that built the Mojo LSP also built the MLIR LSP.
 
 ## Implementation Details
 ### Are objects RefCounted?
@@ -408,6 +407,8 @@ In terms of "betting on Mojo" right now, we are more focused on building Mojo to
 
 
 ## Open Source
+[From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
+
 ### Date to open source
 I would tell you if I knew 🙂. Our priority is to build the "right thing" not build a demo and get stuck with the wrong thing. My wild guess is that the language will be very usable for a lot of things in 18 months, but don't hold me to that.
 
