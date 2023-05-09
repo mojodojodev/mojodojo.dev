@@ -135,6 +135,7 @@ We'll have to evaluate it when we get there (probably 2-3 months) but an alterna
 They solve the same problem without making "two ways to do things" and dovetails better into generics.
 
 ## Standard Python
+
 ### Compatibility
 All Mojo code is compiled by the mojo compiler, including code that happens to be syntactically identical (by design) to Python. The CPython implementation comes in when you import a CPython module into an object. That is exactly a CPython object with exactly the same runtime representation, and uses the CPython interpreter to implement support for it.
 
@@ -149,7 +150,7 @@ Also, we don't see Mojo as different than Python. Mojo is a member of the Python
 we're very happy to be able to now work directly with the smart folk who have built Python 3 into such a beautiful thing.
 
 ### Moving vanilla Python to Mojo
-Yes, that is my expectation, maybe something like 5-10x faster, but not 5000x faster. It's still very early and we haven't put any effort into optimizing untyped code, but we're already seeing mojo run untyped code 8x-ish faster than cpython. Just because we have a compiler instead of an interpreter.  We're not doing anything fancy.
+My expectation is maybe something like 5-10x faster, but not 5000x faster. It's still very early and we haven't put any effort into optimizing untyped code, but we're already seeing mojo run untyped code 8x-ish faster than cpython. Just because we have a compiler instead of an interpreter.  We're not doing anything fancy.
 
 ### Global Interpreter Lock (GIL)
 Like most other languages, Mojo just doesn't have a GIL. 🙂
@@ -467,6 +468,8 @@ Graviton is ARM architecture, check out performance.modular.com or our recent bl
 For that you need the Modular ai framework: you need graph level xforms and heterogenous compute for that. Mojo is one component of that stack that helps author the kernels and make them more portable, but the modular engine provides the "OS" for your heterogenous computer.
 
 ## Modular Inference Engine
+[Official FAQ](https://docs.modular.com/engine/faq.html#do-we-really-need-yet-another-inference-engine)
+
 ### Implementation details
 We haven't shared much about how our inference engine works internally yet.
 
