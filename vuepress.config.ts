@@ -20,9 +20,9 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
+                    { text: 'Playground VS Code', link: '/tutorial/mojo_playground_vscode' },
                     { text: 'Why Use Mojo', link: '/general/why_use_mojo' },
                     { text: 'Mojo Team Answers', link: '/general/mojo_team_answers' },
-                    { text: 'Mojo Playground VS Code', link: '/tutorial/mojo_playground_vscode' },
                 ],
             },
         },
