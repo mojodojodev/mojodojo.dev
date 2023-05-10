@@ -5,9 +5,9 @@
     "author": "Mojo Dojo <mojodojodev@gmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "@vuepress/plugin-git": "2.0.0-beta.60",
         "@vuepress/plugin-back-to-top": "2.0.0-beta.60",
-        "@vuepress/plugin-docsearch": "2.0.0-beta.60",
+        "@vuepress/plugin-docsearch": "^2.0.0-beta.60",
+        "@vuepress/plugin-git": "2.0.0-beta.60",
         "@vuepress/plugin-medium-zoom": "2.0.0-beta.60",
         "@vuepress/theme-default": "2.0.0-beta.60",
         "husky": "^8.0.3",
