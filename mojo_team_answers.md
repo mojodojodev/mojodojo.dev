@@ -1,5 +1,9 @@
 # Mojo Team Answers
-Collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
+The best place to learn about Mojo is [the official docs](https://docs.modular.com/mojo/), in particular the introduction of [why mojo?](https://docs.modular.com/mojo/why-mojo.html) which will give more context to the answers below.
+
+These answers are collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
+
+To keep updated when the team gives new updates, you can follow [the changelog here](/CHANGELOG)
 
 ## Language Features
 ### General
@@ -13,6 +17,12 @@ As we explain in the launch video, our immediate focus is on accelerators and ML
 
 ### Keyword Arguments
 Mojo doesn’t support keyword arguments yet, this is important but hasn’t been prioritized just because it is “syntax sugar”
+
+### Multiple declaration and assignment
+This is something that is currently being worked on, allowing syntax such as:
+```mojo
+let a, b = 1, 2
+```
 
 ### Parametric Algorithms
 Yes, Mojo provides guaranteed specialization of parametric algorithms like Julia/Rust/C++.
@@ -152,6 +162,7 @@ We'll have to evaluate it when we get there (probably 2-3 months) but an alterna
 They solve the same problem without making "two ways to do things" and dovetails better into generics.
 
 ## Standard Python
+The best place for a summary about how Mojo interacts with the current Python ecosystem in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context to specific questions.
 
 ### Compatibility
 The end goal of Mojo is to be a proper superset of Python. That's not what Mojo is today, but that's what it is designed to become and that is what we're working towards.

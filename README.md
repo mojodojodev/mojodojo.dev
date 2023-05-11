@@ -2,13 +2,15 @@
 home: true
 heroImage: /hero.png
 actions:
-  - text: Why Use Mojo?
-    link: /general/why_use_mojo.html
+  - text: Tutorials
+    link: /tutorials
+  - text: Blog
+    link: /blog
     type: primary
   - text: Mojo Team Answers
-    link: /general/mojo_team_answers.html
+    link: /mojo_team_answers
     type: primary
 footer: MIT Licensed
 ---
 
-
+[Follow any updates from the Mojo team here](/updates)
