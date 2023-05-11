@@ -1,4 +1,12 @@
 # Updates
+## 2023-05-12
+### Mojo Team Updates
+#### Float Literals
+`FloatLiteral` is backed by `F64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
+
+### Removed Sections
+#### `&` postfix
+It's been changed to `inout` in [latest playground update](https://docs.modular.com/mojo/changelog.html#week-of-2023-05-01) so no longer relevant
 
 ## 2023-05-11
 ### Mojo Team Updates

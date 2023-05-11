@@ -62,6 +62,9 @@ The unsafe block /changes the semantics of code that is also valid in a safe blo
 
 Rust has more UB than C in unsafe because it always assume pointers do not alias. [Here's an example of a talk on it](https://youtu.be/DG-VLezRkYQ)
 
+### Float Literals
+`FloatLiteral` is backed by `F64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
+
 ### Error Handling
 We support the existing Python raise/try syntax, and also support with blocks etc.
 
@@ -305,11 +308,6 @@ As for "why not fork an existing thing?", well like it's written in our rational
 
 ### `self` keyword
 Dropping the `self` keyword would diverge from Python a lot. it would also break orthogonality in the language. Swift suffers from a ton of extra keywords by not making self be explicit. It is better to just keep things consistent and explicit (also precedent in rust etc)
-
-### `self&` for borrowed
-[We're likely to change the reference syntax to inout](https://github.com/modularml/mojo/issues/7)
-
-the rationale is to get it away from the prefix * and ** sigils used for variadics. I agree with you though that it takes some getting used to. An alternate approach would be to dump the & sigil and switch to a keyword like inout. That would be more expressive and align better with borrowed and owned.
 
 ### Owned and consumed
 They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
