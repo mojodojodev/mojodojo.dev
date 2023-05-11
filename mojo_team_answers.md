@@ -3,7 +3,7 @@ The best place to learn about Mojo is [the official docs](https://docs.modular.c
 
 These answers are collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
 
-To keep updated when the team gives new updates, you can follow [the changelog here](/CHANGELOG)
+To check when new answers are added, you can follow [the updates page here](/updates)
 
 ## Language Features
 ### General

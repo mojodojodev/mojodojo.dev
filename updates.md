@@ -1,6 +1,6 @@
-# Changelog
+# Updates
 
-## 2023-07-23
+## 2023-05-11
 ### Mojo Team Updates
 #### Multiple declaration and assignment
 This is something that is currently being worked on, allowing syntax such as:
@@ -22,3 +22,7 @@ Experimenting with having every blog and tutorial on the same page, inspired by 
 - Can reorganize tutorials without breaking links by taking advantage of `#heading-tags`
 - Users can download a single `.md` file and use it offline in a code editor
 - A single link will have a higher hit rate improving ranking on search engines
+
+Updated to VuePress 2.0.0-beta.61
+
+Add redirects for new page structure and migrate to webpack to support it

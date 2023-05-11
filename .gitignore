@@ -5,3 +5,10 @@
 node_modules
 .temp
 .cache
+.vuepress/dist
+
+# My local works in progress
+general
+tutorials
+examples
+bugs
