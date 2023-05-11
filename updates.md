@@ -2,6 +2,9 @@
 
 ## 2023-05-11
 ### Mojo Team Updates
+#### `object` type in Mojo
+It's a struct that wraps a pointer to a CPython object
+
 #### Multiple declaration and assignment
 This is something that is currently being worked on, allowing syntax such as:
 ```mojo
@@ -25,4 +28,4 @@ Experimenting with having every blog and tutorial on the same page, inspired by 
 
 Updated to VuePress 2.0.0-beta.61
 
-Add redirects for new page structure and migrate to webpack to support it
+Add redirects for new page structure, to retain social media links

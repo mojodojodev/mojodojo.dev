@@ -162,7 +162,7 @@ We'll have to evaluate it when we get there (probably 2-3 months) but an alterna
 They solve the same problem without making "two ways to do things" and dovetails better into generics.
 
 ## Standard Python
-The best place for a summary about how Mojo interacts with the current Python ecosystem in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context to specific questions.
+The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
 
 ### Compatibility
 The end goal of Mojo is to be a proper superset of Python. That's not what Mojo is today, but that's what it is designed to become and that is what we're working towards.
@@ -176,6 +176,9 @@ Just like when the c or c++ committee adds a new feature to their languages, Cla
 Also, we don't see Mojo as different than Python. Mojo is a member of the Python family just like PyPy, IronPython and many others are members of the family.
 
 we're very happy to be able to now work directly with the smart folk who have built Python 3 into such a beautiful thing.
+
+We will implement all of that weird Python stuff, but it will not be the default implementation for Mojo classes and types. There will be different levels of dynamism, on one hand we will have the full Python descriptor hashtable dynamism and on the other hand we will have regular virtual classes with vtables.
+
 
 ### Runtime specialization
 Right now it’s jit just provides compilation, not runtime specialization or adaptive compilation. We can add that, but our goal isn’t to make dynamic code static w runtime information, it is to allow people to express static code as static
@@ -192,16 +195,14 @@ Mojo is a completely new language, and is built with all new compiler and runtim
 
 Yes, code run with CPython runs the same way that CPython does (for both better and worse) you have to move it to Mojo to get the performance and deployability advantages that Mojo brings. It is still amazingly useful!
 
-### Compatibility
-We will implement all of that weird Python stuff
-But it will not be the default implementation for Mojo classes and types. There will be different levels of dynamism
-On one hand we will have the full Python descriptor hashtable dynamism like you described and on the other hand we will have regular virtual classes with vtables
-
 ### Existing libraries
 Yep, they already just work, Check the website or the demo in the launch video from Jeremy Howard. [Also potentially interesting](https://docs.modular.com/mojo/programming-manual.html#python-integration)
 
 ### Classes
 You can import python packages and use their classes, you just can't define your own in Mojo yet.
+
+### `object` type in Mojo
+It's a struct that wraps a pointer to a CPython object
 
 ## Tooling
 ### CLI
