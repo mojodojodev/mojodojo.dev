@@ -32,12 +32,42 @@ Now try writing some code and running a cell!
 
 
 ### Tips
-Every time you want to use it, you'll need to start the server from your browser, you can add it to a bookmark or shell script e.g:
+Every time you want to use it, you'll need to start the server from your browser, you can the add the link without your username and it'll remember your session via cookies:
 
 ```bash
-open 'https://playground.modular.com/user/boby@gmail.com'
+open 'https://playground.modular.com'
 ```
 
 You'll likely need to restart the kernel at some point as bugs are ironed out, you can use:
 
-Command pallette > `Jupyter: Restart Kernel`
+Command Pallette > `Jupyter: Restart Kernel`
+
+## Cheat Sheet
+Some quick examples to show you what you can do with the different Mojo types
+
+### DynamicVector
+```mojo
+from Vector import DynamicVector
+from DType import DType
+
+let fruits = DynamicVector[UI32](5)
+fruits.push_back(10)
+fruits.push_back(8)
+fruits.push_back(6)
+fruits.push_back(4)
+fruits.push_back(2)
+
+let l = fruits.__len__()
+
+for i in range(l):
+    print(fruits[i])
+```
+```output
+10
+8
+6
+4
+2
+```
+
+### List
