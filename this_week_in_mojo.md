@@ -66,7 +66,7 @@ This push us to define/create the "type erasure of structs to object" model so t
 These are super nuanced issues and I'd like to get more experience with the core language before touching into this. There is a big difference between bringing up something simple and building it really great.
 
 ### Community Projects
-- Github user [crisadamo](https://github.com/crisadamo) has released a VS Code extension: [mojo-lang-syntax](https://github.com/crisadamo/mojo-lang-syntax) while we wait for the official language extension. It's not on the market so to install [go to the releases page](https://github.com/crisadamo/mojo-lang-syntax/releases), get the latest `.vsix` and run `code --install-extension <extension-name>.vsix`
+- Github user [crisadamo](https://github.com/crisadamo/mojo-lang-syntax) has released a VS Code extension for syntax highlighting: [mojo-lang-syntax](https://github.com/crisadamo/mojo-lang-syntax) while we wait for the official language extension.
 - Github user [https://github.com/czheo](https://github.com/czheo/mojo.vim) released a [vim plugin](https://github.com/czheo/mojo.vim) for syntax highlighting
 
 ### Community Content
