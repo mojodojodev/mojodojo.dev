@@ -135,7 +135,7 @@ It's a false dichotomy in my opinion based on how those systems work. Mojo alrea
 Much of the root of the dichotomy comes from fairly opinionated perspectives on "manual control over everything is the 'right' and therefore 'only' way to do things", which forces you into super rigorous programming mode. Our view is a bit more pragmatic: dynamic is good, static is good, use the right tool for the job.
 
 ### Concurrency and parallelism
-We support for async/await syntax in python and have a high performance runtime that enables parallelism. The Matmul notebook online shows some simple examples
+We support for async/await syntax in python and have a high performance runtime that enables parallelism. The Matmul notebook online shows some simple examples.
 
 We haven't described the runtime side of this, but Mojo is built on a high performance heterogenous runtime with very lightweight tasks and full asynchrony at its core. The Modular engine is all about high performance heterogenous accelerated compute after all.
 
@@ -145,7 +145,7 @@ We'll need to build this out over time, if you're not familiar with it, you migh
 
 [You can read about the swift prior art here](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
 
-We have a super strong story here, check out the launch demo and matmul notebook, Jeremy shows a simple example there. We also fully support async/await like Python etc.
+We have a super strong story here, check out the launch demo and [matmul notebook](), Jeremy shows a simple example there. We also fully support async/await like Python etc.
 
 ### Async keywords
 Python has async def, async with, and async for.
@@ -207,6 +207,25 @@ You can import python packages and use their classes, you just can't define your
 ### `object` type in Mojo
 It's a struct that wraps a pointer to a CPython object
 
+### Type Erasure for Python Support
+This currently doesn't work as it does in Python due to `a` inferring the `int` type and raising an error when changing type:
+```python
+a = 9
+print(a)
+a = "Hello"
+print(a)
+```
+
+I agree we need to decide what the model is. This __must__ work, at least in a def, for python compatibility. `def`s currently allow implicit declaration, but infer the type from the first assignment. The above implies that implicitly declared variables in a def should default to having object type (which type erases the concrete type and will allow the above).
+
+I think this is the right/unavoidable thing to do, but I have two concerns:
+
+We don't really have the language features in place to implement object correctly (notably need the basics of classes), so I'd like to avoid switching to this model until we can make it work right.
+
+This push us to define/create the "type erasure of structs to object" model so that user defined struct types can be used here. We may or may not want to do this, it isn't clear to me. There is a lot of precedent in this in the Swift world where Swift classes can be typed erased to "AnyObject" (aka id in ObjC) and that type allow dynamic dispatch in various ways. See eg https://github.com/apple/swift-evolution/blob/main/proposals/0116-id-as-any.md
+
+These are super nuanced issues and I'd like to get more experience with the core language before touching into this. There is a big difference between bringing up something simple and building it really great.
+
 ## Tooling
 ### CLI
 There is a CLI to do all the stuff you'd expect, but we're not ready to release that yet.
@@ -240,6 +259,9 @@ For other parts of our stack, we need some missing features, the most important 
 Rewrites can be beneficial beyond the technical capabilities of the system btw.  It is a good step to take what you’ve learned in v1 and reconsider in v2.  Many tales of “we rewrote our system in X and got big benefits” are due to the new thing being architected better than the old thing.
 
 But to your meta point, yes, I fully expect Mojo to be >> C++ for our usecases across the stack.  It will take a bit of time, but I would really like to stop writing c++ some day 🙂
+
+### Global Variables
+Both `def` and `fn` cannot access variables outside their scope because Mojo as a language doesn't actually have proper global variables yet. This is a known missing feature.
 
 ## Language comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
@@ -387,11 +409,15 @@ Various existing languages have problems with "LLVM compilation time", particula
 ### Package manager
 We don't have specific package manager plans and I am not an expert on the existing python ecosystem (other folks on our team know much more about it than me). It would be great if we can avoid inventing something, and fit into existing systems, but if we need to innovate here to get something great then we will.
 
+One of the biggest improvements we're planning for Mojo is to eliminate the need to write code in C to get performance 🙂. That will help one common source of packaging problems - dealing with the C parts of the packages.
+
 ### libc dependency 
 Yes, support for low-dependence zig-like deployment scenarios is important to us and Mojo architecturally supports it, but we haven't put much effort into making that great yet. It's more of a gravel road than a paved road at this point 🙂
 
 ### WASM
 We haven't prioritized that, but it is a strong goal for sure.
+
+The Mojo stack is perfectly set up to do this. It doesn't use garbage collection, supports very small installed binaries etc. It'll be great, we just need to make a bit more progress 😄
 
 ### WebGPU
 Also have not put energy into that yet, but this is the starting point, not the ending point 🙂

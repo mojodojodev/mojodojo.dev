@@ -13,5 +13,5 @@ actions:
 footer: MIT Licensed - Unofficial and not affiliated with Modular or Mojo
 ---
 ::: tip
-[Check Updates](/updates) for the latest information added to this site in reverse chronological order
+Keep up to date with the latest language and community developments with [This Week in Mojo](/this_week_in_mojo.html)
 :::

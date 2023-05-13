@@ -22,7 +22,7 @@ export default defineUserConfig({
                     { text: 'Tutorials', link: '/tutorials' },
                     { text: 'Blog', link: '/blog' },
                     { text: 'Mojo Team Answers', link: '/mojo_team_answers' },
-                    { text: 'Updates', link: '/updates' },
+                    { text: 'This Week in Mojo', link: '/this_week_in_mojo' },
                 ],
             },
         },

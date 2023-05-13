@@ -1,0 +1,76 @@
+# This Week in Mojo
+If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email [mojodojodev@gmail.com](mojodojodev@gmail.com)
+
+## 2023-05-12
+### Mojo Team Content
+- [Tim Davis](https://www.modular.com/team/tim-davis) released a [blog post](https://www.modular.com/blog/our-launch-whats-next) on the launch and what's next
+- [Scott Main](https://www.modular.com/team/scott-main) added a section to the programming manual on [memory ownership](https://docs.modular.com/mojo/programming-manual.html#argument-passing-control-and-memory-ownership) that clarifies value and reference semantics in Mojo.
+
+### Language and Mojo Playground updates
+The changes from [week ending 2023-05-01](https://docs.modular.com/mojo/changelog.html#week-of-2023-05-01) and [week ending 2023-05-08](https://docs.modular.com/mojo/changelog.html#week-of-2023-05-08) have been released to the Mojo Playground with highlights:
+
+#### inout
+The `inout` keyword replaces `&` postfix to declare a mutable reference, `self&` is now `inout self`:
+```
+struct MyVal:
+    var val: Int
+
+    fn __init__(inout self, first: Int):
+        self.first = first
+```
+
+`inout` will be familiar to Swift programmers, any mutations `in` the function will persist `out` of the function.
+
+See justification for the naming of the keyword [here](https://github.com/modularml/mojo/issues/7) and [here](https://github.com/modularml/mojo/discussions/105). To summarize `&` is a heavily overloaded character, while `inout` describes exactly what's happening.
+ 
+#### Generic parameters
+Generic parameters would previously crash notebooks, this now works:
+```mojo
+struct Multi[T: AnyType]:
+    var x: T
+
+    fn __init__(inout self, x: T):
+        self.x = x
+
+let x = Multi(10)
+let y = Multi("string")
+```
+
+### New Mojo Team Answers
+#### WASM Support
+The Mojo stack is perfectly set up to do this. It doesn't use garbage collection, supports very small installed binaries etc. It'll be great, we just need to make a bit more progress 😄
+
+#### Global Variables
+Both `def` and `fn` cannot access variables outside their scope because Mojo as a language doesn't have proper global variables yet, this is a known missing feature.
+
+#### Float Literals
+`FloatLiteral` is backed by `F64` but the Mojo Playground is currently only printing to 6 decimal places. [Feature request added here](https://github.com/modularml/mojo/issues/115) to print all significant digits.
+
+### Type Erasure for Python Support
+This currently doesn't work in Mojo as it does in Python:
+```python
+a = 9
+print(a)
+a = "Hello"
+print(a)
+```
+
+I agree we need to decide what the model is. This __must__ work, at least in a `def`, for python compatibility. `def` currently allows implicit declaration, but infer the type from the first assignment. The above implies that implicitly declared variables in a `def` should default to having object type (which type erases the concrete type and will allow the above).
+
+I think this is the right/unavoidable thing to do, but I have two concerns:
+
+We don't really have the language features in place to implement object correctly (notably need the basics of classes), so I'd like to avoid switching to this model until we can make it work right.
+
+This push us to define/create the "type erasure of structs to object" model so that user defined struct types can be used here. We may or may not want to do this, it isn't clear to me. There is a lot of precedent in this in the Swift world where Swift classes can be typed erased to `AnyObject` (aka `id` in ObjC) and that [allow dynamic dispatch in various ways](https://github.com/apple/swift-evolution/blob/main/proposals/0116-id-as-any.md)
+
+These are super nuanced issues and I'd like to get more experience with the core language before touching into this. There is a big difference between bringing up something simple and building it really great.
+
+### Community Projects
+- Github user [crisadamo](https://github.com/crisadamo) has released a VS Code extension: [mojo-lang-syntax](https://github.com/crisadamo/mojo-lang-syntax) while we wait for the official language extension. It's not on the market so to install [go to the releases page](https://github.com/crisadamo/mojo-lang-syntax/releases), get the latest `.vsix` and run `code --install-extension <extension-name>.vsix`
+- Github user [https://github.com/czheo](https://github.com/czheo/mojo.vim) released a [vim plugin](https://github.com/czheo/mojo.vim) for syntax highlighting
+
+### Community Content
+- Telukso did a video where he experimented with [the Mojo playground](https://www.youtube.com/watch?v=yovCqxZalJU) and the matmul notebook, giving a nice visual for matrix multiplication before diving in [starting at 8:08](https://www.youtube.com/watch?v=yovCqxZalJU?t=483)
+- Jeff Delaney responsible for [fireship.io](https://fireship.io) released a [meme filled video about Mojo](https://www.youtube.com/watch?v=V4gGJ7XXlC0&t=3s)
+- The Primagen who mixes comedy and tech [did a reaction video](https://www.youtube.com/watch?v=RZhTC33lStQ) to Jeremy Howard's launch demo
+
