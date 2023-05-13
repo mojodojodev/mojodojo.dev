@@ -1,5 +1,5 @@
 # This Week in Mojo
-If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email [mojodojodev@gmail.com](mojodojodev@gmail.com)
+If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email `mojodojodev@gmail.com`
 
 ## 2023-05-12
 ### Mojo Team Content
