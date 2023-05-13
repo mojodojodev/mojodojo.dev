@@ -48,7 +48,7 @@ Yes, Python packages perform cyclic imports and we had to support that. We will 
 We like Swift enums so Mojo enums will probably become more feature complete over time. Enums are a different thing entirely to types, but they're basically just aliases for compile-time values.
 
 ### Pointers
-Mojo has an unsafe `Pointer` struct vended by the standard library for folks who know what the they are doing.
+Mojo has an unsafe `Pointer` struct vended by the standard library for folks who know what they are doing.
 
 ### Unsafe Code
 Mojo is (should be) safe by default, and if you want to go low-level or hacky, Mojo provides powerful tools for that as well.
