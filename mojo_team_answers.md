@@ -164,6 +164,19 @@ We'll have to evaluate it when we get there (probably 2-3 months) but an alterna
 
 They solve the same problem without making "two ways to do things" and dovetails better into generics.
 
+### Mutable Reference vs Mutable Referee
+Ah, yes, well Mojo has the same capability and you need to be aware of similar issues.  An `immutable reference` can still have a `mutable referee`. This is equivalent to the difference between `const int*` and `int* const` in c. 
+
+### Thread Safety
+A borrowed argument is "safe to share". It isn't enforced yet, but the model is that a borrowed argument can never alias a mutable reference.
+
+Mojo provides the same model as Rust, which is "mutable XOR sharing" model.  If you have a mutable reference to something, it is known to be unique.  You can have many immutable references though.
+
+### Actor Model
+We only have "ideas", not "plans" here.  I'm a fan of actors, having designed/built out a system for swift a few years ago.  I think an evolved version of that would compose well and will fit nicely into our system. I think we'll want a Mutex abstraction and classes first though. See [Swift Concurrency Manifesto](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782) and [Swift Concurrency Docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
+
+You don't need to convince me of the value of actors, Carl Hewitt already did 🙂
+
 ## Standard Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
 
@@ -249,7 +262,7 @@ I'm sure this isn't actually completely novel, but I'm not aware of another lang
 
 This is all compile time analysis, not runtime
 
-In terms of danger, it's not "dangerous", but it requires the ability to reason about logically "inner pointers". There are several ways to do this, but one of the most important way is based on the lifetime model. Borrows to inner values extend the lifetime of the underlying object in exactly the same way. The lifetime model is halfway figured out right now, I'm very confident it will be awesome, but we need to get it all built to really understand the details
+In terms of danger, it's not "dangerous", but it requires the ability to reason about logically "inner pointers". There are several ways to do this, but one of the most important way is based on the lifetime model. Borrows to inner values extend the lifetime of the underlying object in exactly the same way. The lifetime model is halfway figured out right now, I'm very confident it will be awesome, but we need to get it all built to really understand the details.
 
 ### C++ and Mojo use at Modular
 There isn’t a simple answer here, it depends a lot on details.  For example, the kernel library is all written in Mojo, because C++ is not expressive enough to do what we need. No auto tuning, capable but ungainly meta programming system, doesn’t talk to mlir.
@@ -343,6 +356,9 @@ Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit mac
 ### si32/ui32 vs i32/u32
 Less ambiguity, but this isn't a closely held belief, we can change it if there is a reason to. WDYT @Abdul ?
 
+### Leading underscore `_foo` for private members
+This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
+
 
 ## Interpreter, JIT and AOT
 ### JIT
@@ -366,6 +382,9 @@ It does take time to compile code, but once you do that, you get generally the s
 Mojo is built directly on top of existing compiler technologies like LLVM, which means you can produce object files, libraries, and executables (via the CLI). The Mojo Playground environment is different, however, since it uses our JIT.
 
 Good deployability is a core part of Mojo's language design e.g. [our matmul implementation is ~100kb](https://www.modular.com/blog/the-worlds-fastest-unified-matrix-multiplication)
+
+### Compile to Shared Library
+Yes, it can be compiled as a shared library, no problem. We're not prioritizing this right now, but we'll enable this at some point
 
 ### Binary Size
 For Mojo, it depends on what you do - doing simple math is a couple kilobytes for final binary, doing something "heavy" like printing hello world pushes into 240K or so. We can definitely do better in hello world though, a bunch of stuff isn't getting stripped.
