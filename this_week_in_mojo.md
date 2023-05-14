@@ -37,20 +37,17 @@ let y = Multi("string")
 ```
 
 ### New Mojo Team Answers
-### Mutable Reference vs Mutable Referee
-Ah, yes, well Mojo has the same capability and you need to be aware of similar issues.  An `immutable reference` can still have a `mutable referee`. This is equivalent to the difference between `const int*` and `int* const` in c. 
+#### Thread Safety
+A borrowed argument is `safe to share`. It isn't enforced yet, but the model is that a borrowed argument can never alias a mutable reference.
 
-### Thread Safety
-A borrowed argument is "safe to share". It isn't enforced yet, but the model is that a borrowed argument can never alias a mutable reference.
+Mojo provides the same model as Rust, which is `mutable XOR sharing` model. If you have a mutable reference to something, it is known to be unique. You can have many immutable references though.
 
-Mojo provides the same model as Rust, which is "mutable XOR sharing" model. If you have a mutable reference to something, it is known to be unique. You can have many immutable references though.
-
-### Actor Model
-We only have "ideas", not "plans" here.  I'm a fan of actors, having designed/built out a system for swift a few years ago.  I think an evolved version of that would compose well and will fit nicely into our system. I think we'll want a Mutex abstraction and classes first though. See [Swift Concurrency Manifesto](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782) and [Swift Concurrency Docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
+#### Actor Model
+We only have "ideas" not "plans" here. I'm a fan of actors, having designed/built out a system for swift a few years ago. I think an evolved version of that would compose well and will fit nicely into our system. I think we'll want a Mutex abstraction and classes first though. See [Swift Concurrency Manifesto](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782) and [Swift Concurrency Docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 You don't need to convince me of the value of actors, Carl Hewitt already did 🙂
 
-### Leading underscore `_foo` for private members
+#### Leading underscore `_foo` for private members
 This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
 
 #### WASM Support
@@ -83,6 +80,9 @@ These are super nuanced issues and I'd like to get more experience with the core
 
 #### Compile to Shared Library
 Yes, it can be compiled as a shared library, no problem. We're not prioritizing this right now, but we'll enable this at some point
+
+#### Mutable Reference vs Mutable Referee
+An `immutable reference` can still have a `mutable referee`, this is equivalent to the difference between `const int*` and `int* const` in C. 
 
 ### Community Projects
 - Github user [crisadamo](https://github.com/crisadamo/mojo-lang-syntax) has released a VS Code extension for syntax highlighting: [mojo-lang-syntax](https://github.com/crisadamo/mojo-lang-syntax) while we wait for the official language extension.

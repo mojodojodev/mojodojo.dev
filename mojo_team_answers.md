@@ -165,7 +165,7 @@ We'll have to evaluate it when we get there (probably 2-3 months) but an alterna
 They solve the same problem without making "two ways to do things" and dovetails better into generics.
 
 ### Mutable Reference vs Mutable Referee
-Ah, yes, well Mojo has the same capability and you need to be aware of similar issues.  An `immutable reference` can still have a `mutable referee`. This is equivalent to the difference between `const int*` and `int* const` in c. 
+An `immutable reference` can still have a `mutable referee`, this is equivalent to the difference between `const int*` and `int* const` in c. 
 
 ### Thread Safety
 A borrowed argument is "safe to share". It isn't enforced yet, but the model is that a borrowed argument can never alias a mutable reference.
