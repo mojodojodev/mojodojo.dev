@@ -15,8 +15,8 @@ The `inout` keyword replaces `&` postfix to declare a mutable reference, `self&`
 struct MyVal:
     var val: Int
 
-    fn __init__(inout self, first: Int):
-        self.first = first
+    fn __init__(inout self, val: Int):
+        self.val = val
 ```
 
 `inout` will be familiar to Swift programmers, any mutations `in` the function will persist `out` of the function.
@@ -43,7 +43,7 @@ Ah, yes, well Mojo has the same capability and you need to be aware of similar i
 ### Thread Safety
 A borrowed argument is "safe to share". It isn't enforced yet, but the model is that a borrowed argument can never alias a mutable reference.
 
-Mojo provides the same model as Rust, which is "mutable XOR sharing" model.  If you have a mutable reference to something, it is known to be unique.  You can have many immutable references though.
+Mojo provides the same model as Rust, which is "mutable XOR sharing" model. If you have a mutable reference to something, it is known to be unique. You can have many immutable references though.
 
 ### Actor Model
 We only have "ideas", not "plans" here.  I'm a fan of actors, having designed/built out a system for swift a few years ago.  I think an evolved version of that would compose well and will fit nicely into our system. I think we'll want a Mutex abstraction and classes first though. See [Swift Concurrency Manifesto](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782) and [Swift Concurrency Docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)

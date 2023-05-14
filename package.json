@@ -5,16 +5,16 @@
     "author": "Mojo Dojo <mojodojodev@gmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "vuepress": "2.0.0-beta.61",
-        "@vuepress/plugin-back-to-top": "2.0.0-beta.61",
-        "@vuepress/plugin-docsearch": "2.0.0-beta.61",
-        "@vuepress/plugin-git": "2.0.0-beta.61",
-        "@vuepress/plugin-medium-zoom": "2.0.0-beta.61",
-        "@vuepress/theme-default": "2.0.0-beta.61"
+        "@vuepress/plugin-back-to-top": "2.0.0-beta.62",
+        "@vuepress/plugin-docsearch": "2.0.0-beta.62",
+        "@vuepress/plugin-git": "2.0.0-beta.62",
+        "@vuepress/plugin-google-analytics": "2.0.0-beta.62",
+        "@vuepress/plugin-medium-zoom": "2.0.0-beta.62",
+        "@vuepress/theme-default": "2.0.0-beta.62",
+        "vuepress": "2.0.0-beta.62"
     },
     "scripts": {
         "dev": "vuepress dev",
         "build": "vuepress build"
-    },
-    "dependencies": {}
+    }
 }
