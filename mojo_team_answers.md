@@ -449,6 +449,9 @@ We'll do something similar to the swift/clang integration, so it will use clang 
 ### C++ Interop
 We'd love that too, in fact that's largely what Modular is doing internally for our AI engine. All the kernels are written in Mojo, but a bunch of other stuff is in C++. We'll dissolve away more and more of the C++ over time as Mojo is built out. In any case, it is very important to us for Mojo to support fully hybrid systems.
 
+#### MLIR code with unknown dialects
+The mojo compiler has a number of internal dialects, including `pop` and `kgen`, but they aren't documented yet. They are very much internal implementation details of the compiler and change all the time. I'd recommend sticking with the llvm and other dialects that are more stable.
+
 
 ## Lifetimes, ownership, borrow checking
 ### Ownership System
@@ -543,6 +546,14 @@ Mojo can talk directly to MLIR and LLVM abstractions. [A toy example of that is 
 We already use this to talk directly to both the Apple and Intel AMX instructions for example (which are identically named, but different things) which provide block matrix operations. We'll be sharing more about that soon.
 
 For other accelerators, it depends on whether you have a traditional program counter + programmability or not. We talk a bit about this at a [high level on our Hardware page](https://www.modular.com/hardware)
+
+> Reading the documents on MLIR related APIs, I feel that the style of these APIs seems to be quite different with Python
+
+Indeed, the MLIR integration hasn't been polished or designed to be pretty - we've focused primarily on making it fully capable and unblocking our needs. The idea for it is that only MLIR experts would be using this, but then they'd be wrapping user-facing Pythonic types and methods around them (e.g. like OurBool wraps i1). that said, we can definitely improve this in various ways, we just can't do so at the loss of fidelity/expressiveness.
+
+> I wonder if it is possible to make Mojo more extensible such that it can also create new didacts?
+
+This is also something we're likely to look into in the far future, but isn't a priority right now. Also, as mojo opens up more, it would be great for community members to poke at this.
 
 ### Macos and Ios
 It would be very interesting to explore Mojo -> Swift and Mojo -> iOS interop but we have no plans for that in the immediate future, something to explore over time maybe.

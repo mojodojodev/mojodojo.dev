@@ -7,6 +7,11 @@ export default defineUserConfig({
     title: 'Mojo Dojo',
     description: 'Learning Resources for Mojo 🔥',
     pagePatterns: ['**/*.md', '!**/README.md', '!.vuepress', '!node_modules'],
+    markdown: {
+        code: {
+            lineNumbers: false
+        }
+    },
     theme: defaultTheme({
         colorMode: 'dark',
         logo: '/hero.png',

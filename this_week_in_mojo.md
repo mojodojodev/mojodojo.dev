@@ -1,6 +1,22 @@
 # This Week in Mojo
 If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email `mojodojodev@gmail.com`
 
+
+## 2023-05-19 - Week in Progress
+### New Mojo Team Answers
+#### MLIR and LLVM
+> Reading the documents on MLIR related APIs, I feel that the style of these APIs seems to be quite different with Python
+
+Indeed, the MLIR integration hasn't been polished or designed to be pretty - we've focused primarily on making it fully capable and unblocking our needs. The idea for it is that only MLIR experts would be using this, but then they'd be wrapping user-facing Pythonic types and methods around them (e.g. like OurBool wraps i1). that said, we can definitely improve this in various ways, we just can't do so at the loss of fidelity/expressiveness.
+
+> I wonder if it is possible to make Mojo more extensible such that it can also create new didacts?
+
+This is also something we're likely to look into in the far future, but isn't a priority right now. Also, as mojo opens up more, it would be great for community members to poke at this.
+
+#### MLIR code with unknown dialects
+The mojo compiler has a number of internal dialects, including `pop` and `kgen`, but they aren't documented yet. They are very much internal implementation details of the compiler and change all the time. I'd recommend sticking with the llvm and other dialects that are more stable.
+
+
 ## 2023-05-12
 ### Mojo Team Content
 - [Tim Davis](https://www.modular.com/team/tim-davis) released a [blog post](https://www.modular.com/blog/our-launch-whats-next) on the launch and what's next
