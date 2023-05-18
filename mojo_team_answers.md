@@ -239,6 +239,11 @@ This push us to define/create the "type erasure of structs to object" model so t
 
 These are super nuanced issues and I'd like to get more experience with the core language before touching into this. There is a big difference between bringing up something simple and building it really great.
 
+### Python keyword compatibility
+For now, we need to get Mojo from 0.1 to at least 0.7 (conceptually, we have no specific versioning planned), at which point we'll understand more of what we're dealing with, and have broader developed relationships with the python community.
+
+Also, my understanding is that Python3 generally doesn't take hard keywords for various compatibility reasons, even things like "case" are a soft keyword. If that is true, then we may be fine.
+
 ## Tooling
 ### CLI
 There is a CLI to do all the stuff you'd expect, but we're not ready to release that yet.
@@ -338,6 +343,27 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
 
 ## Syntax 
+### alias
+`comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
+
+Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
+
+If we replaced the keyword "alias x = 42" with "parameter x = 42", then we can say "it's a declaration of a parameter" and that "parameters are all compile time expressions."
+
+alias (regardless of what it is called) is a declaration of a thing. We need spoken vocabulary for programmers to describe these things. It isn't just about encoding things in source code for the compiler, it is allowing humans to communicate ideas as well.
+
+Also, "let" values are not aliases. They've very different. A let isn't mutable after it is initialized, which is a flow sensitive property, e.g. this is allowed:
+```
+let x : Int 
+if cond:
+    x = foo()
+else:
+    x = bar()
+use(x)
+```
+
+which isn't allowed for aliases.
+
 ### F32 vs DType.f32
 `F32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `SI32`, although you'll need `from SIMD import SI32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
 
@@ -354,11 +380,24 @@ Because it composes properly with chained expressions: `x.foo().bar().baz^.do_th
 Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
 
 ### si32/ui32 vs i32/u32
-Less ambiguity, but this isn't a closely held belief, we can change it if there is a reason to. WDYT @Abdul ?
+> Python programmers will probably be more familiar with the i32/u32 syntax.
+
+Yeah, for the core language types, our audience are general programmers and Python folks, not MLIR nerds 😉
+
+We want things to be clear and unambiguous, compiler folk can deal with naming mapping. We will discuss.
+
+> would it ever makes sense for Mojo to also support signless integers?
+
+I don't see a benefit to that. It would mean that we couldn't use the standard Python operators (which imply sign behavior, e.g. on divides). Signless integers are good for compilers because they want canonical forms, but users want operations that work on types. It's a bit of a different concern.
+
 
 ### Leading underscore `_foo` for private members
 This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
 
+### rebind
+> It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
+
+The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
 
 ## Interpreter, JIT and AOT
 ### JIT
@@ -449,9 +488,13 @@ We'll do something similar to the swift/clang integration, so it will use clang 
 ### C++ Interop
 We'd love that too, in fact that's largely what Modular is doing internally for our AI engine. All the kernels are written in Mojo, but a bunch of other stuff is in C++. We'll dissolve away more and more of the C++ over time as Mojo is built out. In any case, it is very important to us for Mojo to support fully hybrid systems.
 
-#### MLIR code with unknown dialects
+### MLIR code with unknown dialects
 The mojo compiler has a number of internal dialects, including `pop` and `kgen`, but they aren't documented yet. They are very much internal implementation details of the compiler and change all the time. I'd recommend sticking with the llvm and other dialects that are more stable.
 
+### Compile Time Optimizations
+Mojo's compiler is not going to be magic. If you write matmul as a triply nested for loop, you will get a triply nested for loop on all hardwares (barring LLVM optimizations).
+
+The general idea is that Mojo's compiler is not going to perform some magic to optimize the code you are generating, but the language provides all the facilities to write that magic in a portable way as just Mojo code. Today, that magic is bundled into a handful of higher-order functions, like parallelize and vectorize_unroll, and as time continues, Mojo will ship with more "batteries" that mean most developers won't have to worry about SIMD, unrolling, etc. You just need to slap a few decorators on your functions/loops and call a function.
 
 ## Lifetimes, ownership, borrow checking
 ### Ownership System
@@ -524,7 +567,15 @@ GPUs are super important (hopefully I don't need to convince you!) but ML is not
 
 GPU numbers are not far away, and benefit directly from everything we've shown so far. You'll need to use your imagination or extrapolate or imagine until we publish our next step, but we're not messing around here. Our goal is to announce things that are solid and production quality, not claim demo- or research-quality results. The ML industry has had enough of that for one or two generations.
 
+### Pytorch on Different hardware
+We outperform PyTorch across a large range of hardware (Intel, AMD, ARM etc) [see performance dashboard](https://www.modular.com/engine#performance) and swap around the Instance Types
+
+### Quantization
+We support quantization and it will support many other HW types like edge deployments
+
 ### Adding a new hardware accelerator
+We can only say that we're working on accelerators and that is core to the mission, but can't talk about that until we're ready to talk about it 😀
+
 Totally depends on the arch, and the compiler system for the target hw that is a very complicated question.
 
 Similarly, that is an insanely complicated question. Software is one of the hardest parts of AI HW. This is one of the big problems modular is solving. If you are interested, please check 'hardware' in get started. 
@@ -555,6 +606,9 @@ Indeed, the MLIR integration hasn't been polished or designed to be pretty - we'
 
 This is also something we're likely to look into in the far future, but isn't a priority right now. Also, as mojo opens up more, it would be great for community members to poke at this.
 
+### Optimization via MLIR
+Mojo is a gateway to the whole MLIR ecosystem. It is entirely plausible that the matmul implementation for a particular piece of hardware just calls a few MLIR operations.
+
 ### Macos and Ios
 It would be very interesting to explore Mojo -> Swift and Mojo -> iOS interop but we have no plans for that in the immediate future, something to explore over time maybe.
 
@@ -570,8 +624,17 @@ Graviton is ARM architecture, check out performance.modular.com or our recent bl
 ### Using CPU and GPU simultaneously
 For that you need the Modular ai framework: you need graph level xforms and heterogenous compute for that. Mojo is one component of that stack that helps author the kernels and make them more portable, but the modular engine provides the "OS" for your heterogenous computer.
 
+### IOT
+yes, definitely, we want Mojo to go everywhere, and deploying to small devices is part of our design. One step at a time though 😀
+
+
 ## Modular Inference Engine
 [Official FAQ](https://docs.modular.com/engine/faq.html#do-we-really-need-yet-another-inference-engine)
+
+### Frameworks
+It’s a unified engine that enables multi-framework support - many users aren’t just using PyTorch (TensorFlow, JAX etc)
+
+It integrates natively with Mojo 🔥 for a completely new high performance programming model that enables many things outside of just pure model execution performance
 
 ### Implementation details
 We haven't shared much about how our inference engine works internally yet.

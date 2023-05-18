@@ -3,7 +3,59 @@ If you'd like to add any content here please [raise a pull request](https://gith
 
 
 ## 2023-05-19 - Week in Progress
+
+### New Mojo Playground Release
+#### ⭐ New:
+- Added missing dunder methods to PythonObject, enabling the use of common arithmetic and logical operators on imported Python values.
+- PythonObject is now printable from Mojo, instead of requiring you to import Python’s print function.
+
+#### 🛠️ Fixed:
+- Issue #98: Incorrect error with lifetime tracking in loop.
+- Issue #49: Type inference issue (?) in ‘ternary assignment’ operation (FloatLiteral vs. ‘SIMD[f32, 1]’).
+- Issue #48: and/or don’t work with memory-only types.
+- Issue #11: setitem Support for PythonObject.
+
 ### New Mojo Team Answers
+### IOT
+yes, definitely, we want Mojo to go everywhere, and deploying to small devices is part of our design. One step at a time though 😀
+
+### rebind
+> It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
+
+The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
+
+#### Pytorch on Different hardware
+We outperform PyTorch across a large range of hardware (Intel, AMD, ARM etc) [see performance dashboard](https://www.modular.com/engine#performance) and swap around the Instance Types
+
+#### Quantization
+We support quantization and it will support many other HW types like edge deployments
+
+#### Inference Engine Frameworks
+It’s a unified engine that enables multi-framework support - many users aren’t just using PyTorch (TensorFlow, JAX etc)
+
+It integrates natively with Mojo 🔥 for a completely new high performance programming model that enables many things outside of just pure model execution performance
+
+#### alias
+`comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
+
+Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
+
+If we replaced the keyword "alias x = 42" with "parameter x = 42", then we can say "it's a declaration of a parameter" and that "parameters are all compile time expressions."
+
+alias (regardless of what it is called) is a declaration of a thing. We need spoken vocabulary for programmers to describe these things. It isn't just about encoding things in source code for the compiler, it is allowing humans to communicate ideas as well.
+
+Also, "let" values are not aliases. They've very different. A let isn't mutable after it is initialized, which is a flow sensitive property, e.g. this is allowed:
+```
+let x : Int 
+if cond:
+    x = foo()
+else:
+    x = bar()
+use(x)
+```
+
+which isn't allowed for aliases.
+
 #### MLIR and LLVM
 > Reading the documents on MLIR related APIs, I feel that the style of these APIs seems to be quite different with Python
 
@@ -16,6 +68,32 @@ This is also something we're likely to look into in the far future, but isn't a 
 #### MLIR code with unknown dialects
 The mojo compiler has a number of internal dialects, including `pop` and `kgen`, but they aren't documented yet. They are very much internal implementation details of the compiler and change all the time. I'd recommend sticking with the llvm and other dialects that are more stable.
 
+#### i32 vs si32
+> Python programmers will probably be more familiar with the i32/u32 syntax.
+
+Yeah, for the core language types, our audience are general programmers and Python folks, not MLIR nerds 😉
+
+We want things to be clear and unambiguous, compiler folk can deal with naming mapping. We will discuss.
+
+> would it ever makes sense for Mojo to also support signless integers?
+
+I don't see a benefit to that. It would mean that we couldn't use the standard Python operators (which imply sign behavior, e.g. on divides). Signless integers are good for compilers because they want canonical forms, but users want operations that work on types. It's a bit of a different concern.
+
+#### Optimization via MLIR
+Mojo is a gateway to the whole MLIR ecosystem. It is entirely plausible that the matmul implementation for a particular piece of hardware just calls a few MLIR operations.
+
+#### Accelerators
+We can only say that we're working on accelerators and that is core to the mission, but can't talk about that until we're ready to talk about it 😀
+
+#### Compile Time Optimizations
+Mojo's compiler is not going to be magic. If you write matmul as a triply nested for loop, you will get a triply nested for loop on all hardwares (barring LLVM optimizations).
+
+The general idea is that Mojo's compiler is not going to perform some magic to optimize the code you are generating, but the language provides all the facilities to write that magic in a portable way as just Mojo code. Today, that magic is bundled into a handful of higher-order functions, like parallelize and vectorize_unroll, and as time continues, Mojo will ship with more "batteries" that mean most developers won't have to worry about SIMD, unrolling, etc. You just need to slap a few decorators on your functions/loops and call a function.
+
+#### Python keyword compatibility
+For now, we need to get Mojo from 0.1 to at least 0.7 (conceptually, we have no specific versioning planned), at which point we'll understand more of what we're dealing with, and have broader developed relationships with the python community.
+
+Also, my understanding is that Python3 generally doesn't take hard keywords for various compatibility reasons, even things like "case" are a soft keyword. If that is true, then we may be fine.
 
 ## 2023-05-12
 ### Mojo Team Content
