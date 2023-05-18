@@ -16,10 +16,35 @@ If you'd like to add any content here please [raise a pull request](https://gith
 - Issue #11: setitem Support for PythonObject.
 
 ### New Mojo Team Answers
-### IOT
+
+#### Community
+On community, this dovetails with our open source plan.  We're getting a bit crushed under lots of different kinds of interest right now, but I'd love to open up more code, enable pull requests etc, that's mostly blocked on logistical work and that we're being crushed in various ways. We have a Mojo developer advocate role open that will help us sort that out.
+
+#### traits
+_currently an unimplemented feature_
+We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
+
+#### help
+On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
+
+#### CPython Implementation Details
+You're quite right about CPython.  Mojo takes a different implementation approach: ignoring C extensions for a moment, the core compilation model for mojo is to compile to native code, and use ownership optimizations, and more modern data layout approaches to avoid heap boxing all the things, and therefore reference counting them.  In CPython for example, a lot of reference counting traffic is required for simple integers and short strings etc.
+
+Mojo solves this in several ways:
+1. compilers: you get a lot of performance by not going through an interpreter, using register allocation etc.
+2. unboxing things: our default "object" is still naive in many ways, but has inline storage + variant for small types like integers to avoid indirections, refcount overhead, etc. 
+3. types like Int are put in cpu registers etc, which give a massive performance uplift vs that.
+
+Now you can't ignore CPython and can't ignore c extensions.  Good news, MLIR and compilers can do more than one thing :), and so we can talk to other ABIs and handle other layout constraints.  We haven't built a proper "talk to c python extensions" directly from Mojo subsystem, but when we do, __it__ will have a GIL because c extensions require it, just as you say.
+
+Similarly, when you import a cpython module, you get the cpython interpreter in the loop, which has a gil (and its datalayout etc) implicitly.
+
+The cool thing about mojo is that you don't pay this overhead in pure Mojo code, so if you care about performance you can incrementally move Python code -> Mojo and you can adopt new features for performance ... but only if you care about performance!  If you don't, hack on and do so without caring, and all is well.
+
+#### IOT
 yes, definitely, we want Mojo to go everywhere, and deploying to small devices is part of our design. One step at a time though 😀
 
-### rebind
+#### rebind
 > It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
 
 The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.

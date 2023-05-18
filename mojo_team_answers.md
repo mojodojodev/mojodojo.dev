@@ -195,6 +195,19 @@ we're very happy to be able to now work directly with the smart folk who have bu
 
 We will implement all of that weird Python stuff, but it will not be the default implementation for Mojo classes and types. There will be different levels of dynamism, on one hand we will have the full Python descriptor hashtable dynamism and on the other hand we will have regular virtual classes with vtables.
 
+### Implementation Details
+You're quite right about CPython.  Mojo takes a different implementation approach: ignoring C extensions for a moment, the core compilation model for mojo is to compile to native code, and use ownership optimizations, and more modern data layout approaches to avoid heap boxing all the things, and therefore reference counting them.  In CPython for example, a lot of reference counting traffic is required for simple integers and short strings etc.
+
+Mojo solves this in several ways:
+1. compilers: you get a lot of performance by not going through an interpreter, using register allocation etc.
+2. unboxing things: our default "object" is still naive in many ways, but has inline storage + variant for small types like integers to avoid indirections, refcount overhead, etc. 
+3. types like Int are put in cpu registers etc, which give a massive performance uplift vs that.
+
+Now you can't ignore CPython and can't ignore c extensions.  Good news, MLIR and compilers can do more than one thing :), and so we can talk to other ABIs and handle other layout constraints.  We haven't built a proper "talk to c python extensions" directly from Mojo subsystem, but when we do, __it__ will have a GIL because c extensions require it, just as you say.
+
+Similarly, when you import a cpython module, you get the cpython interpreter in the loop, which has a gil (and its datalayout etc) implicitly.
+
+The cool thing about mojo is that you don't pay this overhead in pure Mojo code, so if you care about performance you can incrementally move Python code -> Mojo and you can adopt new features for performance ... but only if you care about performance!  If you don't, hack on and do so without caring, and all is well.
 
 ### Runtime specialization
 Right now it’s jit just provides compilation, not runtime specialization or adaptive compilation. We can add that, but our goal isn’t to make dynamic code static w runtime information, it is to allow people to express static code as static
@@ -343,6 +356,13 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
 
 ## Syntax 
+### traits
+_currently an unimplemented feature_
+We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
+
+### help
+On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
+
 ### alias
 `comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
 
@@ -539,6 +559,9 @@ In terms of "betting on Mojo" right now, we are more focused on building Mojo to
 
 ## Open Source
 [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
+
+### Community
+On community, this dovetails with our open source plan.  We're getting a bit crushed under lots of different kinds of interest right now, but I'd love to open up more code, enable pull requests etc, that's mostly blocked on logistical work and that we're being crushed in various ways. We have a Mojo developer advocate role open that will help us sort that out.
 
 ### Date to open source
 I would tell you if I knew 🙂. Our priority is to build the "right thing" not build a demo and get stuck with the wrong thing. My wild guess is that the language will be very usable for a lot of things in 18 months, but don't hold me to that.
