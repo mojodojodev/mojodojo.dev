@@ -16,7 +16,8 @@ If you'd like to add any content here please [raise a pull request](https://gith
 - Issue #11: setitem Support for PythonObject.
 
 ### Community Content
-[Maxim Zaks](https://mzaks.medium.com/) did a blog post on [counting chars with SIMD in Mojo](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d)
+- [Maxim Zaks](https://mzaks.medium.com/) did a blog post on [counting chars with SIMD in Mojo](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d)
+- [Abhinav Upadhyay][https://substack.com/profile/14520974-abhinav-upadhyay] did a substack post titled [Mojo: The Future of AI Programming 🔥](https://codeconfessions.substack.com/p/mojo-the-future-of-ai-programming)
 
 ### New Mojo Team Answers
 
