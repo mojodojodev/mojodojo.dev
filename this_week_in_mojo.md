@@ -15,6 +15,9 @@ If you'd like to add any content here please [raise a pull request](https://gith
 - Issue #48: and/or don’t work with memory-only types.
 - Issue #11: setitem Support for PythonObject.
 
+### Community Content
+[Maxim Zaks](https://mzaks.medium.com/) did a blog post on [counting chars with SIMD in Mojo](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d)
+
 ### New Mojo Team Answers
 
 #### Community
