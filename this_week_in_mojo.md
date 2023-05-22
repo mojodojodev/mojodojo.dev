@@ -2,7 +2,7 @@
 If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email `mojodojodev@gmail.com`
 
 
-## 2023-05-19 - Week in Progress
+## 2023-05-19
 
 ### New Mojo Playground Release
 #### ⭐ New:
@@ -17,10 +17,18 @@ If you'd like to add any content here please [raise a pull request](https://gith
 
 ### Community Content
 - [Maxim Zaks](https://mzaks.medium.com/) did a blog post on [counting chars with SIMD in Mojo](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d)
-- [Abhinav Upadhyay][https://substack.com/profile/14520974-abhinav-upadhyay] did a substack post titled [Mojo: The Future of AI Programming 🔥](https://codeconfessions.substack.com/p/mojo-the-future-of-ai-programming)
-- [Code to the Moon](https://www.youtube.com/@codetothemoon) did a [introduction video on Mojo](https://www.youtube.com/watch?v=w14vohgjnKo) with a live demo.
+- [Abhinav Upadhyay](https://substack.com/profile/14520974-abhinav-upadhyay) did a substack post titled [Mojo: The Future of AI Programming 🔥](https://codeconfessions.substack.com/p/mojo-the-future-of-ai-programming)
+- [Code to the Moon](https://www.youtube.com/@codetothemoon) did a live demo and introduction to Mojo titled [All-in-one C++, Rust, AND Python Successor?](https://www.youtube.com/watch?v=w14vohgjnKo)
 
 ### New Mojo Team Answers
+
+#### Unsafe Code
+> The standard Pointer is very unsafe and can lead catastrophic scenarios
+
+I agree, the Mojo Pointer type is currently "too sharp and pointy" 😀. In my opinion, we should rename it to `UnsafePointer` and make some other changes to make it not have to be something that people reach for immediately, just like in C++ or Rust you should use higher level collections, and not jump right to unsafe features.
+
+#### Bounds Checking
+We have to implement array bound checking for our array/slice types, we just haven't solidified them due to missing features (notably traits)
 
 #### Community
 On community, this dovetails with our open source plan.  We're getting a bit crushed under lots of different kinds of interest right now, but I'd love to open up more code, enable pull requests etc, that's mostly blocked on logistical work and that we're being crushed in various ways. We have a Mojo developer advocate role open that will help us sort that out.
