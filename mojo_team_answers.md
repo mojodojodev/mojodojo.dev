@@ -62,6 +62,10 @@ The unsafe block /changes the semantics of code that is also valid in a safe blo
 
 Rust has more UB than C in unsafe because it always assume pointers do not alias. [Here's an example of a talk on it](https://youtu.be/DG-VLezRkYQ)
 
+> The standard Pointer is very unsafe and can lead catastrophic scenarios
+
+I agree, the Mojo Pointer type is currently "too sharp and pointy" 😀. In my opinion, we should rename it to `UnsafePointer` and make some other changes to make it not have to be something that people reach for immediately, just like in C++ or Rust you should use higher level collections, and not jump right to unsafe features.
+
 ### Float Literals
 `FloatLiteral` is backed by `F64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
 
@@ -256,6 +260,9 @@ These are super nuanced issues and I'd like to get more experience with the core
 For now, we need to get Mojo from 0.1 to at least 0.7 (conceptually, we have no specific versioning planned), at which point we'll understand more of what we're dealing with, and have broader developed relationships with the python community.
 
 Also, my understanding is that Python3 generally doesn't take hard keywords for various compatibility reasons, even things like "case" are a soft keyword. If that is true, then we may be fine.
+
+### Bounds Checking
+We have to implement array bound checking for our array/slice types, we just haven't solidified them due to missing features (notably traits)
 
 ## Tooling
 ### CLI
