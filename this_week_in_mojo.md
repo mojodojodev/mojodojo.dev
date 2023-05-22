@@ -18,6 +18,7 @@ If you'd like to add any content here please [raise a pull request](https://gith
 ### Community Content
 - [Maxim Zaks](https://mzaks.medium.com/) did a blog post on [counting chars with SIMD in Mojo](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d)
 - [Abhinav Upadhyay][https://substack.com/profile/14520974-abhinav-upadhyay] did a substack post titled [Mojo: The Future of AI Programming 🔥](https://codeconfessions.substack.com/p/mojo-the-future-of-ai-programming)
+- [Code to the Moon](https://www.youtube.com/@codetothemoon) did a [introduction video on Mojo](https://www.youtube.com/watch?v=w14vohgjnKo) with a live demo.
 
 ### New Mojo Team Answers
 
