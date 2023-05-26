@@ -18,6 +18,37 @@ with ContextMgr():
 
 Will correctly execute `ContextMgr.__exit__` before returning.
 
+### Community
+- New blog post from this website [mojo first impressions](http://localhost:8080/blog.html#mojo-first-impressions-2023-05-22)
+
+- [sa-](https://github.com/sa-) who is active on the Discord as `sa-code` made their own [tensor struct](https://github.com/modularml/mojo/discussions/251#discussioncomment-5998651) for tensors with up to 2 dimensions as well as a linear regression struct, as they experiment with creating a nice API for a full library.
+
+- [DayDun]() who has been actively raising bugs and answering questions on GitHub has been experimenting with ray tracing and attempting to improve performance via SIMD, here was the latest image and speed:
+
+![Ray Tracing via SIMD](/raytrace-2.png)
+
+- [yt7589](https://gist.github.com/yt7589) has been enthusiastically experimenting with their own [matmul implementation](https://gist.github.com/yt7589/e6f28328a0ce56f21db3861113ea5c94) of up to 4 dimensions similiar to `numpy.matmul` a.k.a the `@` operator for an `ndarray`
+
+#### Python and Mojo creator exchange
+Python creator and `Benevolent Dictator For some-of-Life` Guido van Rossum had a small tongue-in-cheek exchange with Mojo creator and Modular CEO Chris Lattner:
+
+Guido:
+
+How do you pronounce the flame emoji that’s part of the language name?
+
+Chris:
+
+Good question, everyone I've heard say it out loud pronounced it as 🔥
+
+Guido:
+
+Snark 😀 BTW we should talk some more about the evolution of Mojo's design in the context of Python.
+
+Chris:
+
+It is super important to me that Mojo is a good member of the wider Python community. I'd love to reconnect of course!
+
+
 ### New Team Answers
 #### `lambda` syntax
 Loosely held opinion, Mojo clearly needs to support:
@@ -60,36 +91,6 @@ I agree we should generate a good error rather than just crashing when an undete
 
 Watch out for LLVM which has tail call and other optimizations, which can turn things into closed form loops in some cases :-)
 
-
-### Community
-- New blog post from this website [mojo first impressions](http://localhost:8080/blog.html#mojo-first-impressions-2023-05-22)
-
-- [sa-](https://github.com/sa-) who is active on the Discord as `sa-code` made their own [tensor struct](https://github.com/modularml/mojo/discussions/251#discussioncomment-5998651) for tensors with up to 2 dimensions as well as a linear regression struct, as they experiment with creating a nice API for a full library.
-
-- [DayDun]() who has been actively raising bugs and answering questions on GitHub has been experimenting with ray tracing and attempting to improve performance via SIMD, here was the latest image and speed:
-
-![Ray Tracing via SIMD](/raytrace-2.png)
-
-- [yt7589](https://gist.github.com/yt7589) has been enthusiastically experimenting with their own [matmul implementation](https://gist.github.com/yt7589/e6f28328a0ce56f21db3861113ea5c94) of up to 4 dimensions similiar to `numpy.matmul` a.k.a the `@` operator for an `ndarray`
-
-#### Python and Mojo creator exchange
-Python creator and `Benevolent Dictator For some-of-Life` Guido van Rossum had a small tongue-in-cheek exchange with Mojo creator and Modular CEO Chris Lattner:
-
-Guido:
-
-How do you pronounce the flame emoji that’s part of the language name?
-
-Chris:
-
-Good question, everyone I've heard say it out loud pronounced it as 🔥
-
-Guido:
-
-Snark 😀 BTW we should talk some more about the evolution of Mojo's design in the context of Python.
-
-Chris:
-
-It is super important to me that Mojo is a good member of the wider Python community. I'd love to reconnect of course!
 
 ## 2023-05-19
 
