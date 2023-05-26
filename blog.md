@@ -15,7 +15,7 @@ The growing Mojo community has a positive and helpful attitude, with numerous co
 Syntax debates have already begun, which have surprisingly been met with a high level of maturity, once a decision is made the [bike-shedding](https://en.wikipedia.org/wiki/Law_of_triviality) has ceased. This is facilitated by the community trust in Chris Lattner's expertise, having led large open source projects building ubiquitous languages, compilers and infrastructure including Clang, LLVM, MLIR and Swift. Many languages have no final point of authority, or a lack of trust from the community, and so the bike-shedding never ends. This confidence from the Mojo team also extends to responses to negative sentiments, they're not met with defensiveness but with gratitude for the interest, and a hope that they return once the language is more mature.
 
 ### Language Features
-My takeaway experimenting with Mojo has been that it incorporates my favorite features from my favorite languages:
+Mojo incorporates the best features of various languages:
 
 - English readability of Python
 - Memory Safety of Rust
@@ -31,17 +31,16 @@ In several aspects, Mojo surpasses the aforementioned languages:
 - Ability to use any existing runtime function at compile time without annotation
 - Special builtins like `autotune` and `search` to optimize for various hardware at compile time
 
-Everything that is currently implemented is orthogonal, and not just a mixed bag of modern features. The big question mark is the implementation of `traits` a.k.a `protocols`, a syntax to express `lifetimes`, and in general what the toolchain will be like.
-
+Everything currently implemented is orthogonal, and not just a mixed bag of modern features. The big question mark is the implementation of `traits` a.k.a `protocols` and a syntax to express `lifetimes` which are both currently in the works.
 
 ### Current State
 My only criticism on the launch would be some of the marketing suggesting that Mojo is currently a superset of Python, to paraphrase Warren Buffet:
 
 > You can hold a `rock concert`, and that's okay. You can perform a `symphony`, and that's okay. But don't hold a `rock concert` and advertise it as a `symphony`.
 
-Mojo is currently a `rock concert` for system programmers that don't mind getting their hands dirty, with a clear vision and path towards becoming a `symphony` for all programmers.
+Mojo is currently a `rock concert` for system programmers that don't mind getting their hands dirty, with a clear vision and path towards becoming a `symphony` and superset of Python.
 
-Check out some of the below resources if you don't mind getting your hands dirty!
+If you don't mind getting your hands dirty check out these resources:
 
 - [Sign up for the playground](https://www.modular.com/get-started)
 - [Read the FAQ](https://docs.modular.com/mojo/faq.html)
