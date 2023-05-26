@@ -23,7 +23,7 @@ Will correctly execute `ContextMgr.__exit__` before returning.
 
 - [sa-](https://github.com/sa-) who is active on the Discord as `sa-code` made their own [tensor struct](https://github.com/modularml/mojo/discussions/251#discussioncomment-5998651) for tensors with up to 2 dimensions as well as a linear regression struct, as they experiment with creating a nice API for a full library.
 
-- [DayDun]() who has been actively raising bugs and answering questions on GitHub has been experimenting with ray tracing and attempting to improve performance via SIMD, here was the latest image and speed:
+- [DayDun](https://github.com/DayDun) who has been actively raising bugs and answering questions on GitHub has been experimenting with ray tracing and attempting to improve performance via SIMD, here was the latest image and speed:
 
 ![Ray Tracing via SIMD](/raytrace-2.png)
 
