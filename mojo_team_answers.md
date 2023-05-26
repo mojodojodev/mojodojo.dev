@@ -94,6 +94,10 @@ if maybeErr.isError():
 
 We're not impressed with how the swift `marked propagation` stuff worked out. The `try` thing (besides being the wrong keyword) was super verbose for things that required lots of failable calls, e.g. encoders and decoders and it isn't clear that the ambiguity we were afraid of was actually a thing.  We'll certainly explore that in the future, but for now we should try to just keep things simple and bring up the stack end to end imo.
 
+> On question about Result type like Rust
+
+It will be one of the things added when Abstract Data Types (ADT) and traits are in place
+
 ### Error messages
 We do really like Rust's error messages, even the way that they're output with super slick ASCII art arrows, we want Mojo to have clear error messages and Rust's are definitely great in this respect, but we may not have the same super slick ASCII art.
 
@@ -180,6 +184,15 @@ Mojo provides the same model as Rust, which is "mutable XOR sharing" model.  If 
 We only have "ideas", not "plans" here.  I'm a fan of actors, having designed/built out a system for swift a few years ago.  I think an evolved version of that would compose well and will fit nicely into our system. I think we'll want a Mutex abstraction and classes first though. See [Swift Concurrency Manifesto](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782) and [Swift Concurrency Docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
 
 You don't need to convince me of the value of actors, Carl Hewitt already did 🙂
+
+#### Infinite Recursion Error
+We want the compiler to generate diagnostics on obvious bugs to help the programmer. If someone accidentally typos something or (like your initial example) does something that is obviously recursive, we should help the programmer out.
+
+I don't think there is a good reason for people to want to exhaust the stack; generating an error seems fine, and if there is some important use case we can figure out if there are different ways to address the need.
+
+I agree we should generate a good error rather than just crashing when an undetected-infinite recursion (or just DEEP recursion) happens, this isn't going to get fixed in the immediate future due to prioritization, but I agree we should do it at some point.
+
+Watch out for LLVM which has tail call and other optimizations, which can turn things into closed form loops in some cases 😀
 
 ## Standard Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
@@ -425,6 +438,33 @@ This is a very clear extension we could consider, highly precedented of course. 
 > It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
 
 The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
+
+### `lambda` syntax
+Loosely held opinion, Mojo clearly needs to support:
+
+Nested functions (currently wired up, but have a few issues given lifetimes are not here yet). I'd like @parameter to go away on the nested functions eventually too.
+Existing Python lambda syntax, which is sugar for Add the initial README.md #1. We need to support type annotations here.
+Lower priority, but I think we're likely to explore:
+
+Possibly implement more flexible/general/ergonomic light-weight closures like Scala3 => syntax
+User defined statement blocks, e.g.:
+
+```python
+parallel_loop(42):
+    stuff()
+```
+
+User defined statements are a nice way to shift more language syntax into the library, but are just syntactic sugar and will require a little more infra to get wired up. For example, I would like "return" in that context to return from the enclosing function (not from the lambda), and things like break to work for loop-like constructs. This is quite possible to wire up, but will require a bit of design work.
+
+
+### Curly Brackets
+There are practical reasons why brackets will not work and why significant whitespace is crucial to the parser: lazy body parsing. Mojo's parser can trivially skip over the body of structs, functions, etc. because it can use the expected indentation to find the end of the indentation block.
+
+> After more discussion
+This suggestion cuts directly against or goals for Mojo, which is to be a member of the Python family. Thank you for your suggestions, but our goal isn't to design a new language from first principles (been there done that 😄), it is to lift an existing ecosystem. We are also not adding general syntactic sugar, we are focused on core systems programming features that Python lacks.
+
+### `type` builtin
+The issue with adding the type bultin to Mojo is that we don't have a runtime type representation yet. I.e. in Python, type returns a type instance that can be used like a class.
 
 ## Interpreter, JIT and AOT
 ### JIT

@@ -1,6 +1,95 @@
 # This Week in Mojo
 If you'd like to add any content here please [raise a pull request](https://github.com/mojodojodev/mojodojo.dev/edit/main/this_week_in_mojo.md) or email `mojodojodev@gmail.com`
 
+## 2023-05-26 - Week in Progress
+### New Mojo Playground Release
+[See all the bug fixes here](https://docs.modular.com/mojo/changelog.html#fixed)
+
+#### ⭐️ New
+`finally` clauses are now supported on `try` statements. In addition, `try` statements no longer require `except` clauses, allowing `try-finally` blocks. `finally` clauses contain code that is always executed from control-flow leaves any of the other clauses of a `try` statement by any means.
+
+#### 🦋 Changed
+`with` statement emission changed to use the new `finally` logic so that
+
+```python
+with ContextMgr():
+    return
+```
+
+Will correctly execute `ContextMgr.__exit__` before returning.
+
+### New Team Answers
+#### `lambda` syntax
+Loosely held opinion, Mojo clearly needs to support:
+
+Nested functions (currently wired up, but have a few issues given lifetimes are not here yet). I'd like @parameter to go away on the nested functions eventually too.
+Existing Python lambda syntax, which is sugar for Add the initial README.md #1. We need to support type annotations here.
+Lower priority, but I think we're likely to explore:
+
+Possibly implement more flexible/general/ergonomic light-weight closures like Scala3 => syntax
+User defined statement blocks, e.g.:
+
+```python
+parallel_loop(42):
+    stuff()
+```
+
+User defined statements are a nice way to shift more language syntax into the library, but are just syntactic sugar and will require a little more infra to get wired up. For example, I would like "return" in that context to return from the enclosing function (not from the lambda), and things like break to work for loop-like constructs. This is quite possible to wire up, but will require a bit of design work.
+
+#### Error Handling
+> On question about Result type like Rust
+
+It will be one of the things added when Abstract Data Types (ADT) and traits are in place
+
+#### Curly Brackets
+There are practical reasons why brackets will not work and why significant whitespace is crucial to the parser: lazy body parsing. Mojo's parser can trivially skip over the body of structs, functions, etc. because it can use the expected indentation to find the end of the indentation block.
+
+> Answer from Chris after more discussion
+
+This suggestion cuts directly against or goals for Mojo, which is to be a member of the Python family. Thank you for your suggestions, but our goal isn't to design a new language from first principles (been there done that 😄), it is to lift an existing ecosystem. We are also not adding general syntactic sugar, we are focused on core systems programming features that Python lacks.
+
+#### `type` builtin
+The issue with adding the type bultin to Mojo is that we don't have a runtime type representation yet. I.e. in Python, type returns a type instance that can be used like a class.
+
+#### Infinite Recursion Error
+We want the compiler to generate diagnostics on obvious bugs to help the programmer. If someone accidentally typos something or (like your initial example) does something that is obviously recursive, we should help the programmer out.
+
+I don't think there is a good reason for people to want to exhaust the stack; generating an error seems fine, and if there is some important use case we can figure out if there are different ways to address the need.
+
+I agree we should generate a good error rather than just crashing when an undetected-infinite recursion (or just DEEP recursion) happens, this isn't going to get fixed in the immediate future due to prioritization, but I agree we should do it at some point.
+
+Watch out for LLVM which has tail call and other optimizations, which can turn things into closed form loops in some cases :-)
+
+
+### Community
+- New blog post from this website [mojo first impressions](http://localhost:8080/blog.html#mojo-first-impressions-2023-05-22)
+
+- [sa-](https://github.com/sa-) who is active on the Discord as `sa-code` made their own [tensor struct](https://github.com/modularml/mojo/discussions/251#discussioncomment-5998651) for tensors with up to 2 dimensions as well as a linear regression struct, as they experiment with creating a nice API for a full library.
+
+- [DayDun]() who has been actively raising bugs and answering questions on GitHub has been experimenting with ray tracing and attempting to improve performance via SIMD, here was the latest image and speed:
+
+![Ray Tracing via SIMD](/raytrace-2.png)
+
+- [yt7589](https://gist.github.com/yt7589) has been enthusiastically experimenting with their own [matmul implementation](https://gist.github.com/yt7589/e6f28328a0ce56f21db3861113ea5c94) of up to 4 dimensions similiar to `numpy.matmul` a.k.a the `@` operator for an `ndarray`
+
+#### Python and Mojo creator exchange
+Python creator and `Benevolent Dictator For some-of-Life` Guido van Rossum had a small tongue-in-cheek exchange with Mojo creator and Modular CEO Chris Lattner:
+
+Guido:
+
+How do you pronounce the flame emoji that’s part of the language name?
+
+Chris:
+
+Good question, everyone I've heard say it out loud pronounced it as 🔥
+
+Guido:
+
+Snark 😀 BTW we should talk some more about the evolution of Mojo's design in the context of Python.
+
+Chris:
+
+It is super important to me that Mojo is a good member of the wider Python community. I'd love to reconnect of course!
 
 ## 2023-05-19
 
