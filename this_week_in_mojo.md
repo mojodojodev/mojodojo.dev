@@ -54,10 +54,12 @@ It is super important to me that Mojo is a good member of the wider Python commu
 Loosely held opinion, Mojo clearly needs to support:
 
 Nested functions (currently wired up, but have a few issues given lifetimes are not here yet). I'd like @parameter to go away on the nested functions eventually too.
-Existing Python lambda syntax, which is sugar for Add the initial README.md #1. We need to support type annotations here.
+Existing Python lambda syntax, which is sugar, we need to support type annotations here.
+
 Lower priority, but I think we're likely to explore:
 
 Possibly implement more flexible/general/ergonomic light-weight closures like Scala3 => syntax
+
 User defined statement blocks, e.g.:
 
 ```python
