@@ -25,5 +25,5 @@ Yes! There is a budding community of engineers dissatisfied with the current dee
 - [Join the Discord](https://www.discord.gg/modular)
 
 ## Unofficial Links
-- [This week in Mojo](https://mojodojo.dev/this_week_in_mojo.html)
-- [Mojo team answers](https://mojodojo.dev/mojo_team_answers.html)
+- [This week in Mojo](/this_week_in_mojo/)
+- [Mojo team answers](/mojo_team_answers.html)

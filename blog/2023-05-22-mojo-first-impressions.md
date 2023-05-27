@@ -59,6 +59,6 @@ If you don't mind getting your hands dirty check out these resources:
 - [Sign up for the playground](https://www.modular.com/get-started)
 - [Read the FAQ](https://docs.modular.com/mojo/faq.html)
 - [Read the manual](https://docs.modular.com/mojo/programming-manual.html)
-- [This week in Mojo](https://mojodojo.dev/this_week_in_mojo.html)
+- [This week in Mojo](https://mojodojo.dev/this_week_in_mojo/)
 - [Mojo team answers](https://mojodojo.dev/mojo_team_answers.html)
 - [Join the Discord](https://www.discord.gg/modular)
