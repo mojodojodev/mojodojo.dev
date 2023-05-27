@@ -1,21 +1,24 @@
-# Tutorials
-## Mojo playground from VS Code
+---
+title: Mojo Playground From VSCode
+categories: |
+  General
+usage: |
+    Asserts that the condition is true in debug builds, and is not included in release builds
+---
+
+# Mojo playground from VS Code
 ### Getting the Jupyter URL
 If you don't have access to the Mojo playground you'll need to [Sign up to the waitlist here](https://www.modular.com/get-started)
 
-Open the link to your playground via your email from Modular and copy down the address in the browser, leaving out everything after your email address
+Open the link to your playground via your email from Modular and copy down the address in the browser, leaving out everything after your email address:
 
-```url
-https://playground.modular.com/user/<your_email>
-```
+`https://playground.modular.com/user/<your_email>`
 
 [Generate a token here](https://playground.modular.com/hub/token), noting it down somewhere safe.
 
 Add it to the end of your url like this (change the email address and token):
 
-```url
-https://playground.modular.com/user/<your_email>/?token=<your_token>
-```
+```https://playground.modular.com/user/<your_email>/?token=<your_token>```
 
 ### VS Code
 Install the [Jupyter VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
@@ -34,7 +37,8 @@ Now try writing some code and running a cell!
 ### Tips
 Every time you want to use it, you'll need to start the server from your browser, you can the add the link without your username and it'll remember your session via cookies:
 
-```bash
+```
+
 open 'https://playground.modular.com'
 ```
 

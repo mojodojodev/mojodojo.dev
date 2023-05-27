@@ -185,7 +185,7 @@ We only have "ideas", not "plans" here.  I'm a fan of actors, having designed/bu
 
 You don't need to convince me of the value of actors, Carl Hewitt already did 🙂
 
-#### Infinite Recursion Error
+### Infinite Recursion Error
 We want the compiler to generate diagnostics on obvious bugs to help the programmer. If someone accidentally typos something or (like your initial example) does something that is obviously recursive, we should help the programmer out.
 
 I don't think there is a good reason for people to want to exhaust the stack; generating an error seems fine, and if there is some important use case we can figure out if there are different ways to address the need.
@@ -193,6 +193,101 @@ I don't think there is a good reason for people to want to exhaust the stack; ge
 I agree we should generate a good error rather than just crashing when an undetected-infinite recursion (or just DEEP recursion) happens, this isn't going to get fixed in the immediate future due to prioritization, but I agree we should do it at some point.
 
 Watch out for LLVM which has tail call and other optimizations, which can turn things into closed form loops in some cases 😀
+
+## Syntax 
+### traits
+_currently an unimplemented feature_
+We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
+
+### help
+On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
+
+### alias
+`comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
+
+Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
+
+If we replaced the keyword "alias x = 42" with "parameter x = 42", then we can say "it's a declaration of a parameter" and that "parameters are all compile time expressions."
+
+alias (regardless of what it is called) is a declaration of a thing. We need spoken vocabulary for programmers to describe these things. It isn't just about encoding things in source code for the compiler, it is allowing humans to communicate ideas as well.
+
+Also, "let" values are not aliases. They've very different. A let isn't mutable after it is initialized, which is a flow sensitive property, e.g. this is allowed:
+```
+let x : Int 
+if cond:
+    x = foo()
+else:
+    x = bar()
+use(x)
+```
+
+which isn't allowed for aliases.
+
+### F32 vs DType.f32
+`F32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `SI32`, although you'll need `from SIMD import SI32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
+
+### `self` keyword
+Dropping the `self` keyword would diverge from Python a lot. it would also break orthogonality in the language. Swift suffers from a ton of extra keywords by not making self be explicit. It is better to just keep things consistent and explicit (also precedent in rust etc)
+
+### Owned and consumed
+They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
+
+### ^ consume postfix operator
+Because it composes properly with chained expressions: `x.foo().bar().baz^.do_thing()` vs something like `(move x.foo().bar().baz).do_thing()`
+
+### Int
+Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
+
+### si32/ui32 vs i32/u32
+> Python programmers will probably be more familiar with the i32/u32 syntax.
+
+Yeah, for the core language types, our audience are general programmers and Python folks, not MLIR nerds 😉
+
+We want things to be clear and unambiguous, compiler folk can deal with naming mapping. We will discuss.
+
+> would it ever makes sense for Mojo to also support signless integers?
+
+I don't see a benefit to that. It would mean that we couldn't use the standard Python operators (which imply sign behavior, e.g. on divides). Signless integers are good for compilers because they want canonical forms, but users want operations that work on types. It's a bit of a different concern.
+
+
+### Leading underscore `_foo` for private members
+This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
+
+### rebind
+> It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
+
+The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
+
+### `lambda` syntax
+Loosely held opinion, Mojo clearly needs to support:
+
+Nested functions (currently wired up, but have a few issues given lifetimes are not here yet). I'd like @parameter to go away on the nested functions eventually too.
+Existing Python lambda syntax, which is sugar, we need to support type annotations here.
+
+Lower priority, but I think we're likely to explore:
+
+Possibly implement more flexible/general/ergonomic light-weight closures like Scala3 => syntax
+
+User defined statement blocks, e.g.:
+
+```python
+parallel_loop(42):
+    stuff()
+```
+
+User defined statements are a nice way to shift more language syntax into the library, but are just syntactic sugar and will require a little more infra to get wired up. For example, I would like "return" in that context to return from the enclosing function (not from the lambda), and things like break to work for loop-like constructs. This is quite possible to wire up, but will require a bit of design work.
+
+It still bugs me how "return" works the wrong way and break doesn't work in a "closure taking control flow" function in Swift. We can do better.
+
+### Curly Brackets
+There are practical reasons why brackets will not work and why significant whitespace is crucial to the parser: lazy body parsing. Mojo's parser can trivially skip over the body of structs, functions, etc. because it can use the expected indentation to find the end of the indentation block.
+
+> After more discussion
+This suggestion cuts directly against or goals for Mojo, which is to be a member of the Python family. Thank you for your suggestions, but our goal isn't to design a new language from first principles (been there done that 😄), it is to lift an existing ecosystem. We are also not adding general syntactic sugar, we are focused on core systems programming features that Python lacks.
+
+### `type` builtin
+The issue with adding the type bultin to Mojo is that we don't have a runtime type representation yet. I.e. in Python, type returns a type instance that can be used like a class.
+
 
 ## Standard Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
@@ -375,98 +470,6 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 
 As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
 
-## Syntax 
-### traits
-_currently an unimplemented feature_
-We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
-
-### help
-On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
-
-### alias
-`comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
-
-Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
-
-If we replaced the keyword "alias x = 42" with "parameter x = 42", then we can say "it's a declaration of a parameter" and that "parameters are all compile time expressions."
-
-alias (regardless of what it is called) is a declaration of a thing. We need spoken vocabulary for programmers to describe these things. It isn't just about encoding things in source code for the compiler, it is allowing humans to communicate ideas as well.
-
-Also, "let" values are not aliases. They've very different. A let isn't mutable after it is initialized, which is a flow sensitive property, e.g. this is allowed:
-```
-let x : Int 
-if cond:
-    x = foo()
-else:
-    x = bar()
-use(x)
-```
-
-which isn't allowed for aliases.
-
-### F32 vs DType.f32
-`F32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `SI32`, although you'll need `from SIMD import SI32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
-
-### `self` keyword
-Dropping the `self` keyword would diverge from Python a lot. it would also break orthogonality in the language. Swift suffers from a ton of extra keywords by not making self be explicit. It is better to just keep things consistent and explicit (also precedent in rust etc)
-
-### Owned and consumed
-They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
-
-### ^ consume postfix operator
-Because it composes properly with chained expressions: `x.foo().bar().baz^.do_thing()` vs something like `(move x.foo().bar().baz).do_thing()`
-
-### Int
-Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
-
-### si32/ui32 vs i32/u32
-> Python programmers will probably be more familiar with the i32/u32 syntax.
-
-Yeah, for the core language types, our audience are general programmers and Python folks, not MLIR nerds 😉
-
-We want things to be clear and unambiguous, compiler folk can deal with naming mapping. We will discuss.
-
-> would it ever makes sense for Mojo to also support signless integers?
-
-I don't see a benefit to that. It would mean that we couldn't use the standard Python operators (which imply sign behavior, e.g. on divides). Signless integers are good for compilers because they want canonical forms, but users want operations that work on types. It's a bit of a different concern.
-
-
-### Leading underscore `_foo` for private members
-This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
-
-### rebind
-> It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
-
-The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
-
-### `lambda` syntax
-Loosely held opinion, Mojo clearly needs to support:
-
-Nested functions (currently wired up, but have a few issues given lifetimes are not here yet). I'd like @parameter to go away on the nested functions eventually too.
-Existing Python lambda syntax, which is sugar, we need to support type annotations here.
-
-Lower priority, but I think we're likely to explore:
-
-Possibly implement more flexible/general/ergonomic light-weight closures like Scala3 => syntax
-
-User defined statement blocks, e.g.:
-
-```python
-parallel_loop(42):
-    stuff()
-```
-
-User defined statements are a nice way to shift more language syntax into the library, but are just syntactic sugar and will require a little more infra to get wired up. For example, I would like "return" in that context to return from the enclosing function (not from the lambda), and things like break to work for loop-like constructs. This is quite possible to wire up, but will require a bit of design work.
-
-
-### Curly Brackets
-There are practical reasons why brackets will not work and why significant whitespace is crucial to the parser: lazy body parsing. Mojo's parser can trivially skip over the body of structs, functions, etc. because it can use the expected indentation to find the end of the indentation block.
-
-> After more discussion
-This suggestion cuts directly against or goals for Mojo, which is to be a member of the Python family. Thank you for your suggestions, but our goal isn't to design a new language from first principles (been there done that 😄), it is to lift an existing ecosystem. We are also not adding general syntactic sugar, we are focused on core systems programming features that Python lacks.
-
-### `type` builtin
-The issue with adding the type bultin to Mojo is that we don't have a runtime type representation yet. I.e. in Python, type returns a type instance that can be used like a class.
 
 ## Interpreter, JIT and AOT
 ### JIT

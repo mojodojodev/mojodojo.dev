@@ -2,16 +2,18 @@
 home: true
 heroImage: /hero.png
 actions:
-  - text: Tutorials
-    link: /tutorials
-  - text: Blog
-    link: /blog
-    type: primary
+  - text: Guides
+    link: /guides/
   - text: Mojo Team Answers
     link: /mojo_team_answers
     type: primary
+  - text: This Week in Mojo
+    link: /this_week_in_mojo/
+    type: primary
+  - text: Blog
+    link: /blog/
+    type: primary
+  - text: Is Mojo For Me?
+    link: /is_mojo_for_me
+    type: secondary
 footer: MIT Licensed - Unofficial and not affiliated with Modular or Mojo
----
-::: tip
-Keep up to date with the latest language and community developments with [This Week in Mojo](/this_week_in_mojo.html)
-:::

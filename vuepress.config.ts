@@ -1,6 +1,21 @@
 import { defaultTheme, defineUserConfig } from 'vuepress'
 import { docsearchPlugin } from '@vuepress/plugin-docsearch';
 import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
+import { feedPlugin } from 'vuepress-plugin-feed2';
+import { shikiPlugin } from '@vuepress/plugin-shiki'
+import { readFileSync } from "fs"
+
+
+
+const compareDate = (dateA, dateB) => {
+    if (!dateA || !(dateA instanceof Date)) return 1;
+    if (!dateB || !(dateB instanceof Date)) return -1;
+
+    return dateB.getTime() - dateA.getTime();
+};
+
+const mojoGrammar = JSON.parse(readFileSync("./syntax/mojo.tmLanguage.json").toString())
+
 
 export default defineUserConfig({
     lang: 'en-US',
@@ -25,13 +40,55 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
-                    { text: 'Tutorials', link: '/tutorials' },
-                    { text: 'Blog', link: '/blog' },
+                    { text: 'Guides', link: '/guides/index.md' },
                     { text: 'Mojo Team Answers', link: '/mojo_team_answers' },
-                    { text: 'This Week in Mojo', link: '/this_week_in_mojo' },
+                    { text: 'This Week in Mojo', link: '/this_week_in_mojo/' },
+                    { text: 'Blog', link: '/blog/' },
+                    { text: 'Is Mojo for Me?', link: '/is_mojo_for_me' },
                 ],
-            },
-        },
+                sidebar: [
+                    {
+                        text: 'Guides',
+                        link: '/guides/index.md',
+                        collapsible: true,
+                        children: [
+                            {
+                                text: 'Pointers',
+                                collapsible: true,
+                                children: [
+                                    '/guides/modules/Pointer/DTypePointer.md',
+                                    '/guides/modules/Pointer/Pointer.md',
+                                ]
+                            },
+                            {
+                                text: 'Assert',
+                                collapsible: true,
+                                children: [
+                                    '/guides/modules/Assert/assert_param.md',
+                                    '/guides/modules/Assert/assert_param_msg.md',
+                                    '/guides/modules/Assert/debug_assert.md',
+                                ]
+                            },
+                            {
+                                text: 'TargetInfo',
+                                collapsible: true,
+                                children: ['/guides/modules/TargetInfo/os_is_linux.md'],
+                            },
+                            {
+                                text: "General",
+                                collapsible: true,
+                                children: [
+                                    '/guides/general/mojo_playground_vscode.md',
+                                ]
+                            }
+                        ],
+                    },
+                    '/mojo_team_answers',
+                    '/this_week_in_mojo/',
+                    '/blog/',
+                ]
+            }
+        }
     }),
     plugins: [
         docsearchPlugin({
@@ -42,5 +99,58 @@ export default defineUserConfig({
         googleAnalyticsPlugin({
             id: 'G-8B385M142M',
         }),
+        shikiPlugin({
+            langs: [
+                {
+                    id: "mojo",
+                    scopeName: 'source.mojo',
+                    grammar: mojoGrammar,
+                    // path: "./syntax/mojo.tmLanguage",
+                    aliases: ["Mojo"],
+                },
+                {
+                    id: "python",
+                    scopeName: 'source.python',
+                    path: "./languages/python.tmLanguage.json",
+                    aliases: ["Python"]
+                },
+                {
+                    id: "output",
+                    scopeName: 'source.python',
+                    path: "./languages/python.tmLanguage.json",
+                    aliases: ["Output"]
+                },
+            ],
+            theme: 'material-theme',
+        }),
+        feedPlugin({
+            rss: true,
+            json: true,
+            atom: true,
+            count: 30,
+            hostname: 'https://www.mojodojo.dev',
+            filter: ({ frontmatter }) => {
+                return (
+                    frontmatter.feed === true
+                );
+            },
+            sorter: (a, b) => {
+                return compareDate(
+                    a.data.git?.createdTime
+                        ? new Date(a.data.git?.createdTime)
+                        : a.frontmatter.date,
+                    b.data.git?.createdTime
+                        ? new Date(b.data.git?.createdTime)
+                        : b.frontmatter.date
+                );
+            },
+        }),
+
     ],
+    onPrepared: async (app) => {
+        await app.writeTemp(
+            'pages.js',
+            `export default ${JSON.stringify(app.pages.map(({ data }) => data))}`
+        );
+    },
 });
