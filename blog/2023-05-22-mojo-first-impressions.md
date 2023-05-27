@@ -5,6 +5,12 @@ author_site: https://mojodojo.dev
 author_image: https://mojodojo.dev/hero.png
 excerpt: A user perspective from the first few weeks of Mojo's release
 feed: true
+head:
+  - - meta
+    - name: twitter:card
+      content: summary
+    - name: twitter:site
+      content: mojodojodev
 ---
 
 # Mojo First Impressions
