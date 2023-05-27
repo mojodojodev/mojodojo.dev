@@ -58,6 +58,8 @@ print("p1 and p2 are not equal:", p1 != p2)
     p1 and p2 are not equal: True
 
 
+## Register Passable
+
 Let's try printing the zeroed value from the first point:
 
 
@@ -99,6 +101,8 @@ print(coord.x)
 
     0
 
+
+## Storing Values
 
 Let's try setting the values
 
@@ -156,6 +160,8 @@ for i in range(2):
     10
 
 
+## Undefined Behaviour
+
 Now we'll destroy the universe by going outside the bounds we allocated:
 
 
@@ -165,8 +171,8 @@ print(third_coord.x)
 print(third_coord.y)
 ```
 
-    191
-    85
+    38
+    86
 
 
 These are garbage values, we've done something very dangerous that will cause undefined behaviour, and allow attackers to access data they shouldn't.
@@ -187,8 +193,8 @@ for i in range(2):
     print(p1[i].y)
 ```
 
-    191
-    85
+    38
+    86
     0
     0
 
@@ -209,7 +215,7 @@ It's easy to make mistakes when playing with pointers, let's create a struct to 
 ```mojo
 struct Coords:
     var data: Pointer[Coord]
-    var length: Int # can't be larger than 255
+    var length: Int
 
     fn __init__(inout self, length: Int) raises:
         self.data = Pointer[Coord].alloc(length)
