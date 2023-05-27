@@ -1,4 +1,4 @@
-# Tutorials
+# Guides
 
 <script>
   import pages from '@temp/pages'
@@ -18,8 +18,8 @@
   }
 </script>
 
-## Guides
-General guides
+## General
+General guides not directly related to the language
 
 <table>
   <tr>

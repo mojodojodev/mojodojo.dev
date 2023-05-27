@@ -1,9 +1,7 @@
 ---
 title: Mojo Playground From VSCode
-categories: |
-  General
-usage: |
-    Asserts that the condition is true in debug builds, and is not included in release builds
+categories: General
+usage: Connect VS Code to the Mojo Playground via the Jupyter Notebook extension
 ---
 
 # Mojo playground from VS Code
