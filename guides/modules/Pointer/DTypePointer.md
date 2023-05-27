@@ -50,7 +50,6 @@ First zero all the values for this exercise to make it clear what's happening.
 
 ```mojo
 memset_zero(p1, 8)
-
 ```
 
 this zeroes 8 bytes as `p1` a pointer of type `UI8`, if it was `UI16` it would set 8*16 bits to 0

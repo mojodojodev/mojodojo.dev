@@ -14,9 +14,8 @@ usage: |
 ```mojo
 from Pointer import Pointer
 
-from DType import DType
-from Random import rand
 from Memory import memset_zero
+from String import String
 ```
 
 ## Initialization
@@ -25,7 +24,6 @@ Create a struct and use that as the type for the pointer
 
 ```mojo
 struct Coord:
-    var name: StringRef
     var x: UI8 
     var y: UI8
 ```
@@ -84,7 +82,6 @@ Take note of the above error, a `memory-only` type means it can't be passed thro
 ```mojo
 @register_passable
 struct Coord:
-    var name: StringRef
     var x: UI8 
     var y: UI8
 ```
@@ -109,8 +106,11 @@ Let's try setting the values
 ```mojo
 coord.x = 5
 coord.y = 5
-coord.name = "Nose"
+print(coord.x)
 ```
+
+    5
+
 
 
 ```mojo
@@ -120,4 +120,119 @@ print(p1[0].x)
     0
 
 
-Note above that `coord` is an identifier to memory on the stack or in a register, when we try and print `p1[0]` it hasn't been modified. We
+Note above that `coord` is an identifier to memory on the stack or in a register, when we try and print `p1[0]` it hasn't been modified. We need to write the data.
+
+
+```mojo
+p1.store(0, coord)
+print(p1[0].x)
+```
+
+    5
+
+
+Lets add 5 to it and store it at offset 1
+
+
+```mojo
+coord.x += 5
+coord.y += 5
+
+p1.store(1, coord)
+```
+
+Now print both the coords:
+
+
+```mojo
+for i in range(2):
+    print(p1[i].x)
+    print(p1[i].y)
+```
+
+    5
+    5
+    10
+    10
+
+
+Now we'll destroy the universe by going outside the bounds we allocated:
+
+
+```mojo
+let third_coord = p1.load(2)
+print(third_coord.x)
+print(third_coord.y)
+```
+
+    191
+    85
+
+
+These are garbage values, we've done something very dangerous that will cause undefined behaviour, and allow attackers to access data they shouldn't.
+
+Let's keep going down this dangerous path:
+
+
+```mojo
+p1 += 2
+```
+
+Now the pointer is pointer is pointing straight to unallocated garbage data! Let's have a look:
+
+
+```mojo
+for i in range(2):
+    print(p1[i].x)
+    print(p1[i].y)
+```
+
+    191
+    85
+    0
+    0
+
+
+Oh no! Let's move back to where we were and free the memory, if we forget to free the memory that'll cause a memory leak if this code runs a lot:
+
+
+```mojo
+p1 -= 2
+p1.free()
+```
+
+## Build your own struct
+
+It's easy to make mistakes when playing with pointers, let's create a struct to reduce the surface area of potential errors.
+
+
+```mojo
+struct Coords:
+    var data: Pointer[Coord]
+    var length: Int # can't be larger than 255
+
+    fn __init__(inout self, length: Int) raises:
+        self.data = Pointer[Coord].alloc(length)
+        memset_zero(self.data, length)
+        self.length = length
+
+    fn __getitem__(self, index: Int) raises -> Coord:
+        if index > self.length - 1:
+            raise Error("Trying to access index out of bounds")
+        return self.data.load(index)
+```
+
+We've added some initial safety, this is the bare minimum but instead of allowing potential undefined behaviour, we're causing the program to throw an error when accessing an index out of bounds:
+
+
+```mojo
+let coords = Coords(5)
+
+print(coords[5].x)
+```
+
+    Error: Trying to access index out of bounds
+
+
+Experiment with your own safety checks and adding functions utilizing the pointer safely, Mojo gives you the power to do whatever you want with pointers, but [always remember what uncle ben said](https://youtu.be/P9qCFIVlNyM?t=12)
+
