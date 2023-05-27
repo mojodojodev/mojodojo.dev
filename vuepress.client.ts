@@ -29,6 +29,10 @@ export default defineClientConfig({
             path: "/general/mojo_team_answers.html",
             redirect: "/blog",
         })
+        router.addRoute({
+            path: "/blog.html",
+            redirect: "/blog/2023-05-22-mojo-first-impressions.html",
+        })
         app.component('BlogPosts', BlogPosts)
         app.component('ThisWeek', ThisWeek)
     },
