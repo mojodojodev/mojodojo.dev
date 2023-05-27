@@ -19,6 +19,10 @@ with ContextMgr():
 Will correctly execute `ContextMgr.__exit__` before returning.
 
 ### Community
+- [Nicholaswogan](https://github.com/Nicholaswogan) has created a gist benchmarking [Radiative transfer with Mojo and Numba](https://gist.github.com/Nicholaswogan/ca156adb065cb598bd3903b3eaab2381)
+
+- Vlad a.k.a. [ego](https://github.com/ego) has created a repo named [awesome-mojo](https://github.com/ego/awesome-mojo) collecting and curating various information about Mojo 
+
 - New Mojo Dojo post: [Mojo first impressions](https://mojodojo.dev/blog.html#mojo-first-impressions-2023-05-22)
 
 - [sa-](https://github.com/sa-) who is active on the Discord as `sa-code` made their own [tensor struct](https://github.com/modularml/mojo/discussions/251#discussioncomment-5998651) for tensors with up to 2 dimensions as well as a linear regression struct, as they experiment with creating a nice API for a full library.
@@ -30,7 +34,7 @@ Will correctly execute `ContextMgr.__exit__` before returning.
 - [yt7589](https://gist.github.com/yt7589) has been enthusiastically experimenting with their own [matmul implementation](https://gist.github.com/yt7589/e6f28328a0ce56f21db3861113ea5c94) of up to 4 dimensions similiar to `numpy.matmul` a.k.a the `@` operator for an `ndarray`
 
 #### Python and Mojo creator exchange
-Python creator and `Benevolent Dictator For some-of-Life` Guido van Rossum had a small tongue-in-cheek exchange with Mojo creator and Modular CEO Chris Lattner:
+Python creator and `Benevolent Dictator For most-of-Life` Guido van Rossum had a small tongue-in-cheek exchange with Mojo creator and Modular CEO Chris Lattner:
 
 Guido:
 
