@@ -105,7 +105,6 @@ export default defineUserConfig({
                     id: "mojo",
                     scopeName: 'source.mojo',
                     grammar: mojoGrammar,
-                    // path: "./syntax/mojo.tmLanguage",
                     aliases: ["Mojo"],
                 },
                 {
@@ -119,6 +118,12 @@ export default defineUserConfig({
                     scopeName: 'source.python',
                     path: "./languages/python.tmLanguage.json",
                     aliases: ["Output"]
+                },
+                {
+                    id: "shell",
+                    scopeName: 'source.shell',
+                    path: "./languages/shellscript.tmLanguage.json",
+                    aliases: ["bash", "Bash"]
                 },
             ],
             theme: 'material-theme',

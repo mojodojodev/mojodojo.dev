@@ -37,8 +37,7 @@ Now try writing some code and running a cell!
 ### Tips
 Every time you want to use it, you'll need to start the server from your browser, you can the add the link without your username and it'll remember your session via cookies:
 
-```
-
+```bash
 open 'https://playground.modular.com'
 ```
 
