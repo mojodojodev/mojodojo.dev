@@ -1,10 +1,7 @@
-/node_modules
 .temp
 .cache
 .vscode
 node_modules
-.temp
-.cache
 .vuepress/dist
 
 # My local works in progress

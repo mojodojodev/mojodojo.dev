@@ -6,7 +6,7 @@ usage: |
   Store an address to any type, allowing you to allocate, load and modify single instances or arrays of the type on the heap
 ---
 # Pointer
-  Store an address to any `register_passable` type, and allocate `n` amount of them to the heap.
+  Store an address to any type, allowing you to allocate, load and modify single instances or arrays of the type on the heap
 
 ## Import
 
@@ -226,6 +226,10 @@ struct Coords:
         if index > self.length - 1:
             raise Error("Trying to access index out of bounds")
         return self.data.load(index)
+
+    # This is what will run when the object goes out of scope
+    fn __del__(owned self):
+        return self.data.free()
 ```
 
 We've added some initial safety, this is the bare minimum but instead of allowing potential undefined behaviour, we're causing the program to throw an error when accessing an index out of bounds:
