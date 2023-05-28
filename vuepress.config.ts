@@ -40,7 +40,7 @@ export default defineUserConfig({
                 selectLanguageName: 'English',
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
-                    { text: 'Guides', link: '/guides/index.md' },
+                    { text: 'Guides', link: '/guides/' },
                     { text: 'Mojo Team Answers', link: '/mojo_team_answers' },
                     { text: 'This Week in Mojo', link: '/this_week_in_mojo/' },
                     { text: 'Blog', link: '/blog/' },
@@ -49,7 +49,7 @@ export default defineUserConfig({
                 sidebar: [
                     {
                         text: 'Guides',
-                        link: '/guides/index.md',
+                        link: '/guides/',
                         collapsible: true,
                         children: [
                             {
@@ -133,6 +133,7 @@ export default defineUserConfig({
             json: true,
             atom: true,
             count: 30,
+
             hostname: 'https://www.mojodojo.dev',
             filter: ({ frontmatter }) => {
                 return (
