@@ -21,7 +21,7 @@ export default defineUserConfig({
     lang: 'en-US',
     title: 'Mojo Dojo',
     description: 'Learning Resources for Mojo 🔥',
-    pagePatterns: ['**/*.md', '!**/README.md', '!.vuepress', '!node_modules'],
+    pagePatterns: ['**/*.md', '!**/README.md', '!.vuepress', '!node_modules', '!wip'],
     markdown: {
         code: {
             lineNumbers: false
@@ -53,6 +53,13 @@ export default defineUserConfig({
                         collapsible: true,
                         children: [
                             {
+                                text: "General",
+                                collapsible: true,
+                                children: [
+                                    '/guides/general/mojo_playground_vscode.md',
+                                ]
+                            },
+                            {
                                 text: 'Pointers',
                                 collapsible: true,
                                 children: [
@@ -69,24 +76,37 @@ export default defineUserConfig({
                                     '/guides/modules/Assert/debug_assert.md',
                                 ]
                             },
+                            '/guides/modules/Benchmark/Benchmark.html',
                             {
                                 text: 'TargetInfo',
                                 collapsible: true,
                                 children: ['/guides/modules/TargetInfo/os_is_linux.md'],
                             },
-                            {
-                                text: "General",
-                                collapsible: true,
-                                children: [
-                                    '/guides/general/mojo_playground_vscode.md',
-                                ]
-                            }
                         ],
                     },
-                    '/mojo_team_answers',
-                    '/this_week_in_mojo/',
-                    '/blog/',
-                ]
+                    "/mojo_team_answers.md",
+                    {
+                        text: 'This Week in Mojo',
+                        link: '/this_week_in_mojo/',
+                        collapsible: true,
+                        children: [
+                            '/this_week_in_mojo/2023-06-02.md',
+                            '/this_week_in_mojo/2023-05-26.md',
+                            '/this_week_in_mojo/2023-05-19.md',
+                            '/this_week_in_mojo/2023-05-12.md',
+                        ]
+                    },
+                    {
+                        text: 'Blog',
+                        link: '/blog/',
+                        collapsible: true,
+                        children: [
+                            '/blog/2023-05-22-mojo-first-impressions.md',
+                            '/blog/2023-05-08-why-use-mojo.md',
+                        ]
+                    },
+                    "/is_mojo_for_me.md",
+                ],
             }
         }
     }),

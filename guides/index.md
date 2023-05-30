@@ -19,7 +19,7 @@
 </script>
 
 ## General
-General guides not directly related to the language
+General guides
 
 <table>
   <tr>
@@ -34,7 +34,7 @@ General guides not directly related to the language
 
 
 ## Modules
-Quick tutorials on how to use various builtin structs and functions
+Quick tutorials on how to use various standard library modules
 
 <table>
   <tr>

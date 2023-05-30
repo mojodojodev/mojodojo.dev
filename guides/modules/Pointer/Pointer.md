@@ -171,8 +171,8 @@ print(third_coord.x)
 print(third_coord.y)
 ```
 
-    38
-    86
+    235
+    85
 
 
 These are garbage values, we've done something very dangerous that will cause undefined behaviour, and allow attackers to access data they shouldn't.
@@ -193,8 +193,8 @@ for i in range(2):
     print(p1[i].y)
 ```
 
-    38
-    86
+    235
+    85
     0
     0
 

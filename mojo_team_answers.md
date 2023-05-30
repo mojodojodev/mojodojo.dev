@@ -194,15 +194,33 @@ I agree we should generate a good error rather than just crashing when an undete
 
 Watch out for LLVM which has tail call and other optimizations, which can turn things into closed form loops in some cases 😀
 
+### Generics for non trivial types
+This is going to be tricky to address in the immediate term. In the absence of traits/protocols (which is scheduled to start July/August) we can't reason about what members a generic AnyType has, nor can we constrain that type. This is actually a pretty big deal, because we don't have the infra to map back to what a substituted type's destructors are. As a consequence of this, it is only possible to use trivial types like Int/FP with generic algorithms. This is incredibly constraining right now 🙁
+
+There is a separate issue where register_passable and memory-only types have different concrete ABIs / conventions. This is solvable in a simple way (just treat register passable types as memory abi when generic) or a fancier way (delay binding of ABI until type substitution)... but until we solve the trait issue, we'll still only be able to express generic algorithms over trivial types, even if they are memory only. So solving this in the immediate term isn't much of a relief.
+
+The best workarounds right now are pretty ugly:
+
+- Limit your generic code to trivial register passable types; e.g. add an explicit delete() method that you manually manage instead of a __del__ method that is automatically invoked.
+- Copy and paste things to make them non-generic.
+
+sorry, this is pretty annoying to me too. I really want to get on top of this of course.
+
+
 ## Syntax 
+### `let` inside `fn` definitions
+Thank you for filing this. This is known (to me) to not be supported. We have the infrastructure to do this now, but we need to decide whether we want it. There are various folks (incl on this forum) that are proposing that we eliminate `let` declarations to simplify things, and I'd rather resolve that direction before investing more time into let declarations.
+
+Incidentally, this discussion will come up "real soon now" as it is all tangled into the lifetime proposal. This should be coming to the community for discussion in the next two weeks.
+
 ### traits
 _currently an unimplemented feature_
 We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
 
-### help
+### `help` builtin
 On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
 
-### alias
+### `alias` keyword
 `comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
 
 Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
@@ -608,6 +626,8 @@ Thank you for the kind words! As explained in the launch video, we see mojo as a
 
 In terms of "betting on Mojo" right now, we are more focused on building Mojo to be the "right thing" rather that getting "hypergrowth" (something i've learned the hard way comes with down sides), but we'll open things up progressively over time as it matures. We would like to see Mojo go far and wide and are keenly aware of the need for OSS for adoption.
 
+### What do we call Mojo users?
+I'm fond of mojician 🪄
 
 ## Open Source
 [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
