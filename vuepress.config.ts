@@ -60,17 +60,23 @@ export default defineUserConfig({
                                 ]
                             },
                             {
-                                text: 'Pointer',
+                                text: 'Modules',
                                 collapsible: true,
                                 children: [
-                                    '/guides/modules/Pointer/DTypePointer.md',
-                                    '/guides/modules/Pointer/Pointer.md',
+                                    {
+                                        text: 'Pointer',
+                                        collapsible: true,
+                                        children: [
+                                            '/guides/modules/Pointer/DTypePointer.md',
+                                            '/guides/modules/Pointer/Pointer.md',
+                                        ]
+                                    },
+                                    '/guides/modules/Assert.md',
+                                    '/guides/modules/Benchmark.md',
+                                    '/guides/modules/TargetInfo.md',
+                                    '/guides/modules/Time.md',
                                 ]
-                            },
-                            '/guides/modules/Assert.md',
-                            '/guides/modules/Benchmark.md',
-                            '/guides/modules/TargetInfo.md',
-                            '/guides/modules/Time.md',
+                            }
                         ],
                     },
                     "/mojo_team_answers.md",
