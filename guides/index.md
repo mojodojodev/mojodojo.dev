@@ -38,7 +38,7 @@ Quick tutorials on how to use various standard library modules
 
 <table>
   <tr>
-    <th>Struct / Function</th>
+    <th>Item</th>
     <th>Module</th>
     <th>Description</th>
   </tr>

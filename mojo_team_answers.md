@@ -3,7 +3,7 @@ The best place to learn about Mojo is [the official docs](https://docs.modular.c
 
 These answers are collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
 
-To check when new answers are added, you can follow [the updates page here](/updates)
+To check when new answers are added, you can follow [This Week in Mojo](/this_week_in_mojo/)
 
 ## Language Features
 ### General
@@ -23,6 +23,11 @@ This is something that is currently being worked on, allowing syntax such as:
 ```mojo
 let a, b = 1, 2
 ```
+
+### Implicit Type Declaration
+Within a function, implicitly declared variables get the type of their first value assigned into them. This is probably not the right thing - within a def, we will need to maintain dynamic typing (including type transformations like python has) for compatibility. Our base object isn't super built out and set up for this yet, which is why we have a "default to the first type" approach.
+
+[github issue 2023-05-31](https://github.com/modularml/mojo/issues/290)
 
 ### Parametric Algorithms
 Yes, Mojo provides guaranteed specialization of parametric algorithms like Julia/Rust/C++.
@@ -213,8 +218,9 @@ Thank you for filing this. This is known (to me) to not be supported. We have th
 
 Incidentally, this discussion will come up "real soon now" as it is all tangled into the lifetime proposal. This should be coming to the community for discussion in the next two weeks.
 
-### traits
+### traits / protocols
 _currently an unimplemented feature_
+
 We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
 
 ### `help` builtin
@@ -250,10 +256,10 @@ Dropping the `self` keyword would diverge from Python a lot. it would also break
 ### Owned and consumed
 They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
 
-### ^ consume postfix operator
+### `^` consume postfix operator
 Because it composes properly with chained expressions: `x.foo().bar().baz^.do_thing()` vs something like `(move x.foo().bar().baz).do_thing()`
 
-### Int
+### `Int`
 Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
 
 ### si32/ui32 vs i32/u32
@@ -271,7 +277,7 @@ I don't see a benefit to that. It would mean that we couldn't use the standard P
 ### Leading underscore `_foo` for private members
 This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.
 
-### rebind
+### `rebind`
 > It will be nice to change the current rebind parameters from [dest, src] to [src, dest] since its more intuitive that the other way around. The current signature is rebind[dest_type, src_type](src_val)
 
 The current way works better with parameter inference, because you can call it with `rebind[dest_type](src_val)` and have src_type inferred from the argument.
@@ -306,6 +312,12 @@ This suggestion cuts directly against or goals for Mojo, which is to be a member
 ### `type` builtin
 The issue with adding the type bultin to Mojo is that we don't have a runtime type representation yet. I.e. in Python, type returns a type instance that can be used like a class.
 
+### Generic `AnyType` 
+
+This is mostly just a placeholder for now.  This has known problems and will need to be reworked when we get traits/typeclasses/protocols filled in.  Do you have a specific interest/concern in mind?
+One problem with AnyType is that we will need to decide if it is implicitly copyable/movable, if that is trivial, etc.  There are lots of properties we'll want to be able to express elegantly; none of this has been designed, but there is a lot of prior art in rust/swift/haskell/etc.
+
+[discord reply 2023-05-30](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
 ## Standard Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
@@ -610,6 +622,11 @@ Having implicit moves is super confusing to many programmers, and makes the erro
 Yes, this is in the roadway coming soon, this is actually one of the next major features that will land.
 
 ## General
+### Standard Library Philosophy (batteries included etc.)
+Short answer: there isn't one, yet. You are right that we should develop one, however.
+
+[github discussion 2023-05-31](https://github.com/modularml/mojo/discussions/92#discussioncomment-6042101)
+
 ### Investing in Modular
 There is currently no way to publicly invest in Modular I'm sorry.
 

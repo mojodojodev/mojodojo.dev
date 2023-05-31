@@ -60,28 +60,16 @@ export default defineUserConfig({
                                 ]
                             },
                             {
-                                text: 'Pointers',
+                                text: 'Pointer',
                                 collapsible: true,
                                 children: [
                                     '/guides/modules/Pointer/DTypePointer.md',
                                     '/guides/modules/Pointer/Pointer.md',
                                 ]
                             },
-                            {
-                                text: 'Assert',
-                                collapsible: true,
-                                children: [
-                                    '/guides/modules/Assert/assert_param.md',
-                                    '/guides/modules/Assert/assert_param_msg.md',
-                                    '/guides/modules/Assert/debug_assert.md',
-                                ]
-                            },
-                            '/guides/modules/Benchmark/Benchmark.html',
-                            {
-                                text: 'TargetInfo',
-                                collapsible: true,
-                                children: ['/guides/modules/TargetInfo/os_is_linux.md'],
-                            },
+                            '/guides/modules/Assert.md',
+                            '/guides/modules/Benchmark.md',
+                            '/guides/modules/TargetInfo.md',
                         ],
                     },
                     "/mojo_team_answers.md",
