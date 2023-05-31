@@ -9,15 +9,15 @@ usage: Functions related to determining host info such as OS, CPU, width etc.
 
 ```mojo
 from TargetInfo import (
-    alignof, 
-    bitwidthof, 
-    dtype_alignof, 
-    dtype_bitwidthof, 
-    dtype_simd_width, 
-    dtype_sizeof, 
-    simd_bit_width, 
-    simd_byte_width, 
-    simd_width, 
+    alignof,
+    bitwidthof,
+    dtype_alignof,
+    dtype_bitwidthof,
+    dtype_simd_width,
+    dtype_sizeof,
+    simd_bit_width,
+    simd_byte_width,
+    simd_width,
     sizeof
 )
 
@@ -221,6 +221,7 @@ from TargetInfo import (
 ```
 
 ### has_avx
+[Advanced Vector Extensions](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) are instructions for x86 SIMD support, they are commonly used in Intel and AMD chips, the first version of AVX first began shipping in 2011.
 
 
 ```mojo
@@ -231,6 +232,7 @@ print(has_avx())
 
 
 ### has_avx2
+[Advanced Vector Extensions 2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) are instructions for x86 SIMD support, expanding integer commands to 256 bits, and started shipping in 2013l
 
 
 ```mojo
@@ -241,6 +243,7 @@ print(has_avx2())
 
 
 ### has_avx512f
+[Advanced Vector Extensions 512](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) added 512 bit support for x86 SIMD instructions, and began shipping in 2016.
 
 
 ```mojo
@@ -252,6 +255,8 @@ print(has_avx512f())
 
 ### has_intel_amx
 
+[AMX](https://en.wikipedia.org/wiki/Advanced_Matrix_Extensions) is an extension to x86 with instructions for special units designed for ML workloads such as TMUL which is a matrix multiply on BF16, it began shipping in 2023.
+
 
 ```mojo
 print(has_intel_amx())
@@ -262,6 +267,8 @@ print(has_intel_amx())
 
 ### has_neon
 
+[Neon](https://en.wikipedia.org/wiki/ARM_architecture_family#Advanced_SIMD_(Neon)) also known as Advanced SIMD is an ARM extension for specialized instructions.
+
 
 ```mojo
 print(has_neon())
@@ -271,6 +278,7 @@ print(has_neon())
 
 
 ### has_sse4
+[SSE4](https://en.wikipedia.org/wiki/SSE4) is the older SIMD instruction extension for x86 processors introduced in the mid 2000's
 
 
 ```mojo
@@ -281,6 +289,9 @@ print(has_sse4())
 
 
 ### is_apple_m1
+
+
+The [Apple M1 chip](https://en.wikipedia.org/wiki/Apple_M1) contains a ARM CPU that supports Neon 128 bit instructions and GPU accessible through [metal API](https://developer.apple.com/metal/)
 
 
 ```mojo

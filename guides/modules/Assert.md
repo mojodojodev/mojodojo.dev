@@ -1,7 +1,7 @@
 ---
 title: Assert
 categories: Assert
-usage: Place constraints on functions and check conditions at compile time
+usage: Place constraints on functions that are checked at compile time, and check conditions only in debug builds
 ---
 # Assert
 ## assert_param
@@ -74,13 +74,18 @@ print(res)
 
 
 ## debug_assert
-Asserts that the condition is true in debug builds, and is not included release builds
+Asserts that the condition is true in debug builds, and is removed from the compilation process in release builds
 
 
 ```mojo
 from Assert import debug_assert
 
-let x = 10
-debug_assert(x == 10, "x is not equal to 10")
-debug_assert(x > 11, "x is not more than 10")
+fn test_debug_assert[x: Int](y: Int):
+    debug_assert(x == 42, "x is not equal to 42")
+    debug_assert(y == 42, "y is not equal to 42")
+
+
+test_debug_assert[1](2)
 ```
+
+_debug_assert isn't current working in the playground_

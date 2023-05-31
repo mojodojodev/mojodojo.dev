@@ -4,11 +4,14 @@ categories: Benchmark
 usage: Pass in a closure that returns None as a parameter to benchmark its speed in nanoseconds
 ---
 # Benchmark
+## Import
 
 
 ```mojo
 from Benchmark import Benchmark
 ```
+
+## General Usage
 
 Loop through each number up to `n` and calculate the total in the fibonacci sequence:
 
@@ -37,15 +40,15 @@ fn bench():
         for i in range(n):
             _ = fib(i)
 
-    let recursive = Benchmark().run[closure]()
-    print("Nanoseconds:", recursive)
-    print("Seconds:", F64(recursive) / 1e9)
+    let nanoseconds = Benchmark().run[closure]()
+    print("Nanoseconds:", nanoseconds)
+    print("Seconds:", F64(nanoseconds) / 1e9)
 
 bench()
 ```
 
-    Nanoseconds: 49788877
-    Seconds: 0.049788877000000002
+    Nanoseconds: 50025566
+    Seconds: 0.050025566
 
 
 Define iterative version for comparison:
@@ -82,7 +85,8 @@ Notice that the compiler has optimized away everything, LLVM can change an itera
 
 There is a lot going on under the hood, and so you should always test your assumptions with benchmarks, especially if you're adding complexity because you _think_ it will improve performance, [which often isn't the case](https://vimeo.com/649009599).
 
-`Benchmark` has a few different arguments, make a simple benchmark to see what they all do:
+## Max iters
+Set max iterations and a 1s max total duration
 
 
 ```mojo
@@ -93,39 +97,52 @@ fn bench_args():
         print("sleeping 300,000ns")
         sleep(3e-4)
     
-    print("0 warmup iters, 5 max iters, 0 min time, 1_000_000_000ns max time")
-    var nanoseconds = Benchmark(0, 5, 0, 100_000_000).run[sleeper]()
-    print("average time", nanoseconds)
-
-    # Limit the max running time, so it never goes over 1 second
-    print("\n0 warmup iters, 5 max iters, 0 min time, 1_000_000ns max time")
-    nanoseconds = Benchmark(0, 5, 0, 1_000_000).run[sleeper]()
+    print("0 warmup iters, 4 max iters, 0ns min time, 1_000_000_000ns max time")
+    let nanoseconds = Benchmark(0, 5, 0, 1_000_000_000).run[sleeper]()
     print("average time", nanoseconds)
 
 bench_args()
 ```
 
-    0 warmup iters, 5 max iters, 0 min time, 100_000_000ns max time
+    0 warmup iters, 4 max iters, 0ns min time, 1_000_000_000ns max time
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 359957
+    average time 362183
+
+
+Note there is some extra logic inside `Benchmark` to help improve accuracy, so here it actually runs 6 iterations
+
+## Max Duration
+Limit the max running time, so it will never run over 0.001 seconds and will not hit the max iters of 5:
+
+
+```mojo
+fn bench_args_2():
+    fn sleeper():
+        print("sleeping 300,000ns")
+        sleep(3e-4)
+    
+    print("\n0 warmup iters, 5 max iters, 0 min time, 1_000_000ns max time")
+    let nanoseconds = Benchmark(0, 5, 0, 1_000_000).run[sleeper]()
+    print("average time", nanoseconds)
+
+bench_args_2()
+```
+
     
     0 warmup iters, 5 max iters, 0 min time, 1_000_000ns max time
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 359248
+    average time 361994
 
 
-Take note above, the target max iters was 5, it printed 6 iterations as there is a little extra logic inside `Benchmark.run`.
-
-On the second run we set the max to 1,000,000ns so it only has time to run 3 iterations before it finishes.
-
-Try one more with a warmup, and set the minimum to 3 million nanoseconds, which will mean it ignores the max iterations and runs 1 warmup and 9 normal runs:
+## Min Duration
+Try with a minimum of 3 million nanoseconds, so it ignores the max iterations and runs 5 normal runs:
 
 
 ```mojo
@@ -134,7 +151,31 @@ fn bench_args():
         print("sleeping 300,000ns")
         sleep(3e-4)
 
-    let nanoseconds = Benchmark(1, 2, 3_000_000, 1_000_000_000).run[sleeper]()
+    let nanoseconds = Benchmark(0, 2, 1_500_000, 1_000_000_000).run[sleeper]()
+    print("average time", nanoseconds)
+
+bench_args()
+```
+
+    sleeping 300,000ns
+    sleeping 300,000ns
+    sleeping 300,000ns
+    sleeping 300,000ns
+    sleeping 300,000ns
+    average time 364925
+
+
+## Warmup
+You should always have some warmup iterations, there is some extra logic for more accurate results so it won't run exactly what you specify:
+
+
+```mojo
+fn bench_args():
+    fn sleeper():
+        print("sleeping 300,000ns")
+        sleep(3e-4)
+
+    let nanoseconds = Benchmark(1, 2, 0, 1_000_000_000).run[sleeper]()
     print("average time", nanoseconds)
 
 bench_args()
@@ -146,9 +187,5 @@ bench_args()
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    sleeping 300,000ns
-    sleeping 300,000ns
-    sleeping 300,000ns
-    sleeping 300,000ns
-    average time 360254
+    average time 362721
 
