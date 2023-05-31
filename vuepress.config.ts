@@ -70,6 +70,7 @@ export default defineUserConfig({
                             '/guides/modules/Assert.md',
                             '/guides/modules/Benchmark.md',
                             '/guides/modules/TargetInfo.md',
+                            '/guides/modules/Time.md',
                         ],
                     },
                     "/mojo_team_answers.md",
