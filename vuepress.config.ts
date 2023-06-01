@@ -3,6 +3,7 @@ import { docsearchPlugin } from '@vuepress/plugin-docsearch';
 import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
 import { feedPlugin } from 'vuepress-plugin-feed2';
 import { shikiPlugin } from '@vuepress/plugin-shiki'
+import { gitPlugin } from '@vuepress/plugin-git'
 import { readFileSync } from "fs"
 
 
@@ -107,6 +108,9 @@ export default defineUserConfig({
         }
     }),
     plugins: [
+        gitPlugin({
+            contributors: false
+        }),
         docsearchPlugin({
             appId: 'WHF26ZE58I',
             indexName: 'mojodojo',
