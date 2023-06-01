@@ -40,7 +40,7 @@ print(alignof[Foo]())
     4
 
 
-This means each instance of `Foo` will start at a memory address that is a multiple of 4 bytes, the'll also be 3 bytes of padding to accommodate the `UI8`.
+This means each instance of `Foo` will start at a memory address that is a multiple of 4 bytes, there will also be 3 bytes of padding to accommodate the `UI8`.
 
 You can use this for anything falling under an `AnyType`:
 
@@ -126,7 +126,7 @@ print(simd_bit_width())
     512
 
 
-Take note how the result of dtype_simd_width[DType.ui64]() shows you how many of that data type can fit into the systems SIMD register, e.g. 512 / 64 = 8
+Take note how the result of `dtype_simd_width[DType.ui64]()` shows you how many of that data type can fit into the systems SIMD register, e.g. 512 / 64 = 8
 
 ### simd_byte_width
 

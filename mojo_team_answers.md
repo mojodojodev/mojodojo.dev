@@ -27,7 +27,7 @@ let a, b = 1, 2
 ### Implicit Type Declaration
 Within a function, implicitly declared variables get the type of their first value assigned into them. This is probably not the right thing - within a def, we will need to maintain dynamic typing (including type transformations like python has) for compatibility. Our base object isn't super built out and set up for this yet, which is why we have a "default to the first type" approach.
 
-[github issue 2023-05-31](https://github.com/modularml/mojo/issues/290)
+[2023-05-31 Github Issue](https://github.com/modularml/mojo/issues/290)
 
 ### Parametric Algorithms
 Yes, Mojo provides guaranteed specialization of parametric algorithms like Julia/Rust/C++.
@@ -211,12 +211,15 @@ The best workarounds right now are pretty ugly:
 
 sorry, this is pretty annoying to me too. I really want to get on top of this of course.
 
+[2023-05-28 Github Issue](https://github.com/modularml/mojo/issues/271#issuecomment-1565709849)
 
 ## Syntax 
 ### `let` inside `fn` definitions
 Thank you for filing this. This is known (to me) to not be supported. We have the infrastructure to do this now, but we need to decide whether we want it. There are various folks (incl on this forum) that are proposing that we eliminate `let` declarations to simplify things, and I'd rather resolve that direction before investing more time into let declarations.
 
 Incidentally, this discussion will come up "real soon now" as it is all tangled into the lifetime proposal. This should be coming to the community for discussion in the next two weeks.
+
+[2023-05-29 Github Issue](https://github.com/modularml/mojo/issues/280#issuecomment-1566300145)
 
 ### traits / protocols
 _currently an unimplemented feature_
@@ -317,7 +320,7 @@ The issue with adding the type bultin to Mojo is that we don't have a runtime ty
 This is mostly just a placeholder for now.  This has known problems and will need to be reworked when we get traits/typeclasses/protocols filled in.  Do you have a specific interest/concern in mind?
 One problem with AnyType is that we will need to decide if it is implicitly copyable/movable, if that is trivial, etc.  There are lots of properties we'll want to be able to express elegantly; none of this has been designed, but there is a lot of prior art in rust/swift/haskell/etc.
 
-[discord reply 2023-05-30](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
+[2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
 ## Standard Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
@@ -645,6 +648,8 @@ In terms of "betting on Mojo" right now, we are more focused on building Mojo to
 
 ### What do we call Mojo users?
 I'm fond of mojician 🪄
+
+[2023-05-29 Github Issue](https://github.com/modularml/mojo/discussions/276#discussioncomment-6023971)
 
 ## Open Source
 [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
