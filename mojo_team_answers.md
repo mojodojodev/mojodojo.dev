@@ -647,14 +647,14 @@ Yes, this is in the roadway coming soon, this is actually one of the next major 
 
 ## General
 
-### On OS Kernel development with Mojo
+### OS Kernel Development
 Yeah just to clarify, when modular-ites use the word `kernel` they typically mean high performance numeric kernel which may be targeted at an accelerator or GPU or CPU etc. Secondary meanings are `OS kernel` or `Jupyter kernel`, because the word is overloaded.
 
 Mojo is a general purpose language and can be used to replace C use cases like Rust does etc, but that isn't where we're focusing initial development. That doesn't mean we're excluding it, just that the libraries etc aren't the focus for us to build. We hope the community will be interested in filling that in and building out the use cases in time though.
 
-[Github Issue](https://github.com/modularml/mojo/discussions/302#discussioncomment-6065569)
+[2023-06-02 Github Issue](https://github.com/modularml/mojo/discussions/302#discussioncomment-6065569)
 
-### On Paid Licenses like MATLAB
+### Paid Licenses like MATLAB
 [Plz see the faq](https://docs.modular.com/mojo/faq.html#distribution)
 
 Broadly speaking, we see Mojo as a technology, not a product. We have AI based products, and mojo is something that is very important to those products, but it also stands alone for other uses. Mojo is still young and building the right thing for the long term is the priority for us right now.
@@ -664,7 +664,7 @@ Broadly speaking, we see Mojo as a technology, not a product. We have AI based p
 ### Standard Library Philosophy (batteries included etc.)
 Short answer: there isn't one, yet. You are right that we should develop one, however.
 
-[github discussion 2023-05-31](https://github.com/modularml/mojo/discussions/92#discussioncomment-6042101)
+[2023-05-31 Github Discussion](https://github.com/modularml/mojo/discussions/92#discussioncomment-6042101)
 
 ### Investing in Modular
 There is currently no way to publicly invest in Modular I'm sorry.
