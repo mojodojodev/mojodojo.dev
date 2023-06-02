@@ -72,6 +72,13 @@ export default defineUserConfig({
                                             '/guides/modules/Pointer/Pointer.md',
                                         ]
                                     },
+                                    {
+                                        text: 'Buffer',
+                                        collapsible: true,
+                                        children: [
+                                            '/guides/modules/Buffer/Buffer.md',
+                                        ]
+                                    },
                                     '/guides/modules/Assert.md',
                                     '/guides/modules/Benchmark.md',
                                     '/guides/modules/String.md',
