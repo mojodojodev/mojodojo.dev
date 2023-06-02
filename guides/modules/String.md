@@ -50,7 +50,7 @@ print(utf8[4:8])
 ## Slicing
 
 Print part of the string sting using a slice
-### start:end
+
 Slice from 2 up to 4 non-inclusive:
 
 
@@ -62,7 +62,6 @@ print(s[2:4])
     cd
 
 
-### start:
 Slice all characters starting from 1:
 
 
@@ -73,7 +72,6 @@ print(s[1:])
     bcde
 
 
-### :end
 Slice all characters up to the second last:
 
 
@@ -84,7 +82,6 @@ print(s[:-1])
     abcd
 
 
-### ::n-item
 Only get every second item after the start position:
 
 
