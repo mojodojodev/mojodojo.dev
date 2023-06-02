@@ -522,6 +522,27 @@ JIT performance is generally the same as AOT performance.
 It does take time to compile code, but once you do that, you get generally the same code.
 
 ## Compilation
+
+### [Static Single Assignment](https://en.wikipedia.org/wiki/Static_single-assignment_form)
+Mojo generators happen in SSA form, we haven't enabled full imperative reflection over the MLIR representation, but would like to build towards that. This is the "ultimate python decorator at compile time" after all
+
+[2023-06-02 Discord Reply](https://discord.com/channels/1087530497313357884/1113898580885917786/1113914827988013147)
+
+### MLIR Dialect for Unique Requirements
+I worked on Google TPUs (which have several public architecture papers), I'm familiar with difficult to program accelerators w funky requirements 🙂.
+
+One of the major ideas in Mojo wrt MLIR and hardware is to expose "compiler engineering" to library developers instead of having to hack the compiler. That said, we have great ambitions and plans, and I don't want to get us over our skiis. We need to get lifetimes and traits (and numerous other smaller features) [explained in the roadmap](https://docs.modular.com/mojo/roadmap.html) done before we can go out and play. The architecture is in place though. 
+
+[2023-06-02](https://discord.com/channels/1087530497313357884/1113898580885917786/1113915440587079680)
+
+### Triton Compiler Tech
+Hi njs, GPUs are very important to our work obviously, and we'll have something more to share about that later this year.
+Zooming out though, your point about "Triton had to build a compiler in order to express a new programming model" is really a key observation. One of our goals is to enable building programming models like this `as a library` using the metaprogramming features in the language.
+
+Folks shouldn't have to design an entirely new compiler/EDSL to achieve such a thing
+
+[2023-06-02 Discord Reply](https://discord.com/channels/1087530497313357884/1098713601386233997/threads/1113898580885917786)
+
 ### Producing binaries
 Mojo is built directly on top of existing compiler technologies like LLVM, which means you can produce object files, libraries, and executables (via the CLI). The Mojo Playground environment is different, however, since it uses our JIT.
 
@@ -625,6 +646,21 @@ Having implicit moves is super confusing to many programmers, and makes the erro
 Yes, this is in the roadway coming soon, this is actually one of the next major features that will land.
 
 ## General
+
+### On OS Kernel development with Mojo
+Yeah just to clarify, when modular-ites use the word `kernel` they typically mean high performance numeric kernel which may be targeted at an accelerator or GPU or CPU etc. Secondary meanings are `OS kernel` or `Jupyter kernel`, because the word is overloaded.
+
+Mojo is a general purpose language and can be used to replace C use cases like Rust does etc, but that isn't where we're focusing initial development. That doesn't mean we're excluding it, just that the libraries etc aren't the focus for us to build. We hope the community will be interested in filling that in and building out the use cases in time though.
+
+[Github Issue](https://github.com/modularml/mojo/discussions/302#discussioncomment-6065569)
+
+### On Paid Licenses like MATLAB
+[Plz see the faq](https://docs.modular.com/mojo/faq.html#distribution)
+
+Broadly speaking, we see Mojo as a technology, not a product. We have AI based products, and mojo is something that is very important to those products, but it also stands alone for other uses. Mojo is still young and building the right thing for the long term is the priority for us right now.
+
+[2023-06-02 Discord Reply](https://discord.com/channels/1087530497313357884/1103420074372644916/1113937251576057948)
+
 ### Standard Library Philosophy (batteries included etc.)
 Short answer: there isn't one, yet. You are right that we should develop one, however.
 
