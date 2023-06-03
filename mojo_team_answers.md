@@ -112,10 +112,24 @@ We do really like Rust's error messages, even the way that they're output with s
 ### Sockets
 We haven't invested in building anything here, but you can use all the existing Python libraries in the meantime. We also expect (as a community) to build out a bunch of mojo native libraries over time
 
+### Mojo Types
+Python has types like strings, integers, dictionaries etc. but they all live at runtime, in Mojo you specify what the actual types are which allows the compiler to do way better optimizations, gets rid of the expensive indirections, and gives you code completion. You can progressively adopt types where you want them, but you don't have to use them if you don't want to. Our opinion is not that types are the wrong or right thing, but they're a useful thing.
+
+[2023-06-02 Lex Fridman Interview 31:09](https://youtu.be/pdJQ8iVTwj8?t=1869)
+
+### Dynamic and static typing
+(question was on a scale of Python to Rust)
+
+It's a false dichotomy in my opinion based on how those systems work. Mojo already supports great integration with Python and has a more powerful ownership system than Rust [but lifetimes are not finished yet, so that isn't comparable yet](https://docs.modular.com/mojo/programming-manual.html#argument-passing-control-and-memory-ownership)
+
+Much of the root of the dichotomy comes from fairly opinionated perspectives on "manual control over everything is the 'right' and therefore 'only' way to do things", which forces you into super rigorous programming mode. Our view is a bit more pragmatic: dynamic is good, static is good, use the right tool for the job.
+
+
 ### Complex types
 We have experienced slow and overly complex type systems and too much sugar as you're pointing out. We've learned a lot from it, and the conclusion is "don't do it again". [You can see a specific comment about this at the end of this section](https://docs.modular.com/mojo/notebooks/HelloMojo.html#overloaded-functions-methods)
 
 It's also interesting that Rust et al made similar (but also different) mistakes and have compile time issues scaling. Mojo has a ton of core compiler improvements as well addressing the "LLVM is slow" sorts of issues that "zero abstraction" languages have when expecting LLVM to do all the work for them.
+
 
 ### Ray tracer
 Question: If you can expose tensor core instructions, why not expose ray tracing instructions when you support GPUs? Then this would solve major fragmentation problems in HPC.
@@ -144,13 +158,6 @@ Python has amazing dynamic metaprogramming features, and they translate to beaut
 
 [2023-06-02 Lex Fridman Interview 1:45:20](https://youtu.be/pdJQ8iVTwj8?t=6321)
 
-One of the cool things that Mojo provides is an extremely powerful parametric metaprogramming system (see the language design doc for a brief intro) which allows extending the compiler itself in mojo, so you can invent your own combinators. This is very important, because different accelerators have different cool features and we are not looking for a watered down programming model.
-
-This isn't fully documented yet, and there are a few missing pieces we want to wrap up before doing so, but this provides a pretty different programming model than existing systems.
-
-One way to say this is that Mojo is taking a lot of the power out of the compiler and putting it into libraries, allowing Mojo developers to radically extend the language. Python already has this but does so with super dynamic reflective metaprogramming, so this is an old idea done in a new way
-
-[2023-06-02 Lex Fridman Interview 16:23](https://youtu.be/pdJQ8iVTwj8?t=983)
 
 One of the things that makes Python very beautiful is it's very dynamic and expressive which gives it powerful dynamic metaprogramming features. But you can't use those features on things like a GPU due to performance costs. So we take the interpreter and allow it to run at compile time, allowing compile-time metaprogramming. So now you get Python style expressive API's that enable libraries like PyTorch, and instead of doing it at runtime, we do it at compile time.
 
@@ -160,6 +167,11 @@ It uses an interpreter during compile time.
 
 [2023-06-02 Lex Fridman Interview 16:23](https://youtu.be/pdJQ8iVTwj8?t=983)
 
+One of the cool things that Mojo provides is an extremely powerful parametric metaprogramming system (see the language design doc for a brief intro) which allows extending the compiler itself in mojo, so you can invent your own combinators. This is very important, because different accelerators have different cool features and we are not looking for a watered down programming model.
+
+This isn't fully documented yet, and there are a few missing pieces we want to wrap up before doing so, but this provides a pretty different programming model than existing systems.
+
+One way to say this is that Mojo is taking a lot of the power out of the compiler and putting it into libraries, allowing Mojo developers to radically extend the language. Python already has this but does so with super dynamic reflective metaprogramming, so this is an old idea done in a new way
 
 ### Autotune and adaptive compilation
 Libraries like PyTorch have pushed ML towards an abstract specification of a compute problem, which then gets mapped in a whole bunch of different ways, this is why it has become a metaprogramming problem.
@@ -176,13 +188,6 @@ Instead of having humans go and test all these things with different parameters 
 Yes, you can do this in two ways: first any normal function may be used at compile time.  No need to duplicate all math that works on ints between comptime and not, and no need to explicitly label everything as being constexpr capable
 
 Second, runtime functions are also able to have “parameter results” [documented in the manual here](https://docs.modular.com/mojo/programming-manual.html#autotuning-adaptive-compilation), but it is mainly useful when returning parameterized capabilities from run time functions that are selected through auto tuning. This is an exotic power user feature, not the sort of thing I’d expect most mojo programmers to want to care about
-
-### Dynamic and static typing
-(question was on a scale of Python to Rust)
-
-It's a false dichotomy in my opinion based on how those systems work. Mojo already supports great integration with Python and has a more powerful ownership system than Rust [but lifetimes are not finished yet, so that isn't comparable yet](https://docs.modular.com/mojo/programming-manual.html#argument-passing-control-and-memory-ownership)
-
-Much of the root of the dichotomy comes from fairly opinionated perspectives on "manual control over everything is the 'right' and therefore 'only' way to do things", which forces you into super rigorous programming mode. Our view is a bit more pragmatic: dynamic is good, static is good, use the right tool for the job.
 
 ### Concurrency and parallelism
 We support for async/await syntax in python and have a high performance runtime that enables parallelism. The Matmul notebook online shows some simple examples.
@@ -255,18 +260,13 @@ I want to get magic out of the compilers and put it into the libraries, we can b
 
 [2023-06-02 Lex Fridman Interview 40:08](https://youtu.be/pdJQ8iVTwj8?t=2408)
 
+## Syntax 
 ### Syntactic Sugar
 We want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community. We want to be able to evolve Mojo with Python.
 
 [2023-06-02 Lex Fridman Interview 3:04:28](https://youtu.be/pdJQ8iVTwj8?t=11068)
 
-### Mojo Types
-Python has types like strings, integers, dictionaries etc. but they all live at runtime, in Mojo you specify what the actual types are which allows the compiler to do way better optimizations, gets rid of the expensive indirections, and gives you code completion. You can progressively adopt types where you want them, but you don't have to use them if you don't want to. Our opinion is not that types are the wrong or right thing, but they're a useful thing.
 
-[2023-06-02 Lex Fridman Interview 31:09](https://youtu.be/pdJQ8iVTwj8?t=1869)
-
-
-## Syntax 
 ### `let` inside `fn` definitions
 Thank you for filing this. This is known (to me) to not be supported. We have the infrastructure to do this now, but we need to decide whether we want it. There are various folks (incl on this forum) that are proposing that we eliminate `let` declarations to simplify things, and I'd rather resolve that direction before investing more time into let declarations.
 
