@@ -89,7 +89,7 @@ Only get every second item after the start position:
 print(s[::2]) 
 ```
 
-    mj
+    ace
 
 
 ## Appending
