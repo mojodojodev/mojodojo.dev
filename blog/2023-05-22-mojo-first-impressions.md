@@ -47,9 +47,9 @@ In several aspects, Mojo surpasses the aforementioned languages:
 - Incorporation of `SIMD` at the language level for enhanced hardware control
 - Simpler memory management model than Rust with more control through a lack of implicit `move`
 - Ability to use any existing runtime function at compile time without annotation
-- Special builtins like `autotune` and `search` to optimize for various hardware at compile time
+- Special functions like `autotune` and `search` to optimize for various hardware at compile time
 
-Everything currently implemented is orthogonal, and not just a mixed bag of modern features. The big question mark is the implementation of `traits` a.k.a `protocols` and a syntax to express `lifetimes` which is currently in the works.
+Everything currently implemented is orthogonal, and not just a mixed bag of modern features. The big question mark is the implementation of `traits` also known as `protocols`, and a syntax to express `lifetimes` which is currently in the works.
 
 ### Current State
 My only criticism on the launch would be some of the marketing suggesting that Mojo is currently a superset of Python, to paraphrase Warren Buffet:
