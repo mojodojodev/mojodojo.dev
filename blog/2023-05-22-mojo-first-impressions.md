@@ -6,11 +6,11 @@ author_image: https://mojodojo.dev/hero.png
 excerpt: A user perspective from the first few weeks of Mojo's release
 feed: true
 head:
-  - - meta
-    - name: twitter:card
-      content: summary
-    - name: twitter:site
-      content: mojodojodev
+  - [meta, { name: twitter:card , content: summary }]
+  - [meta, { name: twitter:site , content: '@mojodojodev' }]
+  - [meta, { name: twitter:title , content: Mojo First Impressions }]
+  - [meta, { name: twitter:description , content: "A user perspective from the first few weeks of Mojo's release" }]
+  - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
 ---
 
 # Mojo First Impressions
