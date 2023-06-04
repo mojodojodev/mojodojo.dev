@@ -84,6 +84,7 @@ export default defineUserConfig({
                                     '/guides/modules/String.md',
                                     '/guides/modules/TargetInfo.md',
                                     '/guides/modules/Time.md',
+                                    '/guides/modules/Sort.md',
                                 ]
                             }
                         ],
