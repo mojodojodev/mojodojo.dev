@@ -52,24 +52,17 @@ Yes, Python packages perform cyclic imports and we had to support that. We will 
 ### Enums
 We like Swift enums so Mojo enums will probably become more feature complete over time. Enums are a different thing entirely to types, but they're basically just aliases for compile-time values.
 
-### Pointers
-Mojo has an unsafe `Pointer` struct vended by the standard library for folks who know what they are doing.
-
 ### Unsafe Code
-Mojo is (should be) safe by default, and if you want to go low-level or hacky, Mojo provides powerful tools for that as well.
+Mojo is safe by default, but if you want to go low-level Mojo provides powerful tools, a Rust style `unsafe` block in our opinion has not been an aggregate win, it built a lot of distrust and negative feelings, even though the standard library is built on top of unsafe APIs. We prefer Swift's approach to show that an API is unsafe through naming, for example we should rename the Mojo `Pointer` to `UnsafePointer`, instead of propagating an effect that the user has to manage. Unsafe code in Rust also makes it easy to unknowingly expose Undefined Behaviour (UB) when interacting with the borrow checker if you don't follow the rules, we make different tradeoffs to expose less potential UB when writing unsafe code.
 
-I think that Swift got it basically right in this case.  I don't think that a rust-style 'unsafe' block is (in aggregate) a win.  Rust (in my opinion) ended up building a lots of distrust and negative feeling around 'unsafe', even though effectively all safe apis (e.g. Array) are built on top of unsafe apis (e.g. UnsafePointer)
-Swift's approach was to make it clear in the API when something was unsafe (e.g. name the thing UnsafePointer, not Pointer) which I think is important, but don't define an effect that needs to get propagated around and managed by the user.
+- [2023-05-19 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1108969825008615475)
+- [2023-05-09 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1105161023218008094/1105223842605039626)
+- [Talk on unsafe Rust UB](https://youtu.be/DG-VLezRkYQ)
 
-I'm also not entirely familiar with the Rust decisions around unsafe + borrow checker.  We are making pretty different tradeoffs in the borrow checker, and it is possible they expose a lot more UB than we will.  We'll see though, need to build things out more.
+### Loose Typing
+This is an evolving part of the language and likely another difference we pull into the `fn` vs `def` world, in a `def` we could default to getting objects for literals, but within a `fn` you get typed literals. Another potential solution is to have aggressive decay rules in `def` e.g. `True` starts out being typed to `Bool` but we allow decaying to object when an expression doesn't type check otherwise. We'll need to experiment with that when we make progress on other more basic things. The major reason to have both `def` and `fn` is to have a Python compatible world and a stricter systems programmer world, and have them coexist seamlessly.
 
-The unsafe block /changes the semantics of code that is also valid in a safe block/ which we will not be doing.
-
-Rust has more UB than C in unsafe because it always assume pointers do not alias. [Here's an example of a talk on it](https://youtu.be/DG-VLezRkYQ)
-
-> The standard Pointer is very unsafe and can lead catastrophic scenarios
-
-I agree, the Mojo Pointer type is currently "too sharp and pointy" 😀. In my opinion, we should rename it to `UnsafePointer` and make some other changes to make it not have to be something that people reach for immediately, just like in C++ or Rust you should use higher level collections, and not jump right to unsafe features.
+[2023-06-05 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1114818534946648165/1114971056671838350)
 
 ### Float Literals
 `FloatLiteral` is backed by `F64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
@@ -178,8 +171,6 @@ Hardware systems and algorithms are really complicated, most programmers don't w
 Instead of having humans go and test all these things with different parameters which can grow to complex multidimensional spaces, why don't we have computers do that for us. So you can specify different options and have the compiler empirically test what the fastest implementation is for the target you're compiling to.
 
 [2023-06-02 Lex Fridman Interview 21:02](https://youtu.be/pdJQ8iVTwj8?t=1262)
-
-
 
 ### Compile time function results
 Yes, you can do this in two ways: first any normal function may be used at compile time.  No need to duplicate all math that works on ints between comptime and not, and no need to explicitly label everything as being constexpr capable
@@ -715,8 +706,6 @@ The mojo compiler has a number of internal dialects, including `pop` and `kgen`,
 Mojo's compiler is not going to be magic. If you write matmul as a triply nested for loop, you will get a triply nested for loop on all hardwares (barring LLVM optimizations).
 
 The general idea is that Mojo's compiler is not going to perform some magic to optimize the code you are generating, but the language provides all the facilities to write that magic in a portable way as just Mojo code. Today, that magic is bundled into a handful of higher-order functions, like parallelize and vectorize_unroll, and as time continues, Mojo will ship with more "batteries" that mean most developers won't have to worry about SIMD, unrolling, etc. You just need to slap a few decorators on your functions/loops and call a function.
-
-
 
 ## Lifetimes, ownership, borrow checking
 ### Ownership System
