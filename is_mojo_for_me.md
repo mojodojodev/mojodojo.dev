@@ -1,6 +1,15 @@
+---
+head:
+  - [meta, { name: twitter:card , content: summary }]
+  - [meta, { name: twitter:site , content: '@mojodojodev' }]
+  - [meta, { name: twitter:title , content: Is Mojo for Me }]
+  - [meta, { name: twitter:description , content: "Should you start learning Mojo, or learn more about Python, AI/ML, and hardware?" }]
+  - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
+---
+
 # Is Mojo for me?
 ## I'm a beginner programmer
-No, Mojo is not aimed towards beginners, Python is a great choice for a first language and dominates fields like data science and Deep Learning (DL), which is the field responsible for rapid advancements in AI/ML such as Stable Diffusion and ChatGPT.
+Mojo is not aimed towards beginners, Python is a great choice for a first language and dominates fields like data science and Deep Learning (DL), which is the field responsible for rapid advancements in AI/ML such as Stable Diffusion and ChatGPT.
 
 Mojo is a language focused on addressing the main limitation of Python, which is the lack of low-level control to optimize performance, a problem that doesn't concern beginner programmers.
 
