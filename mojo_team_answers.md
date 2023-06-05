@@ -1,5 +1,5 @@
 # Mojo Team Answers
-The best place to learn about Mojo is [the official docs](https://docs.modular.com/mojo/), in particular the introduction of [why mojo?](https://docs.modular.com/mojo/why-mojo.html) which will give more context to the answers below.
+The best place to learn about Mojo is [the official docs](https://docs.modular.com/mojo/), [why mojo?](https://docs.modular.com/mojo/why-mojo.html) will give more context to the answers below, and the [official FAQ]()
 
 These answers are collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
 
@@ -7,14 +7,6 @@ To check when new answers are added, you can follow [This Week in Mojo](/this_we
 
 ## Language Features
 ### General
-There are many theoretical features we could add to Python to make it better in various ways, but we're resisting the urge. We want Mojo to be a good member of the Python community, and the systems programming features and compatibility features need a lot continued development.
-
-Syntactic sugar is fun and can be exciting, but it is also dangerous, and I'd personally prefer we avoid it completely unless it is extremely highly motivated by the core use case (accelerators, systems programming etc) that Python doesn't already service.
-
-Yes, as the core mojo language evolves, we expect more pure-mojo code to be used in practice, and less compatibility-cpython code. This will happen progressively over time, one analogy of this can be seen in the Swift community: in that case, Swift was adopted first by apps and "rewrites of core infra" happened asynchronously where there was value to doing so.
-
-As we explain in the launch video, our immediate focus is on accelerators and ML kernels etc, we'll scale up to C++ use cases, and then to the full python enchilada, this will take time, but certainly not 10 years 😉
-
 ### Keyword Arguments
 Mojo doesn’t support keyword arguments yet, this is important but hasn’t been prioritized just because it is “syntax sugar”
 
@@ -57,7 +49,7 @@ Mojo is safe by default, but if you want to go low-level Mojo provides powerful 
 
 - [2023-05-19 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1108969825008615475)
 - [2023-05-09 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1105161023218008094/1105223842605039626)
-- [Talk on unsafe Rust UB](https://youtu.be/DG-VLezRkYQ)
+- [YouTube: Unsafe Rust Undefined Behavior (not Modular staff)](https://youtu.be/DG-VLezRkYQ)
 
 ### Loose Typing
 This is an evolving part of the language and likely another difference we pull into the `fn` vs `def` world, in a `def` we could default to getting objects for literals, but within a `fn` you get typed literals. Another potential solution is to have aggressive decay rules in `def` e.g. `True` starts out being typed to `Bool` but we allow decaying to object when an expression doesn't type check otherwise. We'll need to experiment with that when we make progress on other more basic things. The major reason to have both `def` and `fn` is to have a Python compatible world and a stricter systems programmer world, and have them coexist seamlessly.
@@ -243,6 +235,11 @@ sorry, this is pretty annoying to me too. I really want to get on top of this of
 
 [2023-05-28 Github Issue](https://github.com/modularml/mojo/issues/271#issuecomment-1565709849)
 
+### Arbitrary Precision Literals
+We don't have support for arbitrary precision literals yet, but we have ideas on that.
+
+[2023-06-05 Github Issue](https://github.com/modularml/mojo/issues/318#issuecomment-1575656080)
+
 ### Built in types like C++ `int`
 I want to get magic out of the compilers and put it into the libraries, we can build an `Int` that's beautiful and has an amazing API and does all the things you expect an integer to do, but maybe you don't like it and want to build a `BigInt`, you can do that and it's not a second class citizen. This is opposed to a language like C++ where the builtins have special promotion rules and other things that are hacked into the compiler.
 
@@ -250,7 +247,10 @@ I want to get magic out of the compilers and put it into the libraries, we can b
 
 ## Syntax 
 ### Syntactic Sugar
-We want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community. We want to be able to evolve Mojo with Python.
+Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
+
+Syntactic sugar is fun and can be exciting, but it is also dangerous, and I'd personally prefer we avoid it completely unless it is extremely highly motivated by the core use case (accelerators, systems programming etc) that Python doesn't already service.
+
 
 [2023-06-02 Lex Fridman Interview 3:04:28](https://youtu.be/pdJQ8iVTwj8?t=11068)
 
@@ -369,36 +369,44 @@ One problem with AnyType is that we will need to decide if it is implicitly copy
 
 [2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
-## Standard Python
+## Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
+
+### CPython Major Updates
+Just like when the C or C++ committee adds a new feature to their languages, Clang fast follows. Mojo will follow the same model.
+
+[2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103190423033356348/1103190904031944735)
 
 ### Compatibility
 The end goal of Mojo is to be a proper superset of Python. That's not what Mojo is today, but that's what it is designed to become and that is what we're working towards.
 
-All Mojo code is compiled by the mojo compiler, including code that happens to be syntactically identical (by design) to Python. The CPython implementation comes in when you import a CPython module into an object. That is exactly a CPython object with exactly the same runtime representation, and uses the CPython interpreter to implement support for it, by using the PyCall and PyAddRef etc apis under the hood.
+All Mojo code is compiled by the Mojo compiler, including code that happens to be syntactically identical to Python. The CPython implementation comes in when you import a CPython module into an object. That is exactly a CPython object with exactly the same runtime representation, and uses the CPython interpreter to implement support for it, by using the PyCall and PyAddRef etc. APIs under the hood.
 
-[Plz check out this for an example](https://docs.modular.com/mojo/notebooks/Mandelbrot.html)
+Also, we don't see Mojo as different than Python. Mojo is a member of the Python family just like PyPy, IronPython and many others are members of the family, we're very happy to be able to work directly with the smart folk who have built Python 3 into such a beautiful thing.
 
-Just like when the c or c++ committee adds a new feature to their languages, Clang fast follows. Same model.
+We will support all of the complicated Python implementation details, but it will not be the default implementation for Mojo `struct` and `fn`. There will be different levels of dynamism, on one hand we will have the full Python descriptor hashtable dynamism and on the other hand we will have regular virtual classes with vtables.
 
-Also, we don't see Mojo as different than Python. Mojo is a member of the Python family just like PyPy, IronPython and many others are members of the family.
+There are many theoretical features we could add to Python to make it better in various ways, but we're resisting the urge. We want Mojo to be a good member of the Python community, and the systems programming features and compatibility features need a lot continued development.
 
-we're very happy to be able to now work directly with the smart folk who have built Python 3 into such a beautiful thing.
+As the core mojo language evolves, we expect more pure-mojo code to be used in practice, and less compatibility-cpython code. This will happen progressively over time, for example Swift was adopted first by apps, rewrites of core infra happened asynchronously where there was value to doing so.
 
-We will implement all of that weird Python stuff, but it will not be the default implementation for Mojo classes and types. There will be different levels of dynamism, on one hand we will have the full Python descriptor hashtable dynamism and on the other hand we will have regular virtual classes with vtables.
+Our immediate focus is on accelerators and ML kernels etc, we'll scale up to C++ use cases, and then to the full Python enchilada, this will take time, but certainly not 10 years 😉
+
+Now you can't ignore C extensions, MLIR and compilers can do more than one thing and so we can talk to other ABIs and handle other layout constraints. We haven't built a proper API to talk to CPython extensions directly from Mojo subsystem, but when we do, it will have a GIL because C extensions require it.
+
+- [2023-05-09 Discord Tim Davis](https://discord.com/channels/1087530497313357884/1105324004513959978/1105340866148708432)
+- [2023-05-04 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103401693238013952/1103403116109516832)
+- [2023-05-17 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1108140099012673626/1108190672139329536)
+- [2023-06-02 Lex Fridman Interview 1:37:56](https://youtu.be/pdJQ8iVTwj8?t=5874)
+- [Mandelbrot Example](https://docs.modular.com/mojo/notebooks/Mandelbrot.html)
 
 ### Python using Mojo code
-We learnt a bunch of tricks along the way converting an entire community of programmers from Objective-C to Swift, we built a lot of machinery to deeply integrate with the Objective-C runtime, we're doing the same thing with Python. When a new library gets built in Mojo people should be able to use it in Python. We need to vend Python interfaces to the Mojo types, that's what we did in Swift and it worked great, it's a huge challenge to implement for the compiler people, but it benefits millions of users and really helps adoption.
+We learnt a bunch of tricks along the way converting an entire community of programmers from Objective-C to Swift, we built a lot of machinery to deeply integrate with the Objective-C runtime, we're doing the same thing with Python. When a new library gets built in Mojo people should be able to use it from Python. We need to vend Python interfaces to the Mojo types, that's what we did in Swift and it worked great, it's a huge challenge to implement for the compiler people, but it benefits millions of users and really helps adoption.
 
 [2023-06-02 Lex Fridman Interview 1:53:29](https://youtu.be/pdJQ8iVTwj8?t=6809)
 
-### CPython Interop
-We use the CPython existing interpreter which runs Python bytecode, Mojo uses the CPython objects to make it fully compatible, as well as the ability to use all the C packages, so Mojo keeps the objects in that representation when they're coming from CPython.
-
-[2023-06-02 Lex Fridman Interview 1:37:56](https://youtu.be/pdJQ8iVTwj8?t=5874)
-
 ### Speedup moving from CPython to Mojo
-Interpreters have an extra layer of bytecode that they have to go and read and interpret, and it makes them slow from this perspective. The first thing that converting your code to Mojo does is get a 2x to 10x speedup without changing the code.
+Interpreters have an extra layer of bytecode that they have to read and interpret, and it makes them slow from this perspective. Converting your code to Mojo does gets a 2-10x speedup out of the gate without doing anything fancy, we haven't put any effort into optimizing untyped code yet.
 
 In Python everything's an object, the memory layout of all objects is the same, so you're always passing around a pointer to the data which has overhead from allocation and reference counting, so you can move that out of the heap and into registers and that's another 10x speedup. 
 
@@ -406,47 +414,46 @@ Modern CPU's allow you to do Single Instruction Multiple Data (SIMD) to run the 
 
 Python also has the Global Interpret Lock (GIL) due to reference counting and other implementation details, in Mojo you can take direct advantage of threads. 
 
-There's even more performance improvements via things like memory hierarchy etc. Mojo allows you to take advantage of all these powerful things that have been built into hardware over time.
+There's even more performance improvements via things like memory hierarchy, autotuning to use the optimal vector size on your target, Mojo allows you to take advantage of all these powerful things that have been built into hardware over time.
 
-[2023-06-02 Lex Fridman Interview 22:21](https://youtu.be/pdJQ8iVTwj8?t=1521)
+If you care about performance you can incrementally move Python to Mojo and you adopt new features for performance, but only if you care about performance! If you don't, hack on and do so without caring, and all is well.
 
-### Implementation Details
-You're quite right about CPython.  Mojo takes a different implementation approach: ignoring C extensions for a moment, the core compilation model for mojo is to compile to native code, and use ownership optimizations, and more modern data layout approaches to avoid heap boxing all the things, and therefore reference counting them.  In CPython for example, a lot of reference counting traffic is required for simple integers and short strings etc.
+- [2023-05-17 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1108140099012673626/1108190672139329536)
+- [2023-06-02 Youtube Chris lattner](https://youtu.be/pdJQ8iVTwj8?t=1521)
 
-Mojo solves this in several ways:
-1. compilers: you get a lot of performance by not going through an interpreter, using register allocation etc.
-2. unboxing things: our default "object" is still naive in many ways, but has inline storage + variant for small types like integers to avoid indirections, refcount overhead, etc. 
-3. types like Int are put in cpu registers etc, which give a massive performance uplift vs that.
-
-Now you can't ignore CPython and can't ignore c extensions.  Good news, MLIR and compilers can do more than one thing :), and so we can talk to other ABIs and handle other layout constraints.  We haven't built a proper "talk to c python extensions" directly from Mojo subsystem, but when we do, __it__ will have a GIL because c extensions require it, just as you say.
-
-Similarly, when you import a cpython module, you get the cpython interpreter in the loop, which has a gil (and its datalayout etc) implicitly.
-
-The cool thing about mojo is that you don't pay this overhead in pure Mojo code, so if you care about performance you can incrementally move Python code -> Mojo and you can adopt new features for performance ... but only if you care about performance!  If you don't, hack on and do so without caring, and all is well.
 
 ### Runtime specialization
-Right now it’s jit just provides compilation, not runtime specialization or adaptive compilation. We can add that, but our goal isn’t to make dynamic code static w runtime information, it is to allow people to express static code as static
+Right now the JIT just provides compilation, not runtime specialization or adaptive compilation. We can add that, but our goal isn’t to make dynamic code static with runtime information, it's to allow people to express static code as static.
 
-### Cost to CPython library calls
-I don’t expect major concerns here. Notably we don’t need to be compatible with the python c api, so many challenges are defined away by that. A major challenge with python is that it only has “one static type” (which has no explicit spelling, and is therefore explicit) which always refers to a CPython runtime object. This is why, for example, all integers and floating point values must be boxed into a python object value. Mojo solves that by having more than one static type, so it can reason about the fact that `int` and `Int` are very different animals at runtime, even through they are efficiently convertible between them.
+- [2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1105494308091600997)
 
-### Moving Vanilla Python to Mojo
-My expectation is maybe something like 5-10x faster, but not 5000x faster. It's still very early and we haven't put any effort into optimizing untyped code, but we're already seeing mojo run untyped code 8x-ish faster than cpython. Just because we have a compiler instead of an interpreter.  We're not doing anything fancy.
+### Performance Cost for CPython library calls
+I don’t expect major concerns here. Notably we don’t need to be compatible with the Python C API, so many challenges are defined away by that. A major challenge with Python is that it only has one static type, which has no explicit spelling, and is therefore explicit, and refers to a CPython runtime object. This is why, for example, all integers and floating point values must be boxed into a python object value. Mojo solves that by having more than one static type, so it can reason about the fact that `int` and `Int` are very different animals at runtime, even through they are efficiently convertible between them.
+
+- [2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1105494308091600997)
 
 ### Global Interpreter Lock (GIL)
-Like most other languages, Mojo just doesn't have a GIL. 🙂
-Mojo is a completely new language, and is built with all new compiler and runtime technologies underneath it. It isn't beholden to existing design decisions in Python, but we've learned a lot from Python and want to be a good member of the Python community
+Like most other languages, Mojo just doesn't have a GIL 🙂. Mojo is a completely new language, and is built with all new compiler and runtime technologies underneath it. It isn't beholden to existing design decisions in Python, but we've learned a lot from Python and want to be a good member of the Python community
 
-Yes, code run with CPython runs the same way that CPython does (for both better and worse) you have to move it to Mojo to get the performance and deployability advantages that Mojo brings. It is still amazingly useful!
+However imported Python modules run the same way that CPython does, and you have to move it to Mojo to get the performance and deployability advantages that Mojo brings.
 
-### Existing libraries
-Yep, they already just work, Check the website or the demo in the launch video from Jeremy Howard. [Also potentially interesting](https://docs.modular.com/mojo/programming-manual.html#python-integration)
+- [2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103067225600049243/1103067483939807302)
+- [2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103006101261267004/1103006421240528956)
+
+### Existing Python libraries
+Yes, all existing Python libraries run in Mojo through the builtin CPython interpreter.
+
+- [Mojo Programming Manual Python Integration](https://docs.modular.com/mojo/programming-manual.html#python-integration)
 
 ### Classes
 You can import python packages and use their classes, you just can't define your own in Mojo yet.
 
+- [2023-05-05](https://discord.com/channels/1087530497313357884/1098713601386233997/1103837984391954442)
+
 ### `object` type in Mojo
 It's a struct that wraps a pointer to a CPython object
+
+[2023-05-11](https://discord.com/channels/1087530497313357884/1106110477228048546/1106132610410893362)
 
 ### Type Erasure for Python Support
 This currently doesn't work as it does in Python due to `a` inferring the `int` type and raising an error when changing type:
@@ -706,6 +713,11 @@ The mojo compiler has a number of internal dialects, including `pop` and `kgen`,
 Mojo's compiler is not going to be magic. If you write matmul as a triply nested for loop, you will get a triply nested for loop on all hardwares (barring LLVM optimizations).
 
 The general idea is that Mojo's compiler is not going to perform some magic to optimize the code you are generating, but the language provides all the facilities to write that magic in a portable way as just Mojo code. Today, that magic is bundled into a handful of higher-order functions, like parallelize and vectorize_unroll, and as time continues, Mojo will ship with more "batteries" that mean most developers won't have to worry about SIMD, unrolling, etc. You just need to slap a few decorators on your functions/loops and call a function.
+
+### Compiler Guidance
+Mojo already gives a couple warnings that suggest better things to do, such as using `let` instead of `var` where possible. That said, the compiler isn't good at pointing out larger design pattern changes, for this I think we'll have LLM based tools outside the compiler itself. The UI is much better for explaining things in that context.
+
+[2023-06-05 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/323#discussioncomment-6084627)
 
 ## Lifetimes, ownership, borrow checking
 ### Ownership System
