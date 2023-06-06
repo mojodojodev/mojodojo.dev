@@ -180,8 +180,6 @@ We'll need to build this out over time, if you're not familiar with it, you migh
 
 [You can read about the swift prior art here](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
 
-We have a super strong story here, check out the launch demo and [matmul notebook](), Jeremy shows a simple example there. We also fully support async/await like Python etc.
-
 ### Async keywords
 Python has async def, async with, and async for.
 
