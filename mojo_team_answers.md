@@ -243,6 +243,21 @@ I want to get magic out of the compilers and put it into the libraries, we can b
 
 [2023-06-02 Lex Fridman Interview 40:08](https://youtu.be/pdJQ8iVTwj8?t=2408)
 
+### Struct Memory Layout C Compatibility
+I agree that an opt-in decorator that specifies layout is the right way to go. By default the compiler should be able to reorder fields to eliminate internal padding so programmers don't have to worry about this, but people putting bits on a wire or dealing with c compatibility should be able to get that. We will need to properly design this out.
+
+[2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
+
+### Int Provenance
+Ints and pointers are different things, so no ints don't carry provenance. This is one of the major things that C/C++ got wrong that has haunted LLVM IR and many other things for a long time. Taking a hard line on this makes everything simpler, but that is only possible when you have a fresh slate like Mojo provides us.
+
+[2023-06-06 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1115452333074153653)
+
+### Float8
+There are so many variants of Float8 representation. We need to think about which ones does Mojo represents and how to expose the variety. For now, we are removing Float8 from the DType list to avoid folks from falling into this trap.
+
+[2023-06-04 Github Abdul Dakkak](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
+
 ## Syntax 
 ### Syntactic Sugar
 Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
@@ -263,7 +278,7 @@ Incidentally, this discussion will come up "real soon now" as it is all tangled 
 ### traits / protocols
 _currently an unimplemented feature_
 
-We don't have a final name here, Guido recommended that `Protocols` as term of art in python already, but we'll need to loop back around and make a decision when we get there.
+We don't have a final name here, Guido recommended that `Protocols` as term of art in Python already, but we'll need to loop back around and make a decision when we get there.
 
 ### `help` builtin
 On the implementation, we'll need some work to build out `help(object)` and `help(Int)` (where Int is a struct, not a class).  I don't see us prioritizing that in the next month or so, but it is super important for us to do that over time.  We have ways to do that without adding a field to Int 🙂 etc, so that should be fine. It depends on Traits/Protocols which is on our roadmap
@@ -367,13 +382,10 @@ One problem with AnyType is that we will need to decide if it is implicitly copy
 
 [2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
+
+
 ## Python
-The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#mojo-as-a-member-of-the-python-family) page, the below adds some context.
-
-### CPython Major Updates
-Just like when the C or C++ committee adds a new feature to their languages, Clang fast follows. Mojo will follow the same model.
-
-[2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103190423033356348/1103190904031944735)
+The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#a-member-of-the-python-family).
 
 ### Compatibility
 The end goal of Mojo is to be a proper superset of Python. That's not what Mojo is today, but that's what it is designed to become and that is what we're working towards.
@@ -396,7 +408,7 @@ Now you can't ignore C extensions, MLIR and compilers can do more than one thing
 - [2023-05-04 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103401693238013952/1103403116109516832)
 - [2023-05-17 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1108140099012673626/1108190672139329536)
 - [2023-06-02 Lex Fridman Interview 1:37:56](https://youtu.be/pdJQ8iVTwj8?t=5874)
-- [Mandelbrot Example](https://docs.modular.com/mojo/notebooks/Mandelbrot.html)
+- [Mojo using Python: Mandelbrot Example](https://docs.modular.com/mojo/notebooks/Mandelbrot.html)
 
 ### Python using Mojo code
 We learnt a bunch of tricks along the way converting an entire community of programmers from Objective-C to Swift, we built a lot of machinery to deeply integrate with the Objective-C runtime, we're doing the same thing with Python. When a new library gets built in Mojo people should be able to use it from Python. We need to vend Python interfaces to the Mojo types, that's what we did in Swift and it worked great, it's a huge challenge to implement for the compiler people, but it benefits millions of users and really helps adoption.
@@ -429,6 +441,18 @@ Right now the JIT just provides compilation, not runtime specialization or adapt
 I don’t expect major concerns here. Notably we don’t need to be compatible with the Python C API, so many challenges are defined away by that. A major challenge with Python is that it only has one static type, which has no explicit spelling, and is therefore explicit, and refers to a CPython runtime object. This is why, for example, all integers and floating point values must be boxed into a python object value. Mojo solves that by having more than one static type, so it can reason about the fact that `int` and `Int` are very different animals at runtime, even through they are efficiently convertible between them.
 
 - [2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1105494308091600997)
+
+
+### CPython Major Updates
+Just like when the C or C++ committee adds a new feature to their languages, Clang fast follows. Mojo will follow the same model.
+
+[2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103190423033356348/1103190904031944735)
+
+### Integer Overflow on `object` (Mojo untyped object)
+It needs to eventually provide full Python semantics, so we'll need `object` to contain a `PythonObject` in its variant. We could overflow from inline `int` to Python object on demand.
+
+[2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/issues/328#issuecomment-1579468329)
+
 
 ### Global Interpreter Lock (GIL)
 Like most other languages, Mojo just doesn't have a GIL 🙂. Mojo is a completely new language, and is built with all new compiler and runtime technologies underneath it. It isn't beholden to existing design decisions in Python, but we've learned a lot from Python and want to be a good member of the Python community
@@ -521,6 +545,36 @@ But to your meta point, yes, I fully expect Mojo to be >> C++ for our usecases a
 
 ### Global Variables
 Both `def` and `fn` cannot access variables outside their scope because Mojo as a language doesn't actually have proper global variables yet. This is a known missing feature.
+
+### Boolean on SIMD types
+The way to do this is by explicitly calling the bool method later:
+```mojo
+struct MyPair:
+    var first: Float32
+    var second: Float32
+
+    fn __lt__(self, rhs: MyPair) -> Bool:
+        return (
+            self.first < rhs.first
+            or (self.first == rhs.first and self.second < rhs.second)
+        ).__bool__()
+```
+
+We could add `SIMD[DType.bool, 1]` as an initializer to the `Bool` type, but cannot do that currently because `Bool` is a builtin type while `SIMD` is not. We need to think about this and have a library-based solution.
+
+[2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/335)
+
+### `String` supporting UTF-8
+We want to enhance the `String` type to support UTF-8 encoding before starting work on file system.
+
+[2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/306#issuecomment-1579268808)
+
+
+### Mutable and explicit types when iterating over collections
+This was noted as a known `sharp edge` in the [roadmap & sharp edges](https://docs.modular.com/mojo/roadmap.html) document. The behaviour here is definitely subject to change, maybe syntax like `for var i in range(3)` but I don't have a strong opinion.
+
+[2023-06-07 Github Jeff Niu](https://github.com/modularml/mojo/issues/331#issuecomment-1579122472)
+
 
 ## Language comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
@@ -854,9 +908,12 @@ The thing that will most help adoption is you don't have to rewrite all your Pyt
 [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
 
 ### Running Locally
-A lot of the feedback we've received is that people want to run it locally, so we're working on that right now, we just want to make sure we do it right.
+A lot of the feedback we've received is that people want to run it locally, so we're working on that right now, we just want to make sure we do it right. Should be in the next `O(few months)` as of 2023-06-06.
 
 [2023-06-02 Lex Fridman Interview 2:21:56](https://youtu.be/pdJQ8iVTwj8?t=8516)
+
+[2023-06-06 Github Chris Lattner](https://github.com/modularml/mojo/discussions/327#discussioncomment-6095594)
+
 
 ### Releasing Source Code
 When we launched Swift, we had worked on it for four years in secrecy, we launched at a big event saying developers would be able to deploy code using Swift to the app store in 3 months. We had way more bugs than we expected, it wasn't actually production quality, and it was extremely stressful and embarrassing. Pushing major versions became super painful and stressful for the engineering team, and the community was very grumpy about it, there was a lot of technical debt in the compiler. I don't want to do that again, we're setting expectations saying don't use this for production yet, we'll get there but lets do it in the right way. We want to build the worlds best thing, if we do it right and it lifts the industry it doesn't matter if it takes an extra two months. Doing it right and not being overwhelmed with technical debt is absolutely the right thing to do.
