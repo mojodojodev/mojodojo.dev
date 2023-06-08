@@ -95,7 +95,7 @@
             ]
         },
         "builtin-types": {
-            "match": "(?x)\n  (?<!\\.) \\b(\n    bool | bytearray | bytes | classmethod | complex | dict\n   | Int | UI8 | UI16 | UI32 | UI64 | SI8 | String\n      | SI16 | SI32 | SI64 | UI32 | UI64 | Bool\n     | F8 | F32 | F43 | address | index | invalid\n     | float | frozenset | int | list | object | property\n    | set | slice | staticmethod | str | tuple | type\n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n",
+            "match": "(?x)\n  (?<!\\.) \\b(\n    bool | bytearray | bytes | classmethod | complex | dict\n   | Int | UInt8 | UInt16 | UInt32 | UInt64 | Int8 | String\n      | Int16 | Int32 | Int64 | UInt32 | UInt64 | Bool\n     | F8 | Float32 | F43 | address | index | invalid\n     | float | frozenset | int | list | object | property\n    | set | slice | staticmethod | str | tuple | type\n\n    (?# Although 'super' is not a type, it's related to types,\n        and is special enough to be highlighted differently from\n        other built-ins)\n    | super\n  )\\b\n",
             "name": "support.type.python"
         },
         "call-wrapper-inheritance": {

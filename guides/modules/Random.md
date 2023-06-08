@@ -73,7 +73,7 @@ print(p1.simd_load[8](0))
 
 ## random_f64
 
-Returns a single random `F64` value within a specified range e.g 0.0 to 1.0.
+Returns a single random `Float64` value within a specified range e.g 0.0 to 1.0.
 
 
 ```mojo
@@ -86,7 +86,7 @@ print(random_f64(0.0, 1.0))
 
 ## random_si64
 
-Returns a single random `SI64` value within a specified range e.g -10 to +10.
+Returns a single random `Int64` value within a specified range e.g -10 to +10.
 
 
 ```mojo
@@ -99,7 +99,7 @@ print(random_si64(-10, 10))
 
 ## random_ui64
 
-Returns a single random `UI64` value within a specified range e.g 0 to 10.
+Returns a single random `UInt64` value within a specified range e.g 0 to 10.
 
 
 ```mojo

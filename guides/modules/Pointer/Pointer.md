@@ -24,8 +24,8 @@ Create a struct and use that as the type for the pointer
 
 ```mojo
 struct Coord:
-    var x: UI8 
-    var y: UI8
+    var x: UInt8 
+    var y: UInt8
 ```
 
 
@@ -84,8 +84,8 @@ Take note of the above error, a `memory-only` type means it can't be passed thro
 ```mojo
 @register_passable
 struct Coord:
-    var x: UI8 
-    var y: UI8
+    var x: UInt8 
+    var y: UInt8
 ```
 
 Now we'll be able to use Python syntax to access objects of type `Coord`:

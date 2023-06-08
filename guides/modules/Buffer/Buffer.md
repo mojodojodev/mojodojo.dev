@@ -139,7 +139,7 @@ print(x.bytecount())
 
 
 ## aligned_simd_store
-Some registers work better with different alignments e.g. AVX-512 performs better with 64 bit alignment, so you might want padding for a type like a UI32
+Some registers work better with different alignments e.g. AVX-512 performs better with 64 bit alignment, so you might want padding for a type like a UInt32
 
 
 ```mojo
@@ -150,7 +150,7 @@ x.aligned_simd_store[8, 8](0, 5)
 
 
 ## aligned_simd_load
-Some registers work better with different alignments e.g. AVX-512 performs better with 64 bit alignment, so you might want padding for a type like a UI32
+Some registers work better with different alignments e.g. AVX-512 performs better with 64 bit alignment, so you might want padding for a type like a UInt32
 
 
 ```mojo

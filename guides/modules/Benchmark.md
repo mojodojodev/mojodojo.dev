@@ -42,7 +42,7 @@ fn bench():
 
     let nanoseconds = Benchmark().run[closure]()
     print("Nanoseconds:", nanoseconds)
-    print("Seconds:", F64(nanoseconds) / 1e9)
+    print("Seconds:", Float64(nanoseconds) / 1e9)
 
 bench()
 ```

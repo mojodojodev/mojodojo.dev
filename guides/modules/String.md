@@ -1,7 +1,7 @@
 ---
 title: String
 categories: String
-usage: Mutable String with DynamicVector[SI8] as the underlying data type
+usage: Mutable String with DynamicVector[Int8] as the underlying data type
 ---
 
 # String
@@ -204,10 +204,10 @@ print(ord('🔥'))
 
 
 ## Conversions
-### To `DynamicVector[SI8]`
+### To `DynamicVector[Int8]`
 
 
-In Mojo a string is backed by a `DynamicVector[SI8]`, which you can access via the `buffer` member variable:
+In Mojo a string is backed by a `DynamicVector[Int8]`, which you can access via the `buffer` member variable:
 
 
 ```mojo
@@ -231,13 +231,13 @@ buffer = ""
     
 
 
-### From `DynamicVector[SI8]`
+### From `DynamicVector[Int8]`
 
 
 ```mojo
 from Vector import DynamicVector
 
-var x = DynamicVector[SI8](4)
+var x = DynamicVector[Int8](4)
 x.push_back(109)
 x.push_back(111)
 x.push_back(106)

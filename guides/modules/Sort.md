@@ -1,7 +1,7 @@
 ---
 title: Sort
 categories: Sort
-usage: "Sorts a DynamicVector[Int]"
+usage: "Sorts a DynamicVector[Int] inplace, in ascending order"
 ---
 # sort
 
@@ -17,21 +17,7 @@ let v = DynamicVector[Int](3)
 v.push_back(20)
 v.push_back(10)
 v.push_back(70)
-```
 
-
-```mojo
-for i in range(v.size):
-    print(v[i])
-```
-
-    20
-    10
-    70
-
-
-
-```mojo
 sort(v)
 
 for i in range(v.size):

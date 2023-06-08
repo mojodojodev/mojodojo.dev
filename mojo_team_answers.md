@@ -57,7 +57,7 @@ This is an evolving part of the language and likely another difference we pull i
 [2023-06-05 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1114818534946648165/1114971056671838350)
 
 ### Float Literals
-`FloatLiteral` is backed by `F64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
+`FloatLiteral` is backed by `Float64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
 
 ### Error Handling
 It uses variants to avoid performance cost and allows it to run on various hardware, e.g. a function can return a variant of None/Error, but it maps to Python try / except syntax.
@@ -304,8 +304,8 @@ use(x)
 
 which isn't allowed for aliases.
 
-### F32 vs DType.f32
-`F32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `SI32`, although you'll need `from SIMD import SI32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
+### Float32 vs DType.f32
+`Float32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `Int32`, although you'll need `from SIMD import Int32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
 
 ### `self` keyword
 Dropping the `self` keyword would diverge from Python a lot. it would also break orthogonality in the language. Swift suffers from a ton of extra keywords by not making self be explicit. It is better to just keep things consistent and explicit (also precedent in rust etc)

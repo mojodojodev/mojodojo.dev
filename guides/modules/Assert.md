@@ -16,7 +16,7 @@ We can put compile time assertions in the ensure that the two numbers passed in 
 
 
 ```mojo
-fn add_positives[x: Int, y: Int]() -> UI8:
+fn add_positives[x: Int, y: Int]() -> UInt8:
     assert_param[x > 0]()
     assert_param[y > 0]()
     return x + y
@@ -57,7 +57,7 @@ This works the same way as [assert_param](#assert-param) but you can add a custo
 ```mojo
 from Assert import assert_param_msg
 
-fn add_positives[x: Int, y: Int]() -> UI8:
+fn add_positives[x: Int, y: Int]() -> UInt8:
     assert_param_msg[x > 0, "x is not positve, use a positve number over 0"]()
     return x + y
 

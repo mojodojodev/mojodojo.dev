@@ -31,8 +31,8 @@ You can check the alignment of a type, in the struct below it returns 4 bytes:
 
 ```mojo
 struct Foo:
-    var a: UI8
-    var b: UI32
+    var a: UInt8
+    var b: UInt32
 
 print(alignof[Foo]())
 ```
@@ -40,13 +40,13 @@ print(alignof[Foo]())
     4
 
 
-This means each instance of `Foo` will start at a memory address that is a multiple of 4 bytes, there will also be 3 bytes of padding to accommodate the `UI8`.
+This means each instance of `Foo` will start at a memory address that is a multiple of 4 bytes, there will also be 3 bytes of padding to accommodate the `UInt8`.
 
 You can use this for anything falling under an `AnyType`:
 
 
 ```mojo
-print(alignof[UI64]())
+print(alignof[UInt64]())
 ```
 
     8
@@ -59,8 +59,8 @@ The same as [alignof](#alignof) above, but uses bits instead of bytes:
 
 ```mojo
 struct Foo:
-    var a: UI8
-    var b: UI32
+    var a: UInt8
+    var b: UInt32
 
 print(bitwidthof[Foo]())
 ```
@@ -145,7 +145,7 @@ Shows you how many of this type could be processed by SIMD instructions at the s
 
 
 ```mojo
-print(simd_width[UI64]())
+print(simd_width[UInt64]())
 ```
 
     8
@@ -156,7 +156,7 @@ The total size in bytes of an `AnyType`
 
 
 ```mojo
-print(sizeof[UI8]())
+print(sizeof[UInt8]())
 ```
 
     1
