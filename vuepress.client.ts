@@ -15,11 +15,11 @@ export default defineClientConfig({
         })
         router.addRoute({
             path: "/tutorial/mojo_playground_vscode",
-            redirect: "/tutorials",
+            redirect: "/guides/general/mojo_playground_vscode.html",
         })
         router.addRoute({
             path: "/tutorial/mojo_playground_vscode.html",
-            redirect: "/tutorials",
+            redirect: "/guides/general/mojo_playground_vscode.html",
         })
         router.addRoute({
             path: "/general/mojo_team_answers",
