@@ -1,5 +1,11 @@
+---
+title: Random
+categories: Random
+usage: "Provides functions for random numbers"
+---
+
 # Random
-Provides functions for random numbers.
+Provides functions for random numbers
 
 
 ```mojo
