@@ -477,6 +477,14 @@ It's a struct that wraps a pointer to a CPython object
 
 [2023-05-11](https://discord.com/channels/1087530497313357884/1106110477228048546/1106132610410893362)
 
+### String to PythonObject
+Right now you can turn a `StringRef` or a `StringLiteral` into a `PythonObject`. To get a `PythonObject` from a `String`, you'd need to turn the `String` into a `StringRef`. This is available through some underscored methods, but it's currently unsafe due to some lifetime issues. Let me see if I can add a direct conversion path, though it will take a week to make its way to the playground.
+
+A direct conversion should be included in the next Playground release.
+
+[2023-06-08 Discord Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1116063443200520334/1116066258664828949)
+
+
 ### Type Erasure for Python Support
 This currently doesn't work as it does in Python due to `a` inferring the `int` type and raising an error when changing type:
 ```python
@@ -663,17 +671,28 @@ It does take time to compile code, but once you do that, you get generally the s
 
 ## Compilation
 
-### [Static Single Assignment](https://en.wikipedia.org/wiki/Static_single-assignment_form)
-Mojo generators happen in SSA form, we haven't enabled full imperative reflection over the MLIR representation, but would like to build towards that. This is the "ultimate python decorator at compile time" after all
+### Alias Analysis
+It does a simple intraprocedural `bitvector(!)` dataflow analysis to implement all this. It uses local field sensitive pointer provenance for recursively nested fields.
 
-[2023-06-02 Discord Reply](https://discord.com/channels/1087530497313357884/1113898580885917786/1113914827988013147)
+It isn't whole program like [Steensgaard's](https://en.wikipedia.org/wiki/Steensgaard%27s_algorithm) or [Andersen's](https://en.wikipedia.org/wiki/Pointer_analysis) analysis. It is flow sensitive, is field sensitive, and it is very simple / predictable, because you need that to get good error messages, although our messages could still be improved.
+
+As of today, Mojo has perfect understanding of pointers, but with the introduction of lifetimes, it will get may-alias relationships and use a union-find algo like steens under the covers as part of the implementation.
+
+Lifetime and ownership tracking isn't an optimization and isn't performed at the LLVM level, it is performed as part of the mojo compiler frontend itself.
+
+Optimizations are generally disabled at -O0 and aren't guaranteed.  Lifetime analysis is precise, guaranteed and not subject to differences in analysis precision. You wouldn't want the order or placement of destructor calls to depend on the compiler version you use.
+
+Mojo generators happen in [SSA](https://en.wikipedia.org/wiki/Static_single-assignment_form) form, we haven't enabled full imperative reflection over the MLIR representation, but would like to build towards that. This is the "ultimate python decorator at compile time" after all
+
+- [2023-06-09 Discord Reply](https://discord.com/channels/1087530497313357884/1116158407322386553/1116462378222100541)
+- [2023-06-02 Discord Reply](https://discord.com/channels/1087530497313357884/1113898580885917786/1113914827988013147)
 
 ### MLIR Dialect for Unique Requirements
 I worked on Google TPUs (which have several public architecture papers), I'm familiar with difficult to program accelerators w funky requirements 🙂.
 
 One of the major ideas in Mojo wrt MLIR and hardware is to expose "compiler engineering" to library developers instead of having to hack the compiler. That said, we have great ambitions and plans, and I don't want to get us over our skiis. We need to get lifetimes and traits (and numerous other smaller features) [explained in the roadmap](https://docs.modular.com/mojo/roadmap.html) done before we can go out and play. The architecture is in place though. 
 
-[2023-06-02](https://discord.com/channels/1087530497313357884/1113898580885917786/1113915440587079680)
+- [2023-06-02](https://discord.com/channels/1087530497313357884/1113898580885917786/1113915440587079680)
 
 ### Triton Compiler Tech
 Hi njs, GPUs are very important to our work obviously, and we'll have something more to share about that later this year.
@@ -899,9 +918,9 @@ If you look at companies like OpenAI building huge ML models, they're innovating
 [2023-06-02 Lex Fridman Interview 1:59:31](https://youtu.be/pdJQ8iVTwj8?t=7171)
 
 ### Adoption
-The thing that will most help adoption is you don't have to rewrite all your Python code, you can learn a new trick, and grow your knowledge that way. You can start with the world you know, and progressively learn and adopt new things where it makes sense.
+If the software is useful The thing that will most help adoption is you don't have to rewrite all your Python code, you can learn a new trick, and grow your knowledge that way. You can start with the world you know, and progressively learn and adopt new things where it makes sense.
 
-[2023-06-02 Lex Fridman Interview 2:14:58](https://youtu.be/pdJQ8iVTwj8?t=8096)
+[2023-06-02 Lex Fridman Interview 2:14:58](https://youtu.be/pdJQ8iVTwj8?t=7834)
 
 
 ## Open Source
@@ -942,57 +961,55 @@ Hey, great question! We aren't ready to talk more about the implementation detai
 
 Yep, Mojo has a bunch of dialects internally, but they aren't intended for use by other languages. While it could be done theoretically, it isn't a goal, and we wouldn't want to slow down Mojo development by taking on new dependencies.
 
+### Becoming a `Mojo Champion` mod on Discord
+We reached out to individuals we identified ourselves this time. In the future as the server scales, if we look to add more, we will probably send out an application form that folks can fill out and we'll review on a rolling basis. 
+
+[2023-06-09 Discord Andrew](https://discord.com/channels/1087530497313357884/1116515673611448352/1116528356603736084)
+
 ## Hardware and accelerators
-### General
-We'll be sharing more about this soon (it has been quite a bit to get just to today) [but you can read a bit about it on our web page here](https://www.modular.com/hardware)
-
-[Also check out some more technical content here](https://docs.modular.com/mojo/programming-manual.html#parameterization-compile-time-meta-programming)
-
 ### GPUs
-We'll be sharing GPU numbers soon, I am pretty sure it will blow you away, but today is just our initial launch day. ML isn't one thing, and we are pretty excited about the full expanse of heterogenous compute. We'll be sharing more soon.
+We'll be sharing GPU numbers soon, I am pretty sure it will blow you away, but today is just our initial launch day. ML isn't one thing, and we are pretty excited about the full expanse of heterogenous compute.
 
-GPUs are super important (hopefully I don't need to convince you!) but ML is not just matmuls. ML is also about preprocessing, data loading, networking, and many other things. We've decided to solve the general problem first, because we know we can specialize that. Many existing systems have started from specialized solutions and failed to generalize.
+GPUs are super important but ML is not just matmuls, it's also about preprocessing, data loading, networking, and many other things. We've decided to solve the general problem first, because we know we can specialize that. Many existing systems have started from specialized solutions and failed to generalize.
 
-GPU numbers are not far away, and benefit directly from everything we've shown so far. You'll need to use your imagination or extrapolate or imagine until we publish our next step, but we're not messing around here. Our goal is to announce things that are solid and production quality, not claim demo- or research-quality results. The ML industry has had enough of that for one or two generations.
+GPU numbers are not far away, and benefit directly from everything we've shown so far. You'll need to use your imagination or extrapolate or imagine until we publish our next step, but we're not messing around here. Our goal is to announce things that are solid and production quality, not claim demo or research-quality results. The ML industry has had enough of that for one or two generations.
+
+- [2023-05-03 Discord Chris lattner](https://discord.com/channels/1087530497313357884/1103154673814351924/1103182306052669462)
 
 ### Pytorch on Different hardware
-We outperform PyTorch across a large range of hardware (Intel, AMD, ARM etc) [see performance dashboard](https://www.modular.com/engine#performance) and swap around the Instance Types
+We outperform PyTorch across a large range of hardware (Intel, AMD, ARM etc) [see performance dashboard](https://www.modular.com/engine#performance) and swap around the Instance Types.
 
 ### Quantization
 We support quantization and it will support many other HW types like edge deployments
 
-### Adding a new hardware accelerator
-We can only say that we're working on accelerators and that is core to the mission, but can't talk about that until we're ready to talk about it 😀
+### Supporting Hardware Accelerators
+We can only say that we're working on accelerators and that is core to the mission, but can't talk about that until we're ready. This is a very complicated question, software is one of the hardest parts of AI hardware, and is one of the big problems Modular is solving. We'll be sharing more about it soon, but you can read more [on our web page here](https://www.modular.com/hardware), also check out some more [technical content here](https://docs.modular.com/mojo/programming-manual.html#parameterization-compile-time-metaprogramming)
 
-Totally depends on the arch, and the compiler system for the target hw that is a very complicated question.
+- [2023-05-03 Discord Tim Davis](https://discord.com/channels/1087530497313357884/1103109867830525962/1103113756243918898)
+- [2023-05-05 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713575259910224/1103854837738770495)
+- [2023-06-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103050029620535327/1103051748899311646)
 
-Similarly, that is an insanely complicated question. Software is one of the hardest parts of AI HW. This is one of the big problems modular is solving. If you are interested, please check 'hardware' in get started. 
+### Interaction with MLIR
+Modular uses many of its own dialects internally, but the only mainline MLIR dialects we use are LLVM and Index. Nothing else was suitable, not even SCF which has tons of ties into arithmetic etc. so we built an entirely new stack.
 
-### Community contributions
-Yes, community is super important to us, we definitely can't do everything ourselves!
+We use LLVM level dialects, and leverage LLVM for the targets it supports. We already use this to talk directly to both the Apple and Intel AMX instructions for example (identically named but different things) which provide block matrix operations.
 
-### Integration with MLIR
-[Check out the public docs](https://docs.modular.com/mojo/notebooks/BoolMLIR.html)
+For other accelerators, it depends on whether you have a traditional program counter and programmability or not.
 
-### Interaction with MLIR types
-Modular uses many of its own dialects internally, but the only mainline MLIR dialects we use are LLVM and Index. Nothing else was suitable (not even SCF; which has tons of ties into arith etc), so we built an entirely new stack.
+- [2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103002276190224464/1103003562407108623)
+- [2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103058370405072941/1103068324490916001)
+- [Public MLIR example](https://docs.modular.com/mojo/notebooks/BoolMLIR.html)
+- [High Level Hardware Outline](https://www.modular.com/hardware)
 
-We use LLVM level dialects, and leverage LLVM for the targets it supports.
+### MLIR Syntax
+MLIR integration hasn't been polished or designed to be pretty - we've focused primarily on making it fully capable and unblocking our needs. The idea for it is that only MLIR experts would be using this, but then they'd be wrapping user-facing Pythonic types and methods around them, like `OurBool` wraps `i1`. that said, we can definitely improve this in various ways, we just can't do so at the loss of fidelity and expressiveness.
 
-### MLIR and LLVM
-Mojo can talk directly to MLIR and LLVM abstractions. [A toy example of that is shown in the Bool notebook here](https://docs.modular.com/mojo/notebooks/BoolMLIR.html)
+- [2023-05-15 Github Chris Lattner](https://github.com/modularml/mojo/discussions/154#discussioncomment-5904861)
 
-We already use this to talk directly to both the Apple and Intel AMX instructions for example (which are identically named, but different things) which provide block matrix operations. We'll be sharing more about that soon.
-
-For other accelerators, it depends on whether you have a traditional program counter + programmability or not. We talk a bit about this at a [high level on our Hardware page](https://www.modular.com/hardware)
-
-> Reading the documents on MLIR related APIs, I feel that the style of these APIs seems to be quite different with Python
-
-Indeed, the MLIR integration hasn't been polished or designed to be pretty - we've focused primarily on making it fully capable and unblocking our needs. The idea for it is that only MLIR experts would be using this, but then they'd be wrapping user-facing Pythonic types and methods around them (e.g. like OurBool wraps i1). that said, we can definitely improve this in various ways, we just can't do so at the loss of fidelity/expressiveness.
-
-> I wonder if it is possible to make Mojo more extensible such that it can also create new didacts?
-
+### Creating new MLIR dialects
 This is also something we're likely to look into in the far future, but isn't a priority right now. Also, as mojo opens up more, it would be great for community members to poke at this.
+
+- [2023-05-15 Github Chris Lattner](https://github.com/modularml/mojo/discussions/154#discussioncomment-5904870)
 
 ### Optimization via MLIR
 Mojo is a gateway to the whole MLIR ecosystem. It is entirely plausible that the matmul implementation for a particular piece of hardware just calls a few MLIR operations.
