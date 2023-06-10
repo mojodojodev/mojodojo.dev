@@ -258,6 +258,17 @@ There are so many variants of Float8 representation. We need to think about whic
 
 [2023-06-04 Github Abdul Dakkak](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
 
+### Pure Functions
+Pureness is what is known as an "effect" in PL terminology. You can see this in the handling of async and raises in the current mojo implementation: a non-raising function is not allowed to call a raising function directly - it must wrap it in a try block.
+
+I don't see a way to provide this sort of mapping from one world to the other for purity, I think we cannot practically implement this, and while pure computation is important, it is actually quite complicated: is reading from memory pure? If no, "purity" is pretty useless. If so, you cannot use purity information for much optimization, because you need to know which memory sets may be read and written by functions anyway.
+
+Also, in other pure-functional languages like Haskell, you need escape hatches (perform unsafe io) because you want to add printf debugging etc to "pure" functions and compiler enforcement makes that whole thing incredibly difficult.
+
+Overall I can understand wanting to have this conceptually, but I can't see how it could work out well in practice. We can come back to this later as the language evolves.
+
+[Pure Functions](https://github.com/modularml/mojo/discussions/345#discussioncomment-6136537)
+
 ## Syntax 
 ### Syntactic Sugar
 Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
