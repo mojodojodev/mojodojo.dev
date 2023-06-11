@@ -26,15 +26,15 @@ Take notice of the parameters in the `[]` brackets for example `DT`:
 
 
 ```mojo
-struct Tensor[RANK: Int, SHAPE: DimList, DT: DType]:
-    var data: DTypePointer[DT]
-    var buffer: NDBuffer[RANK, SHAPE, DT]
+struct Tensor[rank: Int, shape: DimList, type: DType]:
+    var data: DTypePointer[type]
+    var buffer: NDBuffer[rank, shape, type]
 
     fn __init__(inout self):
-        let size = SHAPE.product[RANK]().get()
-        self.data = DTypePointer[DT].alloc(size)
+        let size = shape.product[rank]().get()
+        self.data = DTypePointer[type].alloc(size)
         memset_zero(self.data, size)
-        self.buffer = NDBuffer[RANK, SHAPE, DT](self.data)
+        self.buffer = NDBuffer[rank, shape, type](self.data)
 
     fn __del__(owned self):
         self.data.free()
