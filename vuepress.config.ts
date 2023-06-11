@@ -77,6 +77,7 @@ export default defineUserConfig({
                                         collapsible: true,
                                         children: [
                                             '/guides/modules/Buffer/Buffer.md',
+                                            '/guides/modules/Buffer/NDBuffer.md',
                                         ]
                                     },
                                     '/guides/modules/Assert.md',

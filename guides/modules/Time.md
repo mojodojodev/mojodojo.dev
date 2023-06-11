@@ -18,7 +18,7 @@ Gets the current nanoseconds using the systems monotonic clock, which is general
 print(now())
 ```
 
-    1144926796748331
+    276729993584072
 
 
 ## sleep
@@ -33,7 +33,7 @@ let toc = now() - tic
 print("slept for", toc, "nanoseconds")
 ```
 
-    slept for 1058927 nanoseconds
+    slept for 1062234 nanoseconds
 
 
 ## time_function
@@ -54,5 +54,5 @@ fn measure():
 measure()
 ```
 
-    sleeper took 1059901 nanoseconds to run
+    sleeper took 1060233 nanoseconds to run
 

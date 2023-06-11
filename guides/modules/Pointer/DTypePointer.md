@@ -22,8 +22,8 @@ Create two variables to store a new address on the heap and allocate 8 bytes
 
 
 ```mojo
-var p1 = DTypePointer[DType.ui8].alloc(8)
-var p2 = DTypePointer[DType.ui8].alloc(8)
+var p1 = DTypePointer[DType.uint8].alloc(8)
+var p2 = DTypePointer[DType.uint8].alloc(8)
 ```
 
 ## Operators
@@ -39,7 +39,7 @@ print("p1 and p2 are not equal:", p1 != p2)
 ```
 
     p1 is not null
-    p1 is at a lower address than p2: True
+    p1 is at a lower address than p2: False
     p1 and p2 are equal: False
     p1 and p2 are not equal: True
 
@@ -154,7 +154,7 @@ all_data = p1.simd_load[8](0)
 print(all_data)
 ```
 
-    [126, 213, 240, 222, 20, 86, 0, 0]
+    [99, 206, 45, 92, 5, 0, 0, 0]
 
 
 ## Build your own Struct
@@ -163,11 +163,11 @@ Playing with pointers is dangerous! Lets build a safe `struct` abstraction aroun
 
 ```mojo
 struct Matrix:
-    var data: DTypePointer[DType.ui8]
+    var data: DTypePointer[DType.uint8]
 
     fn __init__(inout self):
         "Initialize the struct and set everything to zero"
-        self.data = DTypePointer[DType.ui8].alloc(64)
+        self.data = DTypePointer[DType.uint8].alloc(64)
         memset_zero(self.data, 64)
 
     # This is what will run when the object goes out of scope
@@ -175,11 +175,11 @@ struct Matrix:
         return self.data.free()
 
     # This allows you to use let x = obj[1]
-    fn __getitem__(self, row: Int) -> SIMD[DType.ui8, 8]:
+    fn __getitem__(self, row: Int) -> SIMD[DType.uint8, 8]:
         return self.data.simd_load[8](row * 8)
 
-    # This allows you to use obj[1] = SIMD[DType.ui8]()
-    fn __setitem__(self, row: Int, data: SIMD[DType.ui8, 8]):
+    # This allows you to use obj[1] = SIMD[DType.uint8]()
+    fn __setitem__(self, row: Int, data: SIMD[DType.uint8, 8]):
         return self.data.simd_store[8](row * 8, data)
 
     fn print_all(self):

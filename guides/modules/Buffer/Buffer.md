@@ -15,12 +15,12 @@ from DType import DType
 from Pointer import DTypePointer
 ```
 
-Allocate 8 `ui8` and pass that pointer into the buffer:
+Allocate 8 `uint8` and pass that pointer into the buffer:
 
 
 ```mojo
-let p = DTypePointer[DType.ui8].alloc(8)
-let x = Buffer[8, DType.ui8](p)
+let p = DTypePointer[DType.uint8].alloc(8)
+let x = Buffer[8, DType.uint8](p)
 ```
 
 ## zero
@@ -145,9 +145,6 @@ Some registers work better with different alignments e.g. AVX-512 performs bette
 ```mojo
 x.aligned_simd_store[8, 8](0, 5)
 ```
-
-    [10, 10, 10, 10, 10, 10, 10, 10]
-
 
 ## aligned_simd_load
 Some registers work better with different alignments e.g. AVX-512 performs better with 64 bit alignment, so you might want padding for a type like a UInt32

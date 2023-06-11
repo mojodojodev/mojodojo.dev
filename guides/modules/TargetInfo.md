@@ -94,11 +94,11 @@ print(dtype_bitwidthof[DType.address]())
 
 ### dtype_simd_width
 
-The vector size, e.g. to see how many ui64's can be processed with a single instruction:
+The vector size, e.g. to see how many uint64's can be processed with a single instruction:
 
 
 ```mojo
-print(dtype_simd_width[DType.ui64]())
+print(dtype_simd_width[DType.uint64]())
 ```
 
     8
@@ -126,7 +126,7 @@ print(simd_bit_width())
     512
 
 
-Take note how the result of `dtype_simd_width[DType.ui64]()` shows you how many of that data type can fit into the systems SIMD register, e.g. 512 / 64 = 8
+Take note how the result of `dtype_simd_width[DType.uint64]()` shows you how many of that data type can fit into the systems SIMD register, e.g. 512 / 64 = 8
 
 ### simd_byte_width
 

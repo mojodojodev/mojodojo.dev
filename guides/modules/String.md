@@ -56,7 +56,6 @@ Slice from 2 up to 4 non-inclusive:
 
 ```mojo
 print(s[2:4]) 
-
 ```
 
     cd

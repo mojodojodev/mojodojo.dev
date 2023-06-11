@@ -297,7 +297,7 @@ On the implementation, we'll need some work to build out `help(object)` and `hel
 ### `alias` keyword
 `comptime` is really obvious to Zig folk, but that's not really our audience. You're right that `alias` may not be the right word to use here either. Aligning this around "parameter" could be a good way to go, but I'm curious if there are other suggestions.
 
-Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.si8, 1]. That doesn't make it the right thing, but it is a nice thing.
+Once nice thing about "alias" is that it is more obvious for the trivial cases like alias my_magic = 12312 or alias Int8 = SIMD[DType.int8, 1]. That doesn't make it the right thing, but it is a nice thing.
 
 If we replaced the keyword "alias x = 42" with "parameter x = 42", then we can say "it's a declaration of a parameter" and that "parameters are all compile time expressions."
 
@@ -315,8 +315,8 @@ use(x)
 
 which isn't allowed for aliases.
 
-### Float32 vs DType.f32
-`Float32` is defined as an alias of `SIMD[DType.f32, 1]`. The equivalent for `DType.si32` is `Int32`, although you'll need `from SIMD import Int32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
+### Float32 vs DType.float32
+`Float32` is defined as an alias of `SIMD[DType.float32, 1]`. The equivalent for `DType.int32` is `Int32`, although you'll need `from SIMD import Int32`. DType is an enum describing different data types -- SIMD is how you get something that can hold a value of that type. [More information here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
 
 ### `self` keyword
 Dropping the `self` keyword would diverge from Python a lot. it would also break orthogonality in the language. Swift suffers from a ton of extra keywords by not making self be explicit. It is better to just keep things consistent and explicit (also precedent in rust etc)
@@ -329,18 +329,6 @@ Because it composes properly with chained expressions: `x.foo().bar().baz^.do_th
 
 ### `Int`
 Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
-
-### si32/ui32 vs i32/u32
-> Python programmers will probably be more familiar with the i32/u32 syntax.
-
-Yeah, for the core language types, our audience are general programmers and Python folks, not MLIR nerds 😉
-
-We want things to be clear and unambiguous, compiler folk can deal with naming mapping. We will discuss.
-
-> would it ever makes sense for Mojo to also support signless integers?
-
-I don't see a benefit to that. It would mean that we couldn't use the standard Python operators (which imply sign behavior, e.g. on divides). Signless integers are good for compilers because they want canonical forms, but users want operations that work on types. It's a bit of a different concern.
-
 
 ### Leading underscore `_foo` for private members
 This is a very clear extension we could consider, highly precedented of course. In the immediate future we are focusing on building the core systems programming features in the roadmap. When that is complete, we can consider "general goodness" features like this.

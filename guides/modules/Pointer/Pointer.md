@@ -171,7 +171,7 @@ print(third_coord.x)
 print(third_coord.y)
 ```
 
-    235
+    179
     85
 
 
@@ -193,7 +193,7 @@ for i in range(2):
     print(p1[i].y)
 ```
 
-    235
+    179
     85
     0
     0
