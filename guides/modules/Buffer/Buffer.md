@@ -19,8 +19,8 @@ Allocate 8 `ui8` and pass that pointer into the buffer:
 
 
 ```mojo
-let p = DTypePointer[DType.ui8].alloc(8)
-let x = Buffer[8, DType.ui8](p)
+let p = DTypePointer[DType.uint8].alloc(8)
+let x = Buffer[8, DType.uint8](p)
 ```
 
 ## zero
