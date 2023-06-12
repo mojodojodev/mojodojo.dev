@@ -94,12 +94,6 @@ print(True.__or__(False))
 print(False or False)
 ```
 
-    warning: Expression [47]:22:20: unreachable code after 'if False'
-        print(False or False)
-                       ^
-    
-
-
     True
     False
 
