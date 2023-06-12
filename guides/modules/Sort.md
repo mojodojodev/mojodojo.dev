@@ -3,7 +3,7 @@ title: Sort
 categories: Sort
 usage: "Sorts a DynamicVector[Int] inplace, in ascending order"
 ---
-Contributed By: [guatam](https://github.com/gautam-e)
+Contributed By: [gautam](https://github.com/gautam-e)
 
 # sort
 
