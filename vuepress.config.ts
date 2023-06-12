@@ -88,7 +88,14 @@ export default defineUserConfig({
                                     '/guides/modules/Time.md',
                                     '/guides/modules/Sort.md',
                                 ]
-                            }
+                            },
+                            {
+                                text: "Examples",
+                                collapsible: true,
+                                children: [
+                                    '/guides/examples/Bool_example.md',
+                                ]
+                            },
                         ],
                     },
                     "/mojo_team_answers.md",
