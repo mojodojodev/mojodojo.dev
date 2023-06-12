@@ -269,6 +269,18 @@ Overall I can understand wanting to have this conceptually, but I can't see how 
 
 [Pure Functions](https://github.com/modularml/mojo/discussions/345#discussioncomment-6136537)
 
+### Side Effect Propagation
+Unfortunately, it is pretty impractical to define what `side effect free` means in a general purpose language; particularly one that wants you to be able to call existing python code.
+
+In practice side effects would be so common that the model would have to be "add a keyword to opt-in/indicate/require that a function is side effect free", not "add a keyword saying it has side effects".
+
+Given that, very few people would use it, and it would interfere with printf debugging and a lot of other things.
+
+It's possible that there is a model here that will work and would be usable, but I'm not sure how much value it would provide.
+
+[2023-06-12 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
+
+
 ## Syntax 
 ### Syntactic Sugar
 Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
@@ -381,7 +393,17 @@ One problem with AnyType is that we will need to decide if it is implicitly copy
 
 [2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
+### StringRef from LLVM
+Yep that's where it came from. It is directly related to string_view in C++, the LLVM data structures predate the C++ STL growing all these things. The idea of a `pointer + extend without ownership` is more general than a `reference to a specific owning data structure` because it type erases the concrete storage type. For example, an LLVM StringRef can point into C array, an std::vector, or one of the zoo of other specialized storage types llvm has - it can even point to a scalar on the stack.
 
+Per the comments above, I think actually calling this sort of type `ArrayRef` and `StringRef` in mojo would be super confusing if we have `ref` as a different concept. Python generally uses the word "Slice" for these things, and I think that would be great to use for these.
+
+[2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145782)
+
+### `borrowed` keyword
+I don't have strong opinions, but I have some concern about general programmers (i.e., those without Rust experience) and the word "borrow". It is a word that can be explained and has good meaning in the rust lexicon, but doesn't connote referencing something, and doesn't even appear in the rust language (they use the & sigil instead). This isn't to say that "borrow" or "borrowed" is bad, but it does have some challenges.
+
+[2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145791)
 
 ## Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#a-member-of-the-python-family).
@@ -581,6 +603,11 @@ We want to enhance the `String` type to support UTF-8 encoding before starting w
 This was noted as a known `sharp edge` in the [roadmap & sharp edges](https://docs.modular.com/mojo/roadmap.html) document. The behaviour here is definitely subject to change, maybe syntax like `for var i in range(3)` but I don't have a strong opinion.
 
 [2023-06-07 Github Jeff Niu](https://github.com/modularml/mojo/issues/331#issuecomment-1579122472)
+
+### Sorting Algorithm discovered by AlphaDev
+Sure, that algorithm could definitely be used inside the Mojo sort algorithm.  What they found is something you'd put into a standard library, e.g. they put it into the libc++ c++ standard library, eventually it could go into the Mojo stdlib.
+
+[2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103420074372644916/1117497920678285332)
 
 
 ## Language comparisons
