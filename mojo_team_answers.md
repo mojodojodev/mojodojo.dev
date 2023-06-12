@@ -155,6 +155,17 @@ This isn't fully documented yet, and there are a few missing pieces we want to w
 
 One way to say this is that Mojo is taking a lot of the power out of the compiler and putting it into libraries, allowing Mojo developers to radically extend the language. Python already has this but does so with super dynamic reflective metaprogramming, so this is an old idea done in a new way
 
+### Compile time metaprogramming relationship to MLIR
+Mojo has great support for evaluating fairly arbitrary expressions at compile time with an interpreter that (under the covers) ends up calling an MLIR dialect's fold operations.
+
+These then get wrapped up in structs to give a new programmable veneer etc. Check out the Bool workbook example in the documentation for a simple example of doing this with the index dialect.
+
+Mojo is designed "for" MLIR in this way - MLIR can talk to roughly anything that computes, and it is very important (over time) for Mojo to scale into new forms of computation, whether it be low level things like low-level tensorcore operators, mid-level things like a shape dialect, or high level things like an ML operator graph.
+
+Right now many folks on the channel are excited about a Python++, but Mojo was designed to work backwards from the "speed of light" of hardware and accelerators. The syntax and applicability to Python is important for community reasons, but not particularly relevant to the accelerator side of Mojo.
+
+[2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1114406301808726138/1116540613618323517)
+
 ### Autotune and adaptive compilation
 Libraries like PyTorch have pushed ML towards an abstract specification of a compute problem, which then gets mapped in a whole bunch of different ways, this is why it has become a metaprogramming problem.
 
