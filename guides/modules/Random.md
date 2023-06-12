@@ -4,7 +4,7 @@ categories: Random
 usage: "Provides functions for random numbers"
 ---
 
-Contributed By: [gautam](https://github.com/gautam-e)
+Contributed by [gautam](https://github.com/gautam-e)
 
 # Random
 

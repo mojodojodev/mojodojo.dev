@@ -88,6 +88,13 @@ export default defineUserConfig({
                                     '/guides/modules/Time.md',
                                     '/guides/modules/Sort.md',
                                 ]
+                            },
+                            {
+                                text: 'Builtins',
+                                collapsible: true,
+                                children: [
+                                    '/guides/modules/Bool.md'
+                                ]
                             }
                         ],
                     },

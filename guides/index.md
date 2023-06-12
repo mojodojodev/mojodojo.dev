@@ -34,7 +34,7 @@ General guides
 
 
 ## Modules
-Quick tutorials on how to use various standard library modules
+Quick tutorials on how to use various builtins and standard library modules
 
 <table>
   <tr>
