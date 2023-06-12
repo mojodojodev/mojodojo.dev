@@ -6,7 +6,7 @@ These answers are collected from [Discord](https://discord.com/invite/modular), 
 To check when new answers are added, you can follow [This Week in Mojo](/this_week_in_mojo/)
 
 ## Language Features
-### General
+
 ### Keyword Arguments
 Mojo doesn’t support keyword arguments yet, this is important but hasn’t been prioritized just because it is “syntax sugar”
 
@@ -291,6 +291,10 @@ It's possible that there is a model here that will work and would be usable, but
 
 [2023-06-12 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
 
+### Receiver / Free Floating Functions
+There are alternative ways to address the same thing, e.g. check out how extensions work in Swift. We'll need to look at this whole area as traits come in. We don't have a goal of providing the Julia multimethod dispatch thing. There isn't an efficient way to implement that other than full monomorphization, it is better to express the same thing with generics, which we haven't designed yet. Let's build out the traits system and see what the limitations are.
+
+[2023-06-13 Github Chris Lattner](https://github.com/modularml/mojo/discussions/366#discussioncomment-6155792)
 
 ## Syntax 
 ### Syntactic Sugar
