@@ -28,5 +28,5 @@ The homepage comes from [index.md](index.md), there is some custom Vue code I've
 The syntax highlighting comes from shiki which is what VS Code uses, the definition for the Mojo language is in [syntax/mojo.tmLanguage.json](syntax/mojo.tmLanguage.json) thanks to [crisadamo](https://github.com/crisadamo/mojo-lang-syntax).
 
 ## Contributions
-- Thanks very much to [gautam-e](github.com/gautam-e) for contributing guides
+- Thanks very much to [gautam-e](github.com/gautam-e) and [StitchyPie](https://github.com/StitchyPie) for contributing guides
 - And thanks to all the corrections from [pp123456](github.com/pp123456), [futureofworld](github.com/futureofworld) and [Alex19578](github.com/pp123456)
