@@ -8,17 +8,17 @@ npm i
 ```
 Then start the dev server:
 ```
-npm run docs
+npm run dev
 ```
 
 ## Contributing a guide
-If these steps are too difficult, feel free to just raise a pull request with the `.ipynb` and I'll look after it.
+If you're unable to complete these steps, feel free to raise a pull request with just the `.ipynb`
 
 - Install [Jupyter](https://jupyter.org/install) to enable converting notebooks
 - Put your `.ipynb` in the desired folder in `guides`
 - Run `npm run docs` 
-- Add the `md` filename to `vuepress.config.ts` e.g. '/guides/modules/Sort.md', 
-- Run `npm run dev` and make sure everything looks right
+- Add the `md` filename to `vuepress.config.ts` e.g. `/guides/modules/MyGuide.md`, 
+- Run `npm run dev`, have a look to make sure you're guide is rendering correctly
 
 ## Project Overview
 It's built with [VuePress V2](https://v2.vuepress.vuejs.org/guide/getting-started.html) which is currently in beta, the main configuration comes from [vuepresss.config.ts](vuepress.config.ts), while [vuepress.client.ts](vuepress.client.ts) contains client-side configuration like redirects to keep old social media links alive, the css and static images can be modified in [.vuepress/public](.vuepress/public) and [.vuepress/styles](.vuepress/styles)
