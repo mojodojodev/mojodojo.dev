@@ -4,7 +4,7 @@ categories: String
 usage: Mutable String with DynamicVector[Int8] as the underlying data type
 ---
 
-Contributed By: [guatam](https://github.com/gautam-e)
+Contributed by [gautam](https://github.com/gautam-e)
 
 # String
 
