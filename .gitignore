@@ -3,6 +3,7 @@
 .vscode
 node_modules
 .vuepress/dist
+env
 
 # My local works in progress
 wip
