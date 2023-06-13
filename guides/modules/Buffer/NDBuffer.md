@@ -7,7 +7,7 @@ usage: A buffer that doesn't own the underlying memory, it allows you to represe
 # NDBuffer
 A buffer that doesn't own the underlying memory, it allows you to represent an N-Dimensional shape both statically, and dynamically at runtime
 
-## Imports
+## import
 
 
 ```mojo
@@ -17,12 +17,13 @@ from Pointer import DTypePointer
 from Buffer import NDBuffer
 from Memory import memset_zero
 from List import VariadicList, DimList
+from Assert import assert_param
+from Functional import unroll
+from Index import StaticIntTuple
 ```
 
-## Setup
+## setup
 This struct allows you to carry around the pointer that owns the data the NDBuffer is pointing to.
-
-Take notice of the parameters in the `[]` brackets for example `DT`:
 
 
 ```mojo
@@ -40,7 +41,7 @@ struct Tensor[rank: Int, shape: DimList, type: DType]:
         self.data.free()
 ```
 
-## Initialization
+## init
 We can now create a shape statically and store data, but be careful there's no safety checks on our struct yet:
 
 
@@ -48,8 +49,6 @@ We can now create a shape statically and store data, but be careful there's no s
 let x = Tensor[3, DimList(2, 2, 2), DType.uint8]()
 x.data.simd_store(0, SIMD[DType.uint8, 8](1, 2, 3, 4, 5, 6, 7, 8))
 ```
-
-## Usage
 
 Let's try using the buffer now:
 
@@ -60,6 +59,8 @@ print(x.buffer.num_elements())
 
     8
 
+
+## indexing
 
 We can also access elements via it's 3D shape:
 
@@ -91,7 +92,18 @@ print(x.buffer[1, 1, 0])
     7
 
 
-## Bounds Checking
+To set an item we need to use a `StaticIntTuple`
+
+
+```mojo
+x.buffer[StaticIntTuple[3](1, 1, 1)] = 50
+print(x.buffer[1, 1, 1])
+```
+
+    50
+
+
+## runtime bounds checking
 
 There are no safety checks on our struct yet so we can access data out of bounds:
 
@@ -137,13 +149,12 @@ print(x[0, 2, 0])
     Error: index out of bounds
 
 
-## Compile Time Bounds Checking
+## compile time bounds checking
 This bounds checking isn't optimal because it has a runtime cost, we could create a separate function that checks the shape at compile time:
 
 
 ```mojo
-from Assert import assert_param
-from Functional import unroll
+
 ```
 
 
@@ -181,75 +192,6 @@ x.data.simd_store(0, SIMD[DType.uint64, 8](0, 1, 2, 3, 4, 5, 6, 7))
 ```mojo
 print(x.get[1, 1, 2]())
 ```
-
-    error: Expression [14]:6:1: no viable expansions found
-    fn __lldb_expr__(inout __mojo_repl_arg: __mojo_repl_context__):
-    ^
-    
-    Expression [14]:8:28:   call expansion failed - no concrete specializations
-        __mojo_repl_expr_impl__(__mojo_repl_arg, __get_address_as_lvalue(__mojo_repl_arg.`x`.load().address))
-                               ^
-    
-    Expression [14]:12:1:     no viable expansions found
-    def __mojo_repl_expr_impl__(inout __mojo_repl_arg: __mojo_repl_context__, inout `x`: __mlir_type.`!kgen.declref<@"$Expression [12]"::@Tensor<rank: @"$Int"::@Int = #lit.struct<{value: scalar<index> = 3}>, shape: @"$List"::@DimList = apply(:<>(!kgen.variadic<@"$List"::@Dim> borrow) vararg -> !kgen.declref<@"$List"::@DimList> @"$List"::@DimList::@"__init__($List::Dim*)", [#lit.struct<{value: variant<i1, @"$Int"::@Int> = #pop.variant<:@"$Int"::@Int #lit.struct<{value: scalar<index> = 2}>>}>, #lit.struct<{value: variant<i1, @"$Int"::@Int> = #pop.variant<:@"$Int"::@Int #lit.struct<{value: scalar<index> = 2}>>}>, #lit.struct<{value: variant<i1, @"$Int"::@Int> = #pop.variant<:@"$Int"::@Int #lit.struct<{value: scalar<index> = 2}>>}>]), type: @"$DType"::@DType = #lit.struct<{value: dtype = ui64}>>>`) -> None:
-    ^
-    
-    Expression [14]:19:26:       call expansion failed - no concrete specializations
-      __mojo_repl_expr_body__()
-                             ^
-    
-    Expression [14]:14:3:         no viable expansions found
-      def __mojo_repl_expr_body__() -> None:
-      ^
-    
-    Expression [14]:16:25:           call expansion failed - no concrete specializations
-        print(x.get[1, 1, 2]())
-                            ^
-    
-    Expression [12]:14:5:             no viable expansions found
-        fn get[*idx: Int](self) -> SIMD[type, 1]:
-        ^
-    
-    Expression [12]:19:32:               call expansion failed - no concrete specializations
-            unroll[rank, check_dim]()
-                                   ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:48:1:                 no viable expansions found
-    fn unroll[
-    ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:59:33:                   call expansion failed - no concrete specializations
-        _unroll_impl[0, count, func]()
-                                    ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:63:1:                     no viable expansions found
-    fn _unroll_impl[
-    ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:71:43:                       call expansion failed - no concrete specializations
-            _unroll_impl[idx + 1, count, func]()
-                                              ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:63:1:                         no viable expansions found
-    fn _unroll_impl[
-    ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:71:43:                           call expansion failed - no concrete specializations
-            _unroll_impl[idx + 1, count, func]()
-                                              ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:63:1:                             no viable expansions found
-    fn _unroll_impl[
-    ^
-    
-    /.modular/Kernels/mojo/Stdlib/Functional.mojo:70:18:                               call expansion failed - no concrete specializations
-            func[idx]()
-                     ^
-    
-    Expression [12]:16:9:                                 no viable expansions found
-            fn check_dim[i: Int]():
-            ^
-    
     Expression [12]:17:56:                                   constraint failed: param assertion failed
                 assert_param[idx[i] < shape.value[i].get()]()
                                                            ^
@@ -276,24 +218,11 @@ Store a SIMD vector at the given ND index, for example here we take the first 4 
 
 
 ```mojo
-from Index import StaticIntTuple
-
 x.buffer.simd_store(StaticIntTuple[3](1, 0, 0), x.buffer.simd_load[4]() * 8)
 print(x.buffer.simd_load[8]())
 ```
 
     [0, 1, 2, 3, 0, 8, 16, 24]
-
-
-## `__setitem__`
-
-
-```mojo
-x.buffer[StaticIntTuple[3](1, 1, 1)] = 50
-print(x.get[1, 1, 1]())
-```
-
-    50
 
 
 ## Fields
