@@ -64,14 +64,8 @@ export default defineUserConfig({
                                 text: 'Modules',
                                 collapsible: true,
                                 children: [
-                                    {
-                                        text: 'Pointer',
-                                        collapsible: true,
-                                        children: [
-                                            '/guides/modules/Pointer/DTypePointer.md',
-                                            '/guides/modules/Pointer/Pointer.md',
-                                        ]
-                                    },
+                                    '/guides/modules/Assert.md',
+                                    '/guides/modules/Benchmark.md',
                                     {
                                         text: 'Buffer',
                                         collapsible: true,
@@ -80,13 +74,28 @@ export default defineUserConfig({
                                             '/guides/modules/Buffer/NDBuffer.md',
                                         ]
                                     },
-                                    '/guides/modules/Assert.md',
-                                    '/guides/modules/Benchmark.md',
+                                    {
+                                        text: 'Pointer',
+                                        collapsible: true,
+                                        children: [
+                                            '/guides/modules/Pointer/DTypePointer.md',
+                                            '/guides/modules/Pointer/Pointer.md',
+                                        ]
+                                    },
                                     '/guides/modules/Random.md',
+                                    '/guides/modules/Sort.md',
                                     '/guides/modules/String.md',
                                     '/guides/modules/TargetInfo.md',
                                     '/guides/modules/Time.md',
-                                    '/guides/modules/Sort.md',
+                                    {
+                                        text: 'Vector',
+                                        collapsible: true,
+                                        children: [
+                                            '/guides/modules/Vector/DynamicVector.md',
+                                            '/guides/modules/Vector/InlinedFixedVector.md',
+                                            '/guides/modules/Vector/UnsafeFixedVector.md',
+                                        ]
+                                    },
                                 ]
                             },
                             {
@@ -95,7 +104,15 @@ export default defineUserConfig({
                                 children: [
                                     '/guides/modules/Bool.md'
                                 ]
-                            }
+                            },
+                            {
+                                text: "Intro to Mojo",
+                                collapsible: true,
+                                children: [
+                                    '/guides/intro_to_mojo/1-setup.md',
+                                    '/guides/intro_to_mojo/2-basic-types.md',
+                                ]
+                            },
                         ],
                     },
                     "/mojo_team_answers.md",
