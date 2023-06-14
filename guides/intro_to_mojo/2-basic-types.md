@@ -8,10 +8,10 @@ usage: Some basic types to get you started with Mojo
 _This is in very early stages and under heavy development_
 
 ## PythonObject
-Run code through the Python interpreter to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
+To understand how Mojo can interact with the Python ecosystem, and why Mojo can do certain things so much faster, let's start by running code through the Python interpreter to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
 
 
-```mojo
+```
 x = Python.evaluate('5 + 10')
 print(x)
 ```
@@ -19,13 +19,21 @@ print(x)
     15
 
 
-The first line is executed the exact same way as if we ran this in Python:
+`x` is represented in memory the same way as if we ran this in Python:
 
-```python
+
+```
+%%python
 x = 5 + 10
+print(x)
 ```
 
-The code is parsed and compiled to byte code, then CPython executes the instruction, `x` is actually a pointer to `heap` allocated memory.
+    15
+
+
+_in the Mojo playground, using `%%python` will run straight through the interpreter_
+
+`x` is actually a pointer to `heap` allocated memory.
 
 ::: tip CS Fundamentals
 `stack` and `heap` memory are really important concepts to understand, [this YouTube video](https://www.youtube.com/watch?v=_8-ht2AKyH4) does a fantastic job of explaining it visually. 
@@ -42,7 +50,7 @@ We'll be revisiting these concepts a lot, don't worry if it's not clicking yet.
 We can access all the Python keywords by importing `builtins`:
 
 
-```mojo
+```
 let py = Python.import_module("builtins")
 
 py.print("using python keywords")
@@ -54,17 +62,14 @@ py.print("using python keywords")
 We can now use the `type` builtin from Python to see what the dynamic type of `x` was:
 
 
-```mojo
+```
 py.print(py.type(x))
 ```
-
-    <class 'int'>
-
 
 We can also read the address that is stored on the `stack` which allows us to read memory on the `heap` with the Python `id` builtin:
 
 
-```mojo
+```
 py.print(py.id(x))
 ```
 
@@ -73,86 +78,11 @@ py.print(py.id(x))
 
 This is pointing to a C object in Python, and Mojo behaves the same when using a `PythonObject`, accessing the value actually uses the address to lookup the data on the `heap` which comes with a performance cost. 
 
-Lets dive into this a little more.
-
-## Stack
-This is the fast access section of memory that is allocated to your computers RAM, take a simple program:
-
-_the `%%python` below means the cell runs through the Python interpreter_
+This is a simplified representation of how the `C Object` being pointed to would look if it were a Python dict:
 
 
-```mojo
-%%python
-def double(a):
-    return a * 2 
-
-def quad(a):
-    return a * 4 
-
-a = 1
-
-a = double(a)
-a = quad(a)
 ```
-
-If we represent the instructions in pseudo code, this is a simplified version of what your `stack` memory would look like as the program runs:
-
-
-```mojo
 %%python
-from pprint import pprint
-
-stack = []
-stack.append({"frame": "main", "a": 1, "function_calls": ["double(a)", "quad(a)"]})
-stack.append({"frame": "add", "a": 1})
-
-pprint(stack)
-```
-
-    [{'a': 1, 'frame': 'main', 'function_calls': ['double(a)', 'quad(a)']},
-     {'a': 1, 'frame': 'add'}]
-
-
-The program starts by allocating variables from `main` to the `stack` memory, the first function is `add` so it is then appended to the stack.
-
-When it's finished running and returns the result, all the variables in `add` are popped off the stack:
-
-
-```mojo
-%%python
-stack.pop()
-stack[0]["a"] *= 2
-print(stack)
-```
-
-    [{'frame': 'main', 'a': 2, 'function_calls': ['double(a)', 'quad(a)']}]
-
-
-This is why a `stack` is called Last In First Out (LIFO), because the `last` function to be allocated is the first one `out` of the stack.
-
-The next function calls `quad` and the variable is appended to the stack memory and runs, it then returns while updating `a` and being popped off the stack, then `main` is popped off the stack as there are no more instructions to run which ends the program:
-
-
-```mojo
-%%python
-stack.append({"frame": "quad", "a": 2})
-stack[0]["a"] *= 4
-stack.pop()
-stack.pop()
-print(stack)
-```
-
-    []
-
-
-## Heap
-
-The Heap memory is huge, it can use the remainder of the available RAM on your OS, Python uses it for every object to provide us with conveniences, `a` in the previous example doesn't actually contain the value `1` at the start of the program, it contains an address to another place in memory on the heap:
-
-
-```mojo
-%%python
-
 heap = {
     44601345678945: {
         "type": "int",
@@ -161,33 +91,33 @@ heap = {
         "digit": 8,
         #...
     }
+    #...
 }
 ```
 
-So on the stack `a` looks more like this for each frame:
+On the stack `x` could be represented like:
 
 
-```mojo
+```
 %%python
-
 [
-    {"frame": "main", "a": 44601345678945 }
+    {"frame": "main", "x": 44601345678945 }
 ]
 ```
 
-`a` contains an address that is pointing to the heap object
+`x` contains an address that is pointing to the heap object
 
 In Python we can change the type like:
 
 
-```mojo
-a = "mojo"
+```
+x = "mojo"
 ```
 
 The object in C will change its representation:
 
 
-```mojo
+```
 %%python
 heap = {
     "a": {
@@ -202,20 +132,22 @@ heap = {
 }
 ```
 
-This allows Python to do nice convenient things for us
+Mojo gives us the power to do this with a `PythonObject` as well, it works the exact same way as it would in a Python program.
+
+This allows the program to do nice convenient things for us
 - once the `ref_count` goes to zero it will be de-allocated from the heap during garbage collection, so the OS can use that memory for something else
 - an integer can grow beyond 64 bits by increasing `size`
 - we can dynamically change the `type`
 - the data can be large or small, we don't have to think about when we should allocate to the heap
 
-However this also comes with a penalty, there is a lot more extra memory being used for the extra fields, and it also takes CPU instructions to allocate the data, retrieve it, garbage collect etc.
+However this also comes with a penalty, there is a lot of extra memory being used for the extra fields, and it also takes CPU instructions to allocate the data, retrieve it, garbage collect etc.
 
 In Mojo we can remove all that overhead:
 
 ## Mojo 🔥
 
 
-```mojo
+```
 x = 5 + 10
 print(x)
 ```
@@ -230,6 +162,7 @@ This has numerous performance implications:
 - All the expensive allocation, garbage collection, and indirection is no longer required
 - The compiler can do huge optimizations when it knows what the numeric type is
 - The value can be passed straight into registers for mathematical operations
+- There is no overhead associated with compiling to bytecode and running through an interpreter
 - The data can now be packed into a vector for huge performance gains
 
 That last one is very important in today's world, let's see how Mojo gives us the power to take advantage of modern hardware.
@@ -239,7 +172,7 @@ That last one is very important in today's world, let's see how Mojo gives us th
 SIMD stands for `Single Instruction, Multiple Data`, hardware now contains special registers that allow you do the same operation in a single instruction, greatly improving performance, let's take a look:
 
 
-```mojo
+```
 from DType import DType
 
 y = SIMD[DType.uint8, 4](1, 2, 3, 4)
@@ -254,7 +187,7 @@ In the definition `[DType.uint8, 4]` are known as parameters which means they're
 This is now a vector of 8 bit numbers that are packed into 32 bits, we can perform a single instruction across all of it instead of 4 separate instructions:
 
 
-```mojo
+```
 y *= 10
 print(y)
 ```
@@ -277,29 +210,26 @@ In RAM, binary `1` and `0` represent charged or uncharged capacitors, indicating
 [Check this video](https://www.youtube.com/watch?v=RrJXLdv1i74) if you want more information on binary.
 :::
 
-We have room for 64 bits at each address though on a 64 bit CPU, So we're packing it into a single memory location with SIMD like this:
+We're packing the data together with SIMD on the heap so it can be passed a register like this:
 
-`00000001``00000010``00000011``00000100`
+`00000001` `00000010` `00000011` `00000100`
 
-The register that can perform operations on this in modern CPU's is huge, let's see how big our SIMD register is:
+The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the playground:
 
 
-```mojo
+```
 from TargetInfo import simd_bit_width
 print(simd_bit_width())
 ```
 
-    512
-
-
-That means we could pack 64 8 bit numbers together and perform a single calculation on all of it.
+That means we could pack 64 x 8bit numbers together and perform a calculation on all of it with a single instruction.
 
 ## Scalars
 
 Scalar just means a single value, you'll notice in Mojo all the numerics are SIMD scalars:
 
 
-```mojo
+```
 var x = UInt8(1)
 x = "will cause an error"
 ```
@@ -317,7 +247,7 @@ Also notice when we try and change the type it throws an error, this is because 
 If we use existing Python modules, it will give us back a `PythonObject` that behaves the same `loosely typed` way as it does in Python:
 
 
-```mojo
+```
 np = Python.import_module("numpy")
 
 arr = np.ndarray([5])
@@ -334,7 +264,7 @@ print(arr)
 In Mojo the heap allocated string isn't imported by default:
 
 
-```mojo
+```
 from String import String
 
 s = String("Mojo🔥")
@@ -349,7 +279,7 @@ print(s)
 Let's cause a type error so you can see the data type underlying the String:
 
 
-```mojo
+```
 x = s.buffer
 x = 20
 ```
@@ -363,7 +293,7 @@ x = 20
 `DynamicVector` is similar to a Python list, here it's storing `int8` that represent the characters, let's print the first character:
 
 
-```mojo
+```
 print(s[0])
 ```
 
@@ -373,7 +303,7 @@ print(s[0])
 Now lets take a look at the decimal representation:
 
 
-```mojo
+```
 from String import ord
 
 print(ord(s[0]))
@@ -387,7 +317,7 @@ That's the ASCII code [shown in this table](https://www.ascii-code.com/)
 We can build our own string this way, we can put in 78 which is N and 79 which is O
 
 
-```mojo
+```
 from Vector import DynamicVector
 
 let vec = DynamicVector[Int8](2)
@@ -396,10 +326,10 @@ vec.push_back(78)
 vec.push_back(79)
 ```
 
-And use the pointer
+And use the pointer to copy the data to the heap and convert it to a `String`:
 
 
-```mojo
+```
 vec_str = String(vec.data, 2)
 
 print(vec_str)
@@ -408,10 +338,18 @@ print(vec_str)
     NO
 
 
+Instead of copying data to the heap, if we don't need to dynamically resize it we can be much more efficient with a `StringRef`:
+
+
+```
+vec_str_ref = StringRef(vec.data)
+print(vec_str_ref)
+```
+
 One thing to be aware of is that an emoji is actually four bytes, so we need a slice of 4 to have it print correctly:
 
 
-```mojo
+```
 emoji = String("🔥😀")
 print("fire:", emoji[0:4])
 print("smiley:", emoji[4:8])
@@ -427,7 +365,7 @@ Check out [Maxim Zaks Blog post](https://mzaks.medium.com/counting-chars-with-si
 You can also initialize SIMD with a single argument:
 
 
-```mojo
+```
 z = SIMD[DType.uint8, 4](1)
 print(z)
 ```
@@ -438,7 +376,7 @@ print(z)
 Or do it in a loop:
 
 
-```mojo
+```
 for i in range(3):
     print(SIMD[DType.uint16, 4](i))
 ```
@@ -460,7 +398,7 @@ for i in range(3):
 ### Exercise 1
 
 
-```mojo
+```
 print(SIMD[DType.uint8, 16](2) * 8)
 ```
 
@@ -470,7 +408,7 @@ print(SIMD[DType.uint8, 16](2) * 8)
 ### Exercise 2
 
 
-```mojo
+```
 for i in range(4):
     simd = SIMD[DType.uint8, 4](0)
     simd[i] = 1
