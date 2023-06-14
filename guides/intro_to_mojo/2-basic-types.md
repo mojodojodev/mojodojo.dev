@@ -66,6 +66,9 @@ We can now use the `type` builtin from Python to see what the dynamic type of `x
 py.print(py.type(x))
 ```
 
+    <class 'int'>
+
+
 We can also read the address that is stored on the `stack` which allows us to read memory on the `heap` with the Python `id` builtin:
 
 
@@ -73,7 +76,7 @@ We can also read the address that is stored on the `stack` which allows us to re
 py.print(py.id(x))
 ```
 
-    140411432053024
+    140659155257632
 
 
 This is pointing to a C object in Python, and Mojo behaves the same when using a `PythonObject`, accessing the value actually uses the address to lookup the data on the `heap` which comes with a performance cost. 
@@ -222,6 +225,9 @@ from TargetInfo import simd_bit_width
 print(simd_bit_width())
 ```
 
+    512
+
+
 That means we could pack 64 x 8bit numbers together and perform a calculation on all of it with a single instruction.
 
 ## Scalars
@@ -234,7 +240,7 @@ var x = UInt8(1)
 x = "will cause an error"
 ```
 
-    error: Expression [17]:24:9: cannot implicitly convert 'StringLiteral' value to 'SIMD[ui8, 1]' in assignment
+    error: Expression [14]:20:9: cannot implicitly convert 'StringLiteral' value to 'SIMD[ui8, 1]' in assignment
         x = "will cause an error"
             ^~~~~~~~~~~~~~~~~~~~~
     
@@ -274,7 +280,7 @@ print(s)
     Mojo🔥
 
 
-`String` in one way is similar to a normal Python object, where it's actually a pointer to data that's allocated on the `heap`, this means we can load a huge amount of data into it, and change the size of the data dynamically.
+`String` is actually a pointer to `heap` allocated data, this means we can load a huge amount of data into it, and change the size of the data dynamically during runtime.
 
 Let's cause a type error so you can see the data type underlying the String:
 
@@ -284,7 +290,7 @@ x = s.buffer
 x = 20
 ```
 
-    error: Expression [20]:26:10: cannot implicitly convert 'DynamicVector[SIMD[si8, 1]]' value to 'PythonObject' in assignment
+    error: Expression [17]:22:10: cannot implicitly convert 'DynamicVector[SIMD[si8, 1]]' value to 'PythonObject' in assignment
         x = s.buffer
             ~^~~~~~~
     
@@ -326,25 +332,76 @@ vec.push_back(78)
 vec.push_back(79)
 ```
 
-And use the pointer to copy the data to the heap and convert it to a `String`:
+We can use a `StringRef` to get a pointer to the same location in memory:
 
 
 ```mojo
-vec_str = String(vec.data, 2)
+from Pointer import DTypePointer
+from DType import DType
 
-print(vec_str)
+let vec_str_ref = StringRef(DTypePointer[DType.int8](vec.data).address, vec.size)
+print(vec_str_ref)
 ```
 
     NO
 
 
-Instead of copying data to the heap, if we don't need to dynamically resize it we can be much more efficient with a `StringRef`:
+Because it points to the same location in `heap` memory, changing the original vector will also change the value retrieved by the reference:
 
 
 ```mojo
-vec_str_ref = StringRef(vec.data)
+vec[1] = 78
 print(vec_str_ref)
 ```
+
+    NN
+
+
+Create a `deep copy` of the String and allocate it to the heap:
+
+
+```mojo
+from String import String
+let vec_str = String(vec_str_ref)
+
+print(vec_str)
+```
+
+    NN
+
+
+Now we've made a copy of the data to a new location in `heap` memory, we can modify the original and it won't effect our copy:
+
+
+```mojo
+vec[0] = 65
+vec[1] = 65
+print(vec_str)
+```
+
+    NN
+
+
+The other string type is a `StringLiteral`, it's written directly into the binary, when the program starts it's loaded into `read-only` memory, which means it's constant and lives for the duration of the program:
+
+
+```mojo
+let lit = "This is my StringLiteral"
+print(lit)
+```
+
+    This is my StringLiteral
+
+
+Or a heap allocated deep copy of the data:
+
+
+```mojo
+var lit_ref = StringRef(lit)
+print(lit_ref)
+```
+
+## Tips
 
 One thing to be aware of is that an emoji is actually four bytes, so we need a slice of 4 to have it print correctly:
 
@@ -361,7 +418,6 @@ print("smiley:", emoji[4:8])
 
 Check out [Maxim Zaks Blog post](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d) for more details.
 
-## Notes
 You can also initialize SIMD with a single argument:
 
 
