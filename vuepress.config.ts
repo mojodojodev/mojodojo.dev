@@ -103,7 +103,8 @@ export default defineUserConfig({
                                 collapsible: true,
                                 children: [
                                     '/guides/modules/Bool.md',
-                                    '/guides/modules/FloatLiteral.md'
+                                    '/guides/modules/FloatLiteral.md',
+                                    '/guides/modules/ListLiteral.md'
                                 ]
                             },
                             {
