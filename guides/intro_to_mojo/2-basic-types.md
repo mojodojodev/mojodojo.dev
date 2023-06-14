@@ -11,7 +11,7 @@ _This is in very early stages and under heavy development_
 To understand how Mojo can interact with the Python ecosystem, and why Mojo can do certain things so much faster, let's start by running code through the Python interpreter to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
 
 
-```
+```mojo
 x = Python.evaluate('5 + 10')
 print(x)
 ```
@@ -22,7 +22,7 @@ print(x)
 `x` is represented in memory the same way as if we ran this in Python:
 
 
-```
+```mojo
 %%python
 x = 5 + 10
 print(x)
@@ -50,7 +50,7 @@ We'll be revisiting these concepts a lot, don't worry if it's not clicking yet.
 We can access all the Python keywords by importing `builtins`:
 
 
-```
+```mojo
 let py = Python.import_module("builtins")
 
 py.print("using python keywords")
@@ -62,14 +62,14 @@ py.print("using python keywords")
 We can now use the `type` builtin from Python to see what the dynamic type of `x` was:
 
 
-```
+```mojo
 py.print(py.type(x))
 ```
 
 We can also read the address that is stored on the `stack` which allows us to read memory on the `heap` with the Python `id` builtin:
 
 
-```
+```mojo
 py.print(py.id(x))
 ```
 
@@ -81,7 +81,7 @@ This is pointing to a C object in Python, and Mojo behaves the same when using a
 This is a simplified representation of how the `C Object` being pointed to would look if it were a Python dict:
 
 
-```
+```mojo
 %%python
 heap = {
     44601345678945: {
@@ -98,7 +98,7 @@ heap = {
 On the stack `x` could be represented like:
 
 
-```
+```mojo
 %%python
 [
     {"frame": "main", "x": 44601345678945 }
@@ -110,14 +110,14 @@ On the stack `x` could be represented like:
 In Python we can change the type like:
 
 
-```
+```mojo
 x = "mojo"
 ```
 
 The object in C will change its representation:
 
 
-```
+```mojo
 %%python
 heap = {
     "a": {
@@ -147,7 +147,7 @@ In Mojo we can remove all that overhead:
 ## Mojo 🔥
 
 
-```
+```mojo
 x = 5 + 10
 print(x)
 ```
@@ -172,7 +172,7 @@ That last one is very important in today's world, let's see how Mojo gives us th
 SIMD stands for `Single Instruction, Multiple Data`, hardware now contains special registers that allow you do the same operation in a single instruction, greatly improving performance, let's take a look:
 
 
-```
+```mojo
 from DType import DType
 
 y = SIMD[DType.uint8, 4](1, 2, 3, 4)
@@ -187,7 +187,7 @@ In the definition `[DType.uint8, 4]` are known as parameters which means they're
 This is now a vector of 8 bit numbers that are packed into 32 bits, we can perform a single instruction across all of it instead of 4 separate instructions:
 
 
-```
+```mojo
 y *= 10
 print(y)
 ```
@@ -217,7 +217,7 @@ We're packing the data together with SIMD on the heap so it can be passed a regi
 The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the playground:
 
 
-```
+```mojo
 from TargetInfo import simd_bit_width
 print(simd_bit_width())
 ```
@@ -229,7 +229,7 @@ That means we could pack 64 x 8bit numbers together and perform a calculation on
 Scalar just means a single value, you'll notice in Mojo all the numerics are SIMD scalars:
 
 
-```
+```mojo
 var x = UInt8(1)
 x = "will cause an error"
 ```
@@ -247,7 +247,7 @@ Also notice when we try and change the type it throws an error, this is because 
 If we use existing Python modules, it will give us back a `PythonObject` that behaves the same `loosely typed` way as it does in Python:
 
 
-```
+```mojo
 np = Python.import_module("numpy")
 
 arr = np.ndarray([5])
@@ -264,7 +264,7 @@ print(arr)
 In Mojo the heap allocated string isn't imported by default:
 
 
-```
+```mojo
 from String import String
 
 s = String("Mojo🔥")
@@ -274,12 +274,12 @@ print(s)
     Mojo🔥
 
 
-`String` works similar to a normal python object, where it's actually a pointer to data that's allocated on the `heap`, this means we can load a huge amount of data into it, and change the size of the data dynamically.
+`String` in one way is similar to a normal Python object, where it's actually a pointer to data that's allocated on the `heap`, this means we can load a huge amount of data into it, and change the size of the data dynamically.
 
 Let's cause a type error so you can see the data type underlying the String:
 
 
-```
+```mojo
 x = s.buffer
 x = 20
 ```
@@ -293,7 +293,7 @@ x = 20
 `DynamicVector` is similar to a Python list, here it's storing `int8` that represent the characters, let's print the first character:
 
 
-```
+```mojo
 print(s[0])
 ```
 
@@ -303,7 +303,7 @@ print(s[0])
 Now lets take a look at the decimal representation:
 
 
-```
+```mojo
 from String import ord
 
 print(ord(s[0]))
@@ -317,7 +317,7 @@ That's the ASCII code [shown in this table](https://www.ascii-code.com/)
 We can build our own string this way, we can put in 78 which is N and 79 which is O
 
 
-```
+```mojo
 from Vector import DynamicVector
 
 let vec = DynamicVector[Int8](2)
@@ -329,7 +329,7 @@ vec.push_back(79)
 And use the pointer to copy the data to the heap and convert it to a `String`:
 
 
-```
+```mojo
 vec_str = String(vec.data, 2)
 
 print(vec_str)
@@ -341,7 +341,7 @@ print(vec_str)
 Instead of copying data to the heap, if we don't need to dynamically resize it we can be much more efficient with a `StringRef`:
 
 
-```
+```mojo
 vec_str_ref = StringRef(vec.data)
 print(vec_str_ref)
 ```
@@ -349,7 +349,7 @@ print(vec_str_ref)
 One thing to be aware of is that an emoji is actually four bytes, so we need a slice of 4 to have it print correctly:
 
 
-```
+```mojo
 emoji = String("🔥😀")
 print("fire:", emoji[0:4])
 print("smiley:", emoji[4:8])
@@ -365,7 +365,7 @@ Check out [Maxim Zaks Blog post](https://mzaks.medium.com/counting-chars-with-si
 You can also initialize SIMD with a single argument:
 
 
-```
+```mojo
 z = SIMD[DType.uint8, 4](1)
 print(z)
 ```
@@ -376,7 +376,7 @@ print(z)
 Or do it in a loop:
 
 
-```
+```mojo
 for i in range(3):
     print(SIMD[DType.uint16, 4](i))
 ```
@@ -398,7 +398,7 @@ for i in range(3):
 ### Exercise 1
 
 
-```
+```mojo
 print(SIMD[DType.uint8, 16](2) * 8)
 ```
 
@@ -408,7 +408,7 @@ print(SIMD[DType.uint8, 16](2) * 8)
 ### Exercise 2
 
 
-```
+```mojo
 for i in range(4):
     simd = SIMD[DType.uint8, 4](0)
     simd[i] = 1

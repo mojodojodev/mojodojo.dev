@@ -30,7 +30,7 @@ Mojo doesn’t support overloading solely on result type, and doesn’t use resu
 ### Creating New Operators
 We can definitely add that in time, but in the immediate future we're focused on /not/ adding gratuitous syntactic sugar. We're focused on building out the core model and getting the fundamentals right.
 
-E.g. even changing def __add__( to def +( would be trivial to do, but sends us down the route of building syntax sugar, which is hugely distracting. It's better to stay focused.
+e.g. even changing `def __add__()` to `def +()` would be trivial to do, but sends us down the route of building syntax sugar, which is hugely distracting. It's better to stay focused.
 
 ### Algebraic Data Types
 I'm a fan of optional and other algebraic data types, you don't need to convince me. It's in our roadmap doc! :-) OTOH, Swift has way too much special purpose sugar which I'd prefer to reduce this time around, there are ways to have the best of both worlds - ergonomic and extensible.
@@ -467,6 +467,10 @@ If you care about performance you can incrementally move Python to Mojo and you 
 - [2023-05-17 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1108140099012673626/1108190672139329536)
 - [2023-06-02 Youtube Chris lattner](https://youtu.be/pdJQ8iVTwj8?t=1521)
 
+### Untyped Mojo Improvements over Python
+The easy answers are that the compiler eliminates a ton of overhead compared to the interpreter even if the individual operations are the same, and our dynamic object representation is a variant on the stack for simple things like numbers instead of a heap box, which is a huge win. We aren't doing any interesting static or dynamic analysis like V8 or PyPy etc yet, but we can obviously layer those things into the system as it matures.
+
+- [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1118249387915751538)
 
 ### Runtime specialization
 Right now the JIT just provides compilation, not runtime specialization or adaptive compilation. We can add that, but our goal isn’t to make dynamic code static with runtime information, it's to allow people to express static code as static.
@@ -842,9 +846,7 @@ It's related to work done in the Rust, Swift, C++ and many other communities, it
 ### Lifetime Parallelism Support
 Our lifetime support isn't finished yet but will be in the next month or so, that is a cornerstone of that. Here is something I worked on in a former life that brought data race safety to swift, we will use some of the same approaches [but will also be very different in other ways](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
 
-We have a design and it is partially implemented, but not fully baked. I hope we can share more about this in the next month or two
-
-Mojo doesn't have a publicly exposed lifetime system, so it can't express everything that we want it to today. It will soon though, [in the meantime you can express things with `&` which is shared mutable]( https://docs.modular.com/mojo/programming-manual.html#argument-passing-control-and-memory-ownership)
+Mojo doesn't have a publicly exposed lifetime system, so it can't express everything that we want it to today. It will soon though, [in the meantime you can express things with `inout` which is shared mutable]( https://docs.modular.com/mojo/programming-manual.html#argument-passing-control-and-memory-ownership)
 
 ### Values implicitly copied in `fn` that requires ownership of that type
 You get an error if your value is not copyable. Keep in mind that owned can/should be used in a lot of places as a performance optimization, e.g. the arguments to a "memberwise init". For non-copyable types this is required for correctness to handle ownership correctly, and for copyable types it allows you to avoid the copies if you're careful.
@@ -863,7 +865,19 @@ Mojo doesn't force, but enables the use of value semantics. This allows you to p
 
 [2023-06-02 Lex Fridman Interview 48:28](https://youtu.be/pdJQ8iVTwj8?t=2908)
 
+### First Class Lifetimes
+I'm optimistic the Mojo lifetime solution will be a nice step forward in both usability and expressivity vs rust, and first class lifetimes are very nice for inner pointers etc.
+
+Mojo references are currently second class exactly as [Graydon advocates](https://graydon2.dreamwidth.org/307291.html).  We're experimenting with lifetimes, but if they spiral in complexity we can always eliminate them as a concept and stay with the current design.
+- [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1118249300405780541)
+
+
 ## General
+
+### Self Hosting
+It will take us quite some time to get there, but yes I would like the Mojo parser to some day be written in Mojo. I would also like to see the CPython interpreter rewritten in Mojo, but have no plans to do so. One can dream 😉
+- [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103006101261267004/1118233873738903704)
+
 
 ### OS Kernel Development
 Yeah just to clarify, when modular-ites use the word `kernel` they typically mean high performance numeric kernel which may be targeted at an accelerator or GPU or CPU etc. Secondary meanings are `OS kernel` or `Jupyter kernel`, because the word is overloaded.
