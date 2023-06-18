@@ -1,11 +1,16 @@
 ---
-title: '2: Basic Types'
-category: '1: Setup'
+title: 'Intro to Mojo 2: Basic Types'
 usage: Some basic types to get you started with Mojo
+head:
+  - [meta, { name: twitter:card , content: summary }]
+  - [meta, { name: twitter:site , content: '@mojodojodev' }]
+  - [meta, { name: twitter:title , content: "Intro to Mojo: Basic Types" }]
+  - [meta, { name: twitter:description , content: "Get started with Mojo basic types and how to interact with Python" }]
+  - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
 ---
 
 # Basic Types
-_This is in very early stages and under heavy development_
+_This guide is in the early stages, feedback welcomed [on Github](https://github.com/mojodojodev/mojodojo.dev/discussions/categories/feedback)_
 
 ## PythonObject
 Let's start by running code through the Python interpreter from Mojo to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
@@ -172,7 +177,7 @@ That last one is very important in today's world, let's see how Mojo gives us th
 
 ## SIMD
 
-SIMD stands for `Single Instruction, Multiple Data`, hardware now contains special registers that allow you do the same operation in a single instruction, greatly improving performance, let's take a look:
+SIMD stands for `Single Instruction, Multiple Data`, hardware now contains special registers that allow you do the same operation across a vector in a single instruction, greatly improving performance, let's take a look:
 
 
 ```mojo
@@ -185,7 +190,11 @@ print(y)
     [1, 2, 3, 4]
 
 
-In the definition `[DType.uint8, 4]` are known as `parameters` which means they must be compile-time known, while `(1, 2, 3, 4)` are the `arguments` which can be compile-time or runtime known. For example a user input or data retrieved from an API are runtime known and so can't be used as `parameters`, in other languages `argument` and `parameter` often mean the same thing, in Mojo it's a very important distinction.
+In the definition `[DType.uint8, 4]` are known as `parameters` which means they must be compile-time known, while `(1, 2, 3, 4)` are the `arguments` which can be compile-time or runtime known. 
+
+For example user input or data retrieved from an API is runtime known, and so can't be used as a `parameter` during the compilation process.
+
+In other languages `argument` and `parameter` often mean the same thing, in Mojo it's a very important distinction.
 
 This is now a vector of 8 bit numbers that are packed into 32 bits, we can perform a single instruction across all of it instead of 4 separate instructions:
 
@@ -199,7 +208,7 @@ print(y)
 
 
 ::: tip CS Fundamentals
-Binary is how your computer stores memory, with each bit representing a `0` or `1`. Memory is typically byte-addressable, meaning that each unique memory address points to one byte, which consists of 8 bits.
+Binary is how your computer stores memory, with each bit representing a `0` or `1`. Memory is typically `byte` addressable, meaning that each unique memory address points to one `byte`, which consists of 8 `bits`.
 
 This is how the first 4 digits in a `uint8` are represented in hardware:
 
@@ -208,7 +217,7 @@ This is how the first 4 digits in a `uint8` are represented in hardware:
 - 3 = `00000011`
 - 4 = `00000100`
 
-In RAM, binary `1` and `0` represent charged or uncharged capacitors, indicating ON or OFF states.
+Binary `1` and `0` represents `ON` or `OFF` indicating an electrical charge in the tiny circuits of your computer.
 
 [Check this video](https://www.youtube.com/watch?v=RrJXLdv1i74) if you want more information on binary.
 :::
@@ -217,9 +226,9 @@ We're packing the data together with SIMD on the heap so it can be passed into a
 
 `00000001` `00000010` `00000011` `00000100`
 
-Retrieving the data points to the address of `00000001`, and the type definition we provided earlier of `SIMD[DType.uint8, 4]` is how the compiler knows to collect `4` bytes starting at that address. This is why `parameters` must be compile-time known, the compiler needs that information to optimize the code before runtime.
+The variable stores this data on the `stack`, and when doing mathematical operations it can be passed through the SIMD register.
 
-The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the playground:
+The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the Mojo playground:
 
 
 ```mojo
@@ -231,6 +240,17 @@ print(simd_bit_width())
 
 
 That means we could pack 64 x 8bit numbers together and perform a calculation on all of it with a single instruction.
+
+You can also initialize SIMD with a single argument:
+
+
+```mojo
+z = SIMD[DType.uint8, 4](1)
+print(z)
+```
+
+    [1, 1, 1, 1]
+
 
 ## Scalars
 
@@ -346,7 +366,7 @@ vec.push_back(78)
 vec.push_back(79)
 ```
 
-We can use a `StringRef` to get a pointer to the same location in memory:
+We can use a `StringRef` to get a pointer to the same location in memory, but with the methods required to output the numbers as text:
 
 
 ```mojo
@@ -420,7 +440,6 @@ lit = 20
     
 
 
-## Notes
 One thing to be aware of is that an emoji is actually four bytes, so we need a slice of 4 to have it print correctly:
 
 
@@ -436,32 +455,8 @@ print("smiley:", emoji[4:8])
 
 Check out [Maxim Zaks Blog post](https://mzaks.medium.com/counting-chars-with-simd-in-mojo-140ee730bd4d) for more details.
 
-You can also initialize SIMD with a single argument:
-
-
-```mojo
-z = SIMD[DType.uint8, 4](1)
-print(z)
-```
-
-    [1, 1, 1, 1]
-
-
-Or do it in a loop:
-
-
-```mojo
-for i in range(3):
-    print(SIMD[DType.uint16, 4](i))
-```
-
-    [0, 0, 0, 0]
-    [1, 1, 1, 1]
-    [2, 2, 2, 2]
-
-
 ## Other Builtins
-These are all of the other builtin types not discussed which are accessible without importing anything, the type can be inferred, but are explicit here for demonstration e.g. `let bool: Bool = True` can be `let bool = True`:
+These are all of the other builtin types not discussed which are accessible without importing anything, the type can be inferred, but are explicit here for demonstration, for example `let bool: Bool = True` can just be `let bool = True`:
 
 ### Bool
 Standard Bool type
@@ -610,9 +605,9 @@ return_error()
 
 
 ## Exercises
-1. Use the Python interpreter to calculate 2 to the power of 8 and return it in a `PythonObject`
-2. Using the Python math module, return `pi` to Mojo and print it
-3. Create a SIMD of DType UInt8, 16 bytes wide and each value at 2, then multiply it by 8 and print it
+1. Use the Python interpreter to calculate 2 to the power of 8 in a `PythonObject` and print it
+2. Using the Python `math` module, return `pi` to Mojo and print it
+3. Initialize two single floats with 64 bits of data and the value 2.0, using the full SIMD version, and the shortened alias version, then multiply them together and print the result.
 4. Create a loop using SIMD that prints four rows of data that looks like this:
 ```
     [1,0,0,0]
@@ -620,7 +615,12 @@ return_error()
     [0,0,1,0]
     [0,0,0,1]
 ```
-5. Initialize two single floats with 64 bits of data and the value 2.0, using the full SIMD version, and the shortened alias version, then multiply them together and print the result.
+In Mojo you can create a loop like this:
+
+```mojo
+for i in range(4):
+    pass
+```
 
 ## Solutions
 
@@ -652,10 +652,13 @@ print(pi)
 
 
 ```mojo
-print(SIMD[DType.uint8, 16](2) * 8)
+let left = Float64(2.0)
+let right = SIMD[DType.float64, 1](2.0)
+
+print(left * right)
 ```
 
-    [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
+    4.0
 
 
 ### Exercise 4
@@ -672,17 +675,4 @@ for i in range(4):
     [0, 1, 0, 0]
     [0, 0, 1, 0]
     [0, 0, 0, 1]
-
-
-### Exercise 5
-
-
-```mojo
-let left = Float64(2.0)
-let right = SIMD[DType.float64, 1](2.0)
-
-print(left * right)
-```
-
-    4.0
 
