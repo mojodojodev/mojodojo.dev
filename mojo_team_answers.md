@@ -296,6 +296,16 @@ There are alternative ways to address the same thing, e.g. check out how extensi
 
 [2023-06-13 Github Chris Lattner](https://github.com/modularml/mojo/discussions/366#discussioncomment-6155792)
 
+### Custom Allocators
+We don't have an established policy here and this is a really complicated topic, I'm not keen on making everyone _always_ think about allocators like Zig does, I don't think that is practical in a language that cares about usability and ergonomics, but it is clearly good to _allow_ folks to care.
+
+In my personal opinion, there is a big difference practically between `node` allocation and `array` allocation. Error handling for small objects will kill us, and we don't want to make allocation of any class instance be failable. That said, allocating an array that could be 16GB definitely can fail. On the third hand, core data structures like Array probably don't want to expose memory allocation failability to the client by default for usability reasons.
+
+It would be interesting to explore making these different APIs, possibly overloaded with a keyword argument or something. As one idea, we could make `UnsafePointer[T].allocate()` non-failable, but make `UnsafePointer[T].allocate(Int)` failable. We'd still have to decide what to do with that at the Array api level, but it too could have overloads for `arr.resize(n)` vs `arr.resize(checked = n)` or something like that.
+
+[2023-06-16 Github Chris Lattner](https://github.com/modularml/mojo/discussions/377#discussioncomment-6188353)
+
+
 ## Syntax 
 ### Syntactic Sugar
 Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
@@ -1006,7 +1016,10 @@ We're tapping into some deep long held pressures in the Python, AI and hardware 
 I would tell you if I knew 🙂. Our priority is to build the "right thing" not build a demo and get stuck with the wrong thing. My wild guess is that the language will be very usable for a lot of things in 18 months, but don't hold me to that.
 
 It WILL be open-sourced, because Modular on its own isn't big enough to build the whole ecosystem
-Unlike Apple and Swift
+Unlike Apple and Swift.
+
+- [2023-05-05 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1103858767331872850)
+- [2023-05-09 Discord ](https://discord.com/channels/1087530497313357884/1098713601386233997/1105168399258107925)
 
 ### Opening the MLIR design docs
 Our hands are pretty full at this point, and I don't think the general ML community would care much. That's something more that we'd talk at an LLVM event about or something. BTW, there is one next week.
