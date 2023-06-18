@@ -31,7 +31,7 @@ print(y)
 
 ## bool
 
-`bool` returns true if the value does not equal 0.0
+Returns true if the value does not equal 0.0
 
 
 ```mojo
@@ -48,7 +48,7 @@ if not 0.0:
 
 ## neg
 
-`neg` return `FloatLiteral` with a swapped sign.
+Returns `FloatLiteral` with a swapped sign.
 
 
 ```mojo
@@ -60,11 +60,11 @@ print(-x)
 
 ## lt
 
-`lt` return true if `lhs` is smaller than `rhs`.
+Returns true if `lhs` (left hand side) is smaller than `rhs` (right hand side).
 
 
 ```mojo
-print(-5 < -2)
+print(-5.0 < -2.0)
 ```
 
     True
@@ -72,7 +72,7 @@ print(-5 < -2)
 
 ## le
 
-`le` return true if `lhs` is smaller than or equal to the `rhs`.
+Returns true if `lhs` is smaller than or equal to the `rhs`.
 
 
 ```mojo
@@ -84,7 +84,7 @@ print(5.0 <= 5.0)
 
 ## eq
 
-`eq` return true if `lhs` is equal to `rhs`.
+Returns true if `lhs` is equal to `rhs`.
 
 
 ```mojo
@@ -96,7 +96,7 @@ print(1.0 == 1.0)
 
 ## ne
 
-`ne` return true if `lhs` is not equal to `rhs`.
+Returns true if `lhs` is not equal to `rhs`.
 
 
 ```mojo
@@ -108,7 +108,7 @@ print(1.0 != 2.0)
 
 ## gt
 
-`gt` return true if `lhs` is larger than `rhs`.
+Returns true if `lhs` is larger than `rhs`.
 
 
 ```mojo
@@ -120,7 +120,7 @@ print(3.0 > 2.0)
 
 ## ge
 
-`ge` return true if `lhs` is larger than or equal to `rhs`.
+Returns true if `lhs` is larger than or equal to `rhs`.
 
 
 ```mojo
@@ -132,7 +132,7 @@ print(2.0 >= 2.0)
 
 ## add
 
-`add` return `lhs` plus `rhs`.
+returns `lhs` plus `rhs`.
 
 
 ```mojo
@@ -144,7 +144,7 @@ print(40.0 + 2.0)
 
 ## sub
 
-`sub` return `lhs` minus `rhs`.
+returns `lhs` minus `rhs`.
 
 
 ```mojo
@@ -168,7 +168,7 @@ print(21.0 * 2.0)
 
 ## truediv
 
-`truediv` return `lhs` divided by `rhs`.
+returns `lhs` divided by `rhs`.
 
 
 ```mojo
@@ -180,7 +180,7 @@ print(5.0 / 2.0)
 
 ## floordiv
 
-`floordiv` return `lhs` divided by `rhs` rounded down to the next whole number
+Returns `lhs` divided by `rhs` rounded down to the next whole number
 
 
 ```mojo
@@ -191,43 +191,121 @@ print(5.0 // 2.0)
 
 
 ## mod
-
-`mod` return the remainder of `lhs` divided by `rhs`
+Returns the remainder of `lhs` divided by `rhs`
 
 
 ```mojo
-print(x % y)
+print(5.0 % 2.0)
 ```
 
-    2.0
+    1.0
 
 
 # pow
 
-`pow` return `lhs` raised to the power of `rhs`
+Returns `lhs` raised to the power of `rhs`
 
 
 ```mojo
-print(2 ** 8)
+print(2.0 ** 8.0)
 ```
 
-    256
+    256.0
 
 
 ## radd, rsub, rmul, rtruediv, rfloordiv, rmod, rpow
-Think of the `r` as reversed, for example in `a & b`, if `a` doesn't implement `__and__`, then `b.__rand__(a)` will run instead.
+Think of the `r` as reversed, for example in `a + b`, if `a` doesn't implement `__add__`, then `b.__radd__(a)` will run instead.
+
+For example create a struct `MyNumber` only implementing `__radd__`:
+
+
+```mojo
+struct MyNumber:
+    var value: FloatLiteral
+
+    fn __init__(inout self, num: FloatLiteral):
+        self.value = num
+
+    fn __radd__(self, rhs: FloatLiteral) -> FloatLiteral:
+        print("running MyNumber 'radd' implementation")
+        return self.value + rhs
+```
+
+
+```mojo
+let num = MyNumber(40.0)
+print(2.0 + num)
+```
+
+    running MyNumber 'radd' implementation
+    42.0
+
+
 
 ## iadd, isub, imul, itruediv, ifloordiv, imod, ipow
 `i` stands for `in-place`, the `lhs` becomes the result of the operation and a new object is not created.
 
 
 ```mojo
-var a = 2
-print(a)
-a += 2
+var a = 40.0
+
+a += 2.0
 print(a)
 ```
 
-    2
-    4
+    42.0
+
+
+
+```mojo
+a -= 10.0
+print(a)
+```
+
+    32.0
+
+
+
+```mojo
+a %= 5.0
+print(a)
+```
+
+    2.0
+
+
+
+```mojo
+a /= 3.0
+print(a)
+```
+
+    0.66666666666666663
+
+
+
+```mojo
+a *= 20.0
+print(a)
+```
+
+    13.333333333333332
+
+
+
+```mojo
+a //= 2.0
+print(a)
+```
+
+    6.0
+
+
+
+```mojo
+a **= 2.0
+print(a)
+```
+
+    36.0
 
