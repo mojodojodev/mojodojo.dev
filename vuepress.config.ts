@@ -102,9 +102,9 @@ export default defineUserConfig({
                                 text: 'Builtins',
                                 collapsible: true,
                                 children: [
-                                    '/guides/modules/Bool.md',
-                                    '/guides/modules/FloatLiteral.md',
-                                    '/guides/modules/ListLiteral.md'
+                                    '/guides/modules/builtins/Bool.md',
+                                    '/guides/modules/builtins/FloatLiteral.md',
+                                    '/guides/modules/builtins/ListLiteral.md'
                                 ]
                             },
                             {

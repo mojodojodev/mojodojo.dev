@@ -8,7 +8,7 @@ usage: Some basic types to get you started with Mojo
 _This is in very early stages and under heavy development_
 
 ## PythonObject
-To understand how Mojo can interact with the Python ecosystem, and why Mojo can do certain things so much faster, let's start by running code through the Python interpreter to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
+Let's start by running code through the Python interpreter from Mojo to get a [PythonObject](https://docs.modular.com/mojo/MojoPython/PythonObject.html) back:
 
 
 ```mojo
@@ -31,7 +31,7 @@ print(x)
     15
 
 
-_in the Mojo playground, using `%%python` will run straight through the interpreter_
+_in the Mojo playground, using `%%python` at the top of a cell will run code through Python instead of Mojo_
 
 `x` is actually a pointer to `heap` allocated memory.
 
@@ -42,24 +42,24 @@ If the video doesn't make sense, for now you can use the mental model that:
 
 - `stack` memory is very fast but small, the size of the values must be known at runtime
 - `pointer` is an address to lookup the value somewhere else in memory
-- `heap` memory is huge and the size can change at runtime, but needs a pointer to access the data which is slow
+- `heap` memory is huge and the size can change at runtime, but needs a pointer to access the data which is relatively slow
 
-We'll be revisiting these concepts a lot, don't worry if it's not clicking yet.
+These concepts will make more sense over time
 :::
 
-We can access all the Python keywords by importing `builtins`:
+You can access all the Python keywords by importing `builtins`:
 
 
 ```mojo
 let py = Python.import_module("builtins")
 
-py.print("using python keywords")
+py.print("this uses the python print keyword")
 ```
 
-    using python keywords
+    this uses the python print keyword
 
 
-We can now use the `type` builtin from Python to see what the dynamic type of `x` was:
+We can now use the `type` builtin from Python to see what the dynamic type of `x` is:
 
 
 ```mojo
@@ -69,14 +69,14 @@ py.print(py.type(x))
     <class 'int'>
 
 
-We can also read the address that is stored on the `stack` which allows us to read memory on the `heap` with the Python `id` builtin:
+We can read the address that is stored in `x` on the `stack` using the Python builtin `id`
 
 
 ```mojo
 py.print(py.id(x))
 ```
 
-    140659155257632
+    139732464847136
 
 
 This is pointing to a C object in Python, and Mojo behaves the same when using a `PythonObject`, accessing the value actually uses the address to lookup the data on the `heap` which comes with a performance cost. 
@@ -98,7 +98,7 @@ heap = {
 }
 ```
 
-On the stack `x` could be represented like:
+On the stack the simplified representation of `x` would look like this:
 
 
 ```mojo
@@ -110,7 +110,7 @@ On the stack `x` could be represented like:
 
 `x` contains an address that is pointing to the heap object
 
-In Python we can change the type like:
+In Python we can change the type dynamically:
 
 
 ```mojo
@@ -135,15 +135,15 @@ heap = {
 }
 ```
 
-Mojo gives us the power to do this with a `PythonObject` as well, it works the exact same way as it would in a Python program.
+Mojo also allows us to do this when the type is a `PythonObject`, it works the exact same way as it would in a Python program.
 
-This allows the program to do nice convenient things for us
+This allows the runtime to do nice convenient things for us
 - once the `ref_count` goes to zero it will be de-allocated from the heap during garbage collection, so the OS can use that memory for something else
 - an integer can grow beyond 64 bits by increasing `size`
 - we can dynamically change the `type`
 - the data can be large or small, we don't have to think about when we should allocate to the heap
 
-However this also comes with a penalty, there is a lot of extra memory being used for the extra fields, and it also takes CPU instructions to allocate the data, retrieve it, garbage collect etc.
+However this also comes with a penalty, there is a lot of extra memory being used for the extra fields, and it takes CPU instructions to allocate the data, retrieve it, garbage collect etc.
 
 In Mojo we can remove all that overhead:
 
@@ -185,7 +185,7 @@ print(y)
     [1, 2, 3, 4]
 
 
-In the definition `[DType.uint8, 4]` are known as parameters which means they're compile-time known, while `(1, 2, 3, 4)` are the arguments which can be compile-time or runtime known.
+In the definition `[DType.uint8, 4]` are known as `parameters` which means they must be compile-time known, while `(1, 2, 3, 4)` are the `arguments` which can be compile-time or runtime known. For example a user input or data retrieved from an API are runtime known and so can't be used as `parameters`, in other languages `argument` and `parameter` often mean the same thing, in Mojo it's a very important distinction.
 
 This is now a vector of 8 bit numbers that are packed into 32 bits, we can perform a single instruction across all of it instead of 4 separate instructions:
 
@@ -213,9 +213,11 @@ In RAM, binary `1` and `0` represent charged or uncharged capacitors, indicating
 [Check this video](https://www.youtube.com/watch?v=RrJXLdv1i74) if you want more information on binary.
 :::
 
-We're packing the data together with SIMD on the heap so it can be passed a register like this:
+We're packing the data together with SIMD on the heap so it can be passed into a register like this:
 
 `00000001` `00000010` `00000011` `00000100`
+
+Retrieving the data points to the address of `00000001`, and the type definition we provided earlier of `SIMD[DType.uint8, 4]` is how the compiler knows to collect `4` bytes starting at that address. This is why `parameters` must be compile-time known, the compiler needs that information to optimize the code before runtime.
 
 The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the playground:
 
@@ -246,7 +248,19 @@ x = "will cause an error"
     
 
 
-UInt8 is just an alias for `SIMD[DType.uint8, 1]`, you can see all the [numeric SIMD types imported by default here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html)
+`UInt8` is just an `alias` for `SIMD[DType.uint8, 1]`, you can see all the [numeric SIMD types imported by default here](https://docs.modular.com/mojo/MojoStdlib/SIMD.html):
+
+- Float16
+- Float32
+- Float64
+- Int8
+- Int16
+- Int32
+- Int64
+- UInt8
+- UInt16
+- UInt32
+- UInt64
 
 Also notice when we try and change the type it throws an error, this is because Mojo is `strongly typed`
 
@@ -267,7 +281,7 @@ print(arr)
 
 
 ## Strings
-In Mojo the heap allocated string isn't imported by default:
+In Mojo the heap allocated `String` isn't imported by default:
 
 
 ```mojo
@@ -296,7 +310,7 @@ x = 20
     
 
 
-`DynamicVector` is similar to a Python list, here it's storing `int8` that represent the characters, let's print the first character:
+`DynamicVector` is similar to a Python list, here it's storing multiple `int8`'s that represent the characters, let's print the first character:
 
 
 ```mojo
@@ -386,23 +400,27 @@ The other string type is a `StringLiteral`, it's written directly into the binar
 
 
 ```mojo
-let lit = "This is my StringLiteral"
+var lit = "This is my StringLiteral"
 print(lit)
 ```
 
     This is my StringLiteral
 
 
-Or a heap allocated deep copy of the data:
+Force an error to see the type:
 
 
 ```mojo
-var lit_ref = StringRef(lit)
-print(lit_ref)
+lit = 20
 ```
 
-## Tips
+    error: Expression [26]:26:11: cannot implicitly convert 'Int' value to 'StringLiteral' in assignment
+        lit = 20
+              ^~
+    
 
+
+## Notes
 One thing to be aware of is that an emoji is actually four bytes, so we need a slice of 4 to have it print correctly:
 
 
@@ -442,16 +460,195 @@ for i in range(3):
     [2, 2, 2, 2]
 
 
+## Other Builtins
+These are all of the other builtin types not discussed which are accessible without importing anything, the type can be inferred, but are explicit here for demonstration e.g. `let bool: Bool = True` can be `let bool = True`:
+
+### Bool
+Standard Bool type
+
+
+```mojo
+let bool: Bool = True
+print(bool == False)
+```
+
+    False
+
+
+### Int
+Int is the same size as your architecture e.g. on a 64 bit machine it's 64 bits
+
+
+```mojo
+let i: Int = 2 
+print(i)
+```
+
+    2
+
+
+It can also be used as an index:
+
+
+```mojo
+var vec_2 = DynamicVector[Int]()
+vec_2.push_back(2)
+vec_2.push_back(4)
+vec_2.push_back(6)
+
+print(vec_2[i])
+```
+
+    6
+
+
+### FloatLiteral
+
+
+```mojo
+let float: FloatLiteral = 3.3
+print(float)
+```
+
+    3.2999999999999998
+
+
+
+```mojo
+let f32 = Float32(float)
+print(f32)
+```
+
+    3.2999999523162842
+
+
+### ListLiteral
+
+When you initialize the list the types can be inferred, however when retrieving an item you need to provide the type as a `parameter`:
+
+
+```mojo
+let list: ListLiteral[Int, FloatLiteral, StringLiteral] = [1, 5.0, "Mojo🔥"]
+print(list.get[2, StringLiteral]())
+```
+
+    Mojo🔥
+
+
+### Tuple
+
+
+```mojo
+let tup = (1, "Mojo", 3)
+print(tup.get[0, Int]())
+```
+
+    1
+
+
+### Slice
+A slice follows the python convention of:
+
+`start:end:step`
+
+So for example using Python syntax:
+
+
+```mojo
+let original = String("MojoDojo")
+print(original[0:4])
+```
+
+    Mojo
+
+
+You can also represent as:
+
+
+```mojo
+let slice_expression = slice(0, 4)
+
+print(original[slice_expression])
+```
+
+    Mojo
+
+
+And to get every second letter:
+
+
+```mojo
+print(original[0:4:2])
+```
+
+    Mj
+
+
+Or:
+
+
+```mojo
+let slice_expression = slice(0, 4, 2)
+print(original[slice_expression])
+```
+
+    Mj
+
+
+### Error
+The error type is very simplistic, we'll go into more details on errors in a later chapter:
+
+
+```mojo
+def return_error():
+    raise Error("This returns an Error type")
+
+return_error()
+```
+
+    Error: This returns an Error type
+
+
 ## Exercises
-1. Create a SIMD of DType UInt8, 16 bytes wide and each value at 2, then multiply it by 8 and print it
-2. Create a loop using SIMD that prints four rows of data that looks like this:
+1. Use the Python interpreter to calculate 2 to the power of 8 and return it in a `PythonObject`
+2. Using the Python math module, return `pi` to Mojo and print it
+3. Create a SIMD of DType UInt8, 16 bytes wide and each value at 2, then multiply it by 8 and print it
+4. Create a loop using SIMD that prints four rows of data that looks like this:
+```
     [1,0,0,0]
     [0,1,0,0]
     [0,0,1,0]
     [0,0,0,1]
+```
+5. Initialize two single floats with 64 bits of data and the value 2.0, using the full SIMD version, and the shortened alias version, then multiply them together and print the result.
 
 ## Solutions
+
 ### Exercise 1
+
+
+```mojo
+let pow = Python.evaluate("2 ** 8") 
+print(pow)
+```
+
+    256
+
+
+### Exercise 2
+
+
+```mojo
+let math = Python.import_module("math")
+
+let pi = math.pi
+print(pi)
+```
+
+    3.141592653589793
+
+
+### Exercise 3
 
 
 ```mojo
@@ -461,7 +658,7 @@ print(SIMD[DType.uint8, 16](2) * 8)
     [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
 
 
-### Exercise 2
+### Exercise 4
 
 
 ```mojo
@@ -475,4 +672,17 @@ for i in range(4):
     [0, 1, 0, 0]
     [0, 0, 1, 0]
     [0, 0, 0, 1]
+
+
+### Exercise 5
+
+
+```mojo
+let left = Float64(2.0)
+let right = SIMD[DType.float64, 1](2.0)
+
+print(left * right)
+```
+
+    4.0
 

@@ -1,7 +1,7 @@
 ---
 title: FloatLiteral
 categories: Builtins
-usage: The primitive ListLiteral class in Mojo
+usage: Floating point literal type.
 ---
 
 Contributed by [StitchyPie](https://github.com/StitchyPie)
