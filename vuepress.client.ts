@@ -23,11 +23,11 @@ export default defineClientConfig({
         })
         router.addRoute({
             path: "/mojo_playground_vscode",
-            redirect: "/guides/general/mojo_playground_vscode.html",
+            redirect: "/guides/general/mojo-playground-vscode.html",
         })
         router.addRoute({
             path: "/mojo_playground_vscode",
-            redirect: "/guides/general/mojo_playground_vscode",
+            redirect: "/guides/general/mojo-playground-vscode",
         })
         router.addRoute({
             path: "/tutorial/mojo_playground_vscode",
@@ -63,7 +63,7 @@ export default defineClientConfig({
         })
         router.addRoute({
             path: "/is_mojo_for_me.html",
-            redirect: "/is-mojo-for_me.html",
+            redirect: "/is-mojo-for-me.html",
         })
         router.addRoute({
             path: "/blog.html",
