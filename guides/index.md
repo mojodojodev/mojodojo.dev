@@ -5,19 +5,24 @@
   export default {
     computed: {
       guides() {
-        return pages
-          .filter(p => p.path.indexOf('/guides/general/') >= 0)
-          .sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+        return this.sortByCategories(
+          pages.filter(p => p.path.indexOf('/guides/general/') >= 0)
+        )
       },
       modules() {
-        return pages
-          .filter(p => p.path.indexOf('/guides/modules/') >= 0)
-          .sort((a,b) => (a.categories > b.categories) ? 1 : ((b.categories > a.categories) ? -1 : 0));
+        return this.sortByCategories(
+          pages.filter(p => p.path.indexOf('/guides/modules/') >= 0)
+        )
       },
       intro() {
-        return pages
-          .filter(p => p.path.indexOf('/guides/intro_to_mojo/') >= 0)
-          .sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+        return this.sortByCategories(
+          pages.filter(p => p.path.indexOf('/guides/intro-to-mojo/') >= 0)
+        )
+      }
+    },
+    methods: {
+      sortByCategories(pages) {
+        return pages.sort((a, b) => a.frontmatter.categories.localeCompare(b.frontmatter.categories))
       }
     }
   }
@@ -25,16 +30,16 @@
 
 
 ## Intro to Mojo
-_This is in very early stages and under heavy development_
+_This guide is in the early stages, feedback welcomed [on Github](https://github.com/mojodojodev/mojodojo.dev/discussions/categories/feedback)_
 
 <table>
   <tr>
-    <th>Section</th>
+    <th>Chapter</th>
     <th>Description</th>
   </tr>
-  <tr v-for="command in intro">
-   <td><a :href="command.path">{{ command.title }}</a></td>
-   <td style="white-space: pre-wrap;">{{ command.frontmatter.usage }}</td>
+  <tr v-for="chapter in intro">
+   <td><a :href="chapter.path">{{ chapter.frontmatter.categories }}</a></td>
+   <td style="white-space: pre-wrap;">{{ chapter.frontmatter.usage }}</td>
   </tr>
 </table>
 
@@ -46,9 +51,9 @@ General guides
     <th>Guide</th>
     <th>Description</th>
   </tr>
-  <tr v-for="command in guides">
-   <td><a :href="command.path">{{ command.title }}</a></td>
-   <td style="white-space: pre-wrap;">{{ command.frontmatter.usage }}</td>
+  <tr v-for="guide in guides">
+   <td><a :href="guide.path">{{ guide.title }}</a></td>
+   <td style="white-space: pre-wrap;">{{ guide.frontmatter.usage }}</td>
   </tr>
 </table>
 
@@ -62,9 +67,9 @@ Quick tutorials on how to use various builtins and standard library modules
     <th>Module</th>
     <th>Description</th>
   </tr>
-  <tr v-for="command in modules">
-   <td><a :href="command.path">{{ command.title }}</a></td>
-   <td style="white-space: pre-wrap;">{{ command.frontmatter.categories }}</td>
-   <td style="white-space: pre-wrap;">{{ command.frontmatter.usage }}</td>
+  <tr v-for="module in modules">
+   <td><a :href="module.path">{{ module.title }}</a></td>
+   <td style="white-space: pre-wrap;">{{ module.frontmatter.categories }}</td>
+   <td style="white-space: pre-wrap;">{{ module.frontmatter.usage }}</td>
   </tr>
 </table>
