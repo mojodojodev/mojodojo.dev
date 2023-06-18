@@ -57,11 +57,10 @@ export default defineUserConfig({
                         children: [
                             {
                                 text: "Intro to Mojo",
-                                collapsible: true,
                                 children: [
-                                    '/guides/intro-to-mojo/setup.md',
-                                    '/guides/intro-to-mojo/basic-types.md',
-                                ]
+                                    "/guides/intro-to-mojo/setup",
+                                    "/guides/intro-to-mojo/basic-types",
+                                ],
                             },
                             {
                                 text: "General",

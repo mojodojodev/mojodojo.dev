@@ -1,5 +1,5 @@
 ---
-title: "Intro to Mojo: Basic Types"
+title: "Basic Types"
 categories: "02: Basic Types"
 usage: "Get started with Mojo basic types and how to interact with Python"
 head:

@@ -1,5 +1,5 @@
 ---
-title: "Intro to Mojo: Setup"
+title: "Setup"
 categories: "01: Setup"
 usage: "Introduction and how to use the Mojo playground"
 head:

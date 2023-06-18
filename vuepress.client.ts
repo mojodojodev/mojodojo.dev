@@ -38,6 +38,10 @@ export default defineClientConfig({
             redirect: "/guides/general/mojo-playground-vscode.html",
         })
         router.addRoute({
+            path: "/guides/general/mojo_playground_vscode.html",
+            redirect: "/guides/general/mojo-playground-vscode.html",
+        })
+        router.addRoute({
             path: "/general/mojo_team_answers",
             redirect: "/mojo-team-answers.html",
         })
@@ -77,6 +81,7 @@ export default defineClientConfig({
             path: "/this_week_in_mojo/2023-06-09.html",
             redirect: "/this-week-in-mojo/2023-06-09.html",
         })
+
         app.component('BlogPosts', BlogPosts)
         app.component('ThisWeek', ThisWeek)
     },
