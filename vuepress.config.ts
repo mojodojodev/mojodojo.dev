@@ -5,6 +5,8 @@ import { feedPlugin } from 'vuepress-plugin-feed2';
 import { shikiPlugin } from '@vuepress/plugin-shiki'
 import { gitPlugin } from '@vuepress/plugin-git'
 import { readFileSync } from "fs"
+import codeCopyPlugin from '@snippetors/vuepress-plugin-code-copy'
+
 
 
 
@@ -150,6 +152,7 @@ export default defineUserConfig({
         gitPlugin({
             contributors: false
         }),
+        codeCopyPlugin(),
         docsearchPlugin({
             appId: 'WHF26ZE58I',
             indexName: 'mojodojo',
