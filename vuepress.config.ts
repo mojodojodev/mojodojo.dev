@@ -56,6 +56,14 @@ export default defineUserConfig({
                         collapsible: true,
                         children: [
                             {
+                                text: "Intro to Mojo",
+                                collapsible: true,
+                                children: [
+                                    '/guides/intro-to-mojo/setup.md',
+                                    '/guides/intro-to-mojo/basic-types.md',
+                                ]
+                            },
+                            {
                                 text: "General",
                                 collapsible: true,
                                 children: [
@@ -107,14 +115,6 @@ export default defineUserConfig({
                                     '/guides/modules/builtins/Bool.md',
                                     '/guides/modules/builtins/FloatLiteral.md',
                                     '/guides/modules/builtins/ListLiteral.md'
-                                ]
-                            },
-                            {
-                                text: "Intro to Mojo",
-                                collapsible: true,
-                                children: [
-                                    '/guides/intro-to-mojo/setup.md',
-                                    '/guides/intro-to-mojo/basic-types.md',
                                 ]
                             },
                         ],
