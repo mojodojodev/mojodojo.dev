@@ -1,6 +1,7 @@
 ---
-title: 'Intro to Mojo 2: Basic Types'
-usage: Some basic types to get you started with Mojo
+title: "Intro to Mojo: Basic Types"
+categories: "02: Basic Types"
+usage: "Get started with Mojo basic types and how to interact with Python"
 head:
   - [meta, { name: twitter:card , content: summary }]
   - [meta, { name: twitter:site , content: '@mojodojodev' }]

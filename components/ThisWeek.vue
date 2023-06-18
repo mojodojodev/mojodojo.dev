@@ -23,10 +23,10 @@ export default {
     posts() {
       return pages
         .filter((p) => {
-          return p.path.indexOf('/this_week_in_mojo/') >= 0 && p.path != '/this_week_in_mojo/';
+          return p.path.indexOf('/this-week-in-mojo/') >= 0 && p.path != '/this-week-in-mojo/';
         })
         .map((p) => {
-          let path = p.path.replace('/this_week_in_mojo/', '');
+          let path = p.path.replace('/this-week-in-mojo/', '');
           return { ...p, path: path, date: path.substring(0, 10) };
         })
         .sort((a, b) => new Date(b.date) - new Date(a.date));

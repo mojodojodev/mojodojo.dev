@@ -1,11 +1,12 @@
 ---
-title: 'Intro to Mojo 1: Setup'
-usage: Get setup for the Intro to Mojo guide
+title: "Intro to Mojo: Setup"
+categories: "01: Setup"
+usage: "Introduction and how to use the Mojo playground"
 head:
   - [meta, { name: twitter:card , content: summary }]
-  - [meta, { name: twitter:site , content: '@mojodojodev' }]
+  - [meta, { name: twitter:site , content: "@mojodojodev" }]
   - [meta, { name: twitter:title , content: "Intro to Mojo: Setup" }]
-  - [meta, { name: twitter:description , content: "How to get access to the Mojo playground and use the notebooks in this guide locally" }]
+  - [meta, { name: twitter:description , content: "Introduction and how to use the Mojo playground" }]
   - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
 ---
 

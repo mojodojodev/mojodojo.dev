@@ -42,10 +42,10 @@ export default defineUserConfig({
                 editLinkText: 'Edit this page on GitHub',
                 navbar: [
                     { text: 'Guides', link: '/guides/' },
-                    { text: 'Mojo Team Answers', link: '/mojo_team_answers' },
-                    { text: 'This Week in Mojo', link: '/this_week_in_mojo/' },
+                    { text: 'Mojo Team Answers', link: '/mojo-team-answers' },
+                    { text: 'This Week in Mojo', link: '/this-week-in-mojo/' },
                     { text: 'Blog', link: '/blog/' },
-                    { text: 'Is Mojo for Me?', link: '/is_mojo_for_me' },
+                    { text: 'Is Mojo for Me?', link: '/is-mojo-for-me' },
                 ],
                 sidebar: [
                     {
@@ -57,7 +57,7 @@ export default defineUserConfig({
                                 text: "General",
                                 collapsible: true,
                                 children: [
-                                    '/guides/general/mojo_playground_vscode.md',
+                                    '/guides/general/mojo-playground-vscode.md',
                                 ]
                             },
                             {
@@ -111,24 +111,25 @@ export default defineUserConfig({
                                 text: "Intro to Mojo",
                                 collapsible: true,
                                 children: [
-                                    '/guides/intro_to_mojo/1-setup.md',
-                                    '/guides/intro_to_mojo/2-basic-types.md',
+                                    '/guides/intro-to-mojo/setup.md',
+                                    '/guides/intro-to-mojo/basic-types.md',
                                 ]
                             },
                         ],
                     },
-                    "/mojo_team_answers.md",
+                    "/mojo-team-answers.md",
                     {
                         text: 'This Week in Mojo',
-                        link: '/this_week_in_mojo/',
+                        link: '/this-week-in-mojo/',
                         collapsible: true,
                         children: [
-                            '/this_week_in_mojo/2023-06-16.md',
-                            '/this_week_in_mojo/2023-06-09.md',
-                            '/this_week_in_mojo/2023-06-02.md',
-                            '/this_week_in_mojo/2023-05-26.md',
-                            '/this_week_in_mojo/2023-05-19.md',
-                            '/this_week_in_mojo/2023-05-12.md',
+                            '/this-week-in-mojo/2023-06-23.md',
+                            '/this-week-in-mojo/2023-06-16.md',
+                            '/this-week-in-mojo/2023-06-09.md',
+                            '/this-week-in-mojo/2023-06-02.md',
+                            '/this-week-in-mojo/2023-05-26.md',
+                            '/this-week-in-mojo/2023-05-19.md',
+                            '/this-week-in-mojo/2023-05-12.md',
                         ]
                     },
                     {
@@ -140,7 +141,7 @@ export default defineUserConfig({
                             '/blog/2023-05-08-why-use-mojo.md',
                         ]
                     },
-                    "/is_mojo_for_me.md",
+                    "/is-mojo-for-me.md",
                 ],
             }
         }
