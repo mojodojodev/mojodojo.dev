@@ -110,7 +110,7 @@ On the stack the simplified representation of `x` would look like this:
 ```mojo
 %%python
 [
-    {"frame": "main", "x": 44601345678945 }
+    { "frame": "main", "variables": { "x": 44601345678945 } }
 ]
 ```
 
@@ -129,7 +129,7 @@ The object in C will change its representation:
 ```mojo
 %%python
 heap = {
-    "a": {
+    44601345678945 : {
         "type": "string",
         "ref_count": 1,
         "size": 4,
