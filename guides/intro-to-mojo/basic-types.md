@@ -46,7 +46,7 @@ _in the Mojo playground, using `%%python` at the top of a cell will run code thr
 
 If the video doesn't make sense, for now you can use the mental model that:
 
-- `stack` memory is very fast but small, the size of the values must be known at runtime
+- `stack` memory is very fast but small, the size of the values are static and can't change at runtime
 - `pointer` is an address to lookup the value somewhere else in memory
 - `heap` memory is huge and the size can change at runtime, but needs a pointer to access the data which is relatively slow
 
@@ -223,7 +223,7 @@ Binary `1` and `0` represents `ON` or `OFF` indicating an electrical charge in t
 [Check this video](https://www.youtube.com/watch?v=RrJXLdv1i74) if you want more information on binary.
 :::
 
-We're packing the data together with SIMD on the heap so it can be passed into a register like this:
+We're packing the data together with SIMD on the stack so it can be passed into a register like this:
 
 `00000001` `00000010` `00000011` `00000100`
 
