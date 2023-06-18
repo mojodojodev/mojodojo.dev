@@ -223,13 +223,11 @@ Binary `1` and `0` represents `ON` or `OFF` indicating an electrical charge in t
 [Check this video](https://www.youtube.com/watch?v=RrJXLdv1i74) if you want more information on binary.
 :::
 
-We're packing the data together with SIMD on the stack so it can be passed into a register like this:
+We're packing the data together with SIMD on the `stack` so it can be passed into a SIMD register like this:
 
 `00000001` `00000010` `00000011` `00000100`
 
-The variable stores this data on the `stack`, and when doing mathematical operations it can be passed through the SIMD register.
-
-The SIMD register in modern CPU's is huge, let's see how big our SIMD register is in the Mojo playground:
+The SIMD register in modern CPU's is huge, let's see how big it is in the Mojo playground:
 
 
 ```mojo
