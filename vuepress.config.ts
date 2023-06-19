@@ -113,7 +113,8 @@ export default defineUserConfig({
                                 children: [
                                     '/guides/modules/builtins/Bool.md',
                                     '/guides/modules/builtins/FloatLiteral.md',
-                                    '/guides/modules/builtins/ListLiteral.md'
+                                    '/guides/modules/builtins/ListLiteral.md',
+                                    '/guides/modules/builtins/Tuple.md'
                                 ]
                             },
                         ],
