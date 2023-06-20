@@ -5,25 +5,29 @@
   export default {
     computed: {
       guides() {
+          return pages.filter(p => p.path.indexOf('/guides/general/') >= 0)
+      },
+      std() {
         return this.sortByCategories(
-          pages.filter(p => p.path.indexOf('/guides/general/') >= 0)
+          pages.filter(p => p.path.indexOf('/guides/std/') >= 0)
         )
       },
-      modules() {
-        return this.sortByCategories(
-          pages.filter(p => p.path.indexOf('/guides/modules/') >= 0)
-        )
+      builtins() {
+          return pages.filter(p => p.path.indexOf('/guides/builtins/') >= 0)
+      },
+      decorators() {
+          return pages.filter(p => p.path.indexOf('/guides/decorators/') >= 0)
       },
       intro() {
         return this.sortByCategories(
-          pages.filter(p => p.path.indexOf('/guides/intro-to-mojo/') >= 0)
+            pages.filter(p => p.path.indexOf('/guides/intro-to-mojo/') >= 0)
         )
-      }
+      },
     },
     methods: {
       sortByCategories(pages) {
         return pages.sort((a, b) => a.frontmatter.categories.localeCompare(b.frontmatter.categories))
-      }
+      },
     }
   }
 </script>
@@ -44,7 +48,6 @@ _This guide is in the early stages, feedback welcomed [on Github](https://github
 </table>
 
 ## General
-General guides
 
 <table>
   <tr>
@@ -58,8 +61,34 @@ General guides
 </table>
 
 
-## Modules
-Quick tutorials on how to use various builtins and standard library modules
+## Builtins
+
+<table>
+  <tr>
+    <th>Item</th>
+    <th>Description</th>
+  </tr>
+  <tr v-for="i in builtins">
+   <td><a :href="i.path">{{ i.title }}</a></td>
+   <td style="white-space: pre-wrap;">{{ i.frontmatter.usage }}</td>
+  </tr>
+</table>
+
+## Decorators
+
+<table>
+  <tr>
+    <th>Item</th>
+    <th>Description</th>
+  </tr>
+  <tr v-for="i in decorators">
+   <td><a :href="i.path">{{ i.title }}</a></td>
+   <td style="white-space: pre-wrap;">{{ i.frontmatter.usage }}</td>
+  </tr>
+</table>
+
+
+## Standard Library
 
 <table>
   <tr>
@@ -67,9 +96,9 @@ Quick tutorials on how to use various builtins and standard library modules
     <th>Module</th>
     <th>Description</th>
   </tr>
-  <tr v-for="module in modules">
-   <td><a :href="module.path">{{ module.title }}</a></td>
-   <td style="white-space: pre-wrap;">{{ module.frontmatter.categories }}</td>
-   <td style="white-space: pre-wrap;">{{ module.frontmatter.usage }}</td>
+  <tr v-for="s in std">
+   <td><a :href="s.path">{{ s.title }}</a></td>
+   <td style="white-space: pre-wrap;">{{ s.frontmatter.categories }}</td>
+   <td style="white-space: pre-wrap;">{{ s.frontmatter.usage }}</td>
   </tr>
 </table>

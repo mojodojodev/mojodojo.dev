@@ -57,6 +57,7 @@ export default defineUserConfig({
                         children: [
                             {
                                 text: "Intro to Mojo",
+                                collapsible: true,
                                 children: [
                                     "/guides/intro-to-mojo/setup",
                                     "/guides/intro-to-mojo/basic-types",
@@ -70,39 +71,49 @@ export default defineUserConfig({
                                 ]
                             },
                             {
+                                text: "Decorators",
+                                collapsible: true,
+                                children: [
+                                    '/guides/decorators/value.md',
+                                    '/guides/decorators/register_passable.md',
+                                    '/guides/decorators/parameter.md',
+                                    '/guides/decorators/always_inline.md',
+                                ]
+                            },
+                            {
                                 text: 'Modules',
                                 collapsible: true,
                                 children: [
-                                    '/guides/modules/Assert.md',
-                                    '/guides/modules/Benchmark.md',
+                                    '/guides/std/Assert.md',
+                                    '/guides/std/Benchmark.md',
                                     {
                                         text: 'Buffer',
                                         collapsible: true,
                                         children: [
-                                            '/guides/modules/Buffer/Buffer.md',
-                                            '/guides/modules/Buffer/NDBuffer.md',
+                                            '/guides/std/Buffer/Buffer.md',
+                                            '/guides/std/Buffer/NDBuffer.md',
                                         ]
                                     },
                                     {
                                         text: 'Pointer',
                                         collapsible: true,
                                         children: [
-                                            '/guides/modules/Pointer/DTypePointer.md',
-                                            '/guides/modules/Pointer/Pointer.md',
+                                            '/guides/std/Pointer/DTypePointer.md',
+                                            '/guides/std/Pointer/Pointer.md',
                                         ]
                                     },
-                                    '/guides/modules/Random.md',
-                                    '/guides/modules/Sort.md',
-                                    '/guides/modules/String.md',
-                                    '/guides/modules/TargetInfo.md',
-                                    '/guides/modules/Time.md',
+                                    '/guides/std/Random.md',
+                                    '/guides/std/Sort.md',
+                                    '/guides/std/String.md',
+                                    '/guides/std/TargetInfo.md',
+                                    '/guides/std/Time.md',
                                     {
                                         text: 'Vector',
                                         collapsible: true,
                                         children: [
-                                            '/guides/modules/Vector/DynamicVector.md',
-                                            '/guides/modules/Vector/InlinedFixedVector.md',
-                                            '/guides/modules/Vector/UnsafeFixedVector.md',
+                                            '/guides/std/Vector/DynamicVector.md',
+                                            '/guides/std/Vector/InlinedFixedVector.md',
+                                            '/guides/std/Vector/UnsafeFixedVector.md',
                                         ]
                                     },
                                 ]
@@ -111,10 +122,10 @@ export default defineUserConfig({
                                 text: 'Builtins',
                                 collapsible: true,
                                 children: [
-                                    '/guides/modules/builtins/Bool.md',
-                                    '/guides/modules/builtins/FloatLiteral.md',
-                                    '/guides/modules/builtins/ListLiteral.md',
-                                    '/guides/modules/builtins/Tuple.md'
+                                    '/guides/builtins/Bool.md',
+                                    '/guides/builtins/FloatLiteral.md',
+                                    '/guides/builtins/ListLiteral.md',
+                                    '/guides/builtins/Tuple.md'
                                 ]
                             },
                         ],
