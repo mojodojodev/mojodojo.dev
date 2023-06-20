@@ -81,7 +81,7 @@ export default defineUserConfig({
                                 ]
                             },
                             {
-                                text: 'Modules',
+                                text: 'Standard Library',
                                 collapsible: true,
                                 children: [
                                     '/guides/std/Assert.md',
