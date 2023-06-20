@@ -4,6 +4,7 @@ author: Mojo Dojo
 author_site: https://mojodojo.dev
 author_image: https://mojodojo.dev/hero.png
 excerpt: A user perspective from the first few weeks of Mojo's release
+date: '2023-05-22'
 feed: true
 head:
   - [meta, { name: twitter:card , content: summary }]

@@ -204,6 +204,21 @@ print(ord('🔥'))
     -16
 
 
+## isdigit
+Check if the character passed in is a valid decimal between 0 and 9, which in ASCII is 48 to 57
+
+
+```mojo
+from String import isdigit
+
+print(isdigit(ord('8')))
+print(isdigit(ord('a')))
+```
+
+    True
+    False
+
+
 ## Conversions
 ### To `DynamicVector[Int8]`
 
@@ -226,7 +241,7 @@ Force an error so Mojo shows us the type:
 buffer = ""
 ```
 
-    error: Expression [18]:25:14: cannot implicitly convert 'StringLiteral' value to 'DynamicVector[SIMD[si8, 1]]' in assignment
+    error: Expression [19]:25:14: cannot implicitly convert 'StringLiteral' value to 'DynamicVector[SIMD[si8, 1]]' in assignment
         buffer = ""
                  ^~
     

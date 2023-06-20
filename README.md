@@ -17,7 +17,7 @@ If you're unable to complete these steps, feel free to raise a pull request with
 - Install [Jupyter](https://jupyter.org/install) to enable converting notebooks
 - Put your `.ipynb` in the desired folder in `guides`
 - Run `npm run docs` 
-- Add the `md` filename to `vuepress.config.ts` e.g. `/guides/modules/MyGuide.md`, 
+- Add the `md` filename to `vuepress.config.ts` e.g. `/guides/std/MyGuide.md`, 
 - Run `npm run dev`, have a look to make sure you're guide is rendering correctly
 
 ## Project Overview
