@@ -707,8 +707,14 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 
 As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
 
-### TypeScript
-TypeScript is very popular, lots of people use it, and it fits right into the JavaScript ecosystem. Mojo has a similar relationship to Python, it's a superset, it works with the existing ecosystem, and all the packages "just work" which is really important to us because we don't want to break the Python community. However TypeScript doesn't offer any performance improvements, Mojo takes that next step so you can get big speed improvements just by adding types, and gives you access to much lower level features to optimize further.
+### Typescript
+TypeScript is very popular, a lot of people use it and it fits right into the JavaScript ecosystem, Mojo has a similar relationship to Python where it's a superset. All the Python packages work in Mojo which is really important to us, we don't want to break the Python community. 
+
+There's a big difference though, Python already allows you to add types like TypeScript, but they're just for tools to identify bugs and obvious mistakes in your code, those types aren't used to improve runtime performance. Mojo takes it to the next step, we often see 10x-20x performance improvements just by adding a few type annotations.
+
+In the traditional world of Python if you run into performance problems, or if you need access to low level features you have to build a hybrid package of half C/C++ and half Python. In Mojo you can continue writing dynamically typed code, and you can also use lower-level syntax and put more effort into performance, instead of having to switch to a completely different language where the debugger no longer works on both sides.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=747)
 
 
 ## Interpreter, JIT and AOT
@@ -797,14 +803,22 @@ Check out our (multiple) blog posts talking about this philosophy
 
 One thing I'd say though is that you can't just do this with a PL approach, you need a whole stack ML solution to do this. This is the only way to solve the heterogenous compute problem that you're referencing
 
+### Technology Mojo Builds on
+Mojo builds on a lot of technologies where the research has been done and implemented such as MLIR, which is an evolution of LLVM that has enabled a new generation of compiler technologies. MLIR is now widely utilized across the entire industry for AI accelerators, we built it at Google and then open sourced it, and it's now part of the LLVM. LLVM is an umbrella of technologies that includes MLIR, the Clang compiler for C/C++, and the fundamental building blocks like code generation for an x86 processor, so we build directly on top of that as well. This is the core of how we make the hardware go really fast.
+
+- [2023-06-21 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=336)
+
 ### How is it faster than Python
 That's the trick with Mojo, our goal is not to make dynamic python magically fast. Yes, we are quite a bit faster at dynamic code (because we have compiler instead of an interpreter) but that isn't by relying on a 'sufficiently smart' compiler to remove the dynamism, it is just because "compilers" instead of "interpreters".
 
 The reason Mojo is way way faster than Python is because it give programmers control over static behavior and makes it super easy to adopt incrementally where it makes sense. The key payoff of this is that the compilation process is quite simple, there are no JITs required, you get predictable and controllable performance, and you still get dynamism where you ask for it.
 
-Mojo doesn't aim to magically make Python code faster with no work (though it does accidentally do that a little bit), Mojo gives you control so you can care about performance where you want to. 80/20 rule and all that.
+Mojo doesn't aim to magically make Python code faster with no work, although it does accidentally do that a little, it gives you control so you can care about performance where you want to.
 
-[2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35811170)
+The Modular inference engine was constructed entirely on top of Mojo, and now is the fastest inference engine for TensorFlow and PyTorch models by maximizing the potential of hardware.
+
+- [2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35811170)
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=453)
 
 ### Build System
 Mojo shifts the discussion on that a bit. A lot of value prop of build systems end up being about caching and distribution, which mojo provides natively.
@@ -816,12 +830,8 @@ Various existing languages have problems with "LLVM compilation time", particula
 ### Package Manager
 A lot of people have very big pain points with Python packages, it becomes a huge disaster when code is split between Python and building C code, Mojo solves that part of the problem directly. One of the things we can do with the community, is we'll have an opportunity to reevaluate packaging, we have an entirely new compiler stack so maybe we can innovate in this area.
 
-[2023-06-02 Lex Fridman Interview 2:31:47](https://youtu.be/pdJQ8iVTwj8?t=9107)
-
-
-We don't have specific package manager plans and I am not an expert on the existing python ecosystem (other folks on our team know much more about it than me). It would be great if we can avoid inventing something, and fit into existing systems, but if we need to innovate here to get something great then we will.
-
-One of the biggest improvements we're planning for Mojo is to eliminate the need to write code in C to get performance 🙂. That will help one common source of packaging problems - dealing with the C parts of the packages.
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=2196)
+- [2023-06-02 Lex Fridman Interview 2:31:47](https://youtu.be/pdJQ8iVTwj8?t=9107)
 
 ### libc dependency 
 Yes, support for low-dependence zig-like deployment scenarios is important to us and Mojo architecturally supports it, but we haven't put much effort into making that great yet. It's more of a gravel road than a paved road at this point 🙂
@@ -893,6 +903,19 @@ Mojo references are currently second class exactly as [Graydon advocates](https:
 - [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1118249300405780541)
 
 ## General
+### Three World Problem
+Python has a dependence on C/C++ for performance and hardware-focused tasks, Mojo directly addresses the `three world problem` of Python, C/C++, and accelerator languages required for CPUs, GPUs, TPUs etc.
+
+- [2023-06-21 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=143)
+
+### Debugging Complicated Problems 
+What happens when you need to deploy a model through Core ML or one of the many other hardware interfaces, and the results don't work. Well now you need to know not just PyTorch, not just your model, not just Core ML, but also the translator, compiler and all these other things. You keep digging and you find out it's handling the edge padding on a convolution slightly differently. All of these tools were supposed to be making it easy aren't reliable, it's a leaky abstraction where if something goes wrong you have to understand all of this complexity.
+
+And so this is what causes it to take three months to deploy a model, leaders ask why it's taking so long but they don't realize that the tool set, this fundamental technology that all this stuff is built on top of, it's not up to high standards. No C programmer would tolerate AI tools of this quality, it's just crazy.
+
+But again, this is just the maturity of the AI technology space, and by solving that problem we should see way more inclusion and the kinds of companies that are able to work with AI, and that'll have a big impact on the world.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=2340)
 
 ### Logo and brand community usage
 We definitely want the community to be able to use the Mojo logo and name. We should get a proper web page up that describes this.
@@ -972,7 +995,8 @@ Our joking mission statement is to "Save the world from terrible AI software", s
 
 In the early days of PyTorch and Tensorflow things were basically CPU and CUDA, so for a dense layer with matrix multiplication you could kick off a CUDA kernel on GPU, or use something like Intel MKL for CPU. Now you have an explosion of hardware on one end with thousands of different types of hardware, and explosion of development in AI models on the other end with thousands of different operators. From giant TPU stacks to CPU's on mobile devices, whenever someone releases new hardware they need teams of people rewriting the compiler and kernel technology, which keeps out the little competitors. There is only a handful of people compiler experts out there which excludes a tonne of people. Mojo and the Modular stack brings programmability back into this world, allowing more general programmers to extend the stack without having to go hack the compiler itself. This opens it up to researchers and hardware innovators and people who know things that compiler people don't know.
 
-[2023-06-02 Lex Fridman Interview 58:04](https://youtu.be/pdJQ8iVTwj8?t=3484)
+- [2023-06-02 Lex Fridman Interview 58:04](https://youtu.be/pdJQ8iVTwj8?t=3484)
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1861)
 
 ### Hardware Complexity
 Hardware is getting very complicated, part of my thesis is that it's going to get a lot more complicated, part of what's exciting about what we're building is the universal platform to support the world as we get more exotic hardware, and they don't have to rewrite their code every time a new device comes out.
@@ -1072,6 +1096,15 @@ We can only say that we're working on accelerators and that is core to the missi
 - [2023-05-05 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713575259910224/1103854837738770495)
 - [2023-06-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103050029620535327/1103051748899311646)
 
+### MLIR to unlock exotic hardware
+AI isn't just about a GPU, even though so much thinking around AI technology is focused on that, the Modular team spent years working Google TPUs, they're highly specialized for AI workloads and scale to exaflops of compute, they're also internally really weird.
+
+Mojo is built on top of MLIR which We built back at Google, now it's being used by basically the who's who of all the hardware industry. LLVM talks to CPUs and some GPUs, but it's never been successful at targeting AI accelerators and video optimization engines, and all the other weird hardware that exists in the world. That's the role that MLIR provides, Mojo fully exposes MLIR and all the nerdery that goes into compiler technology, and gives it to library developers.
+
+It's important that you can talk to TPUs or other exotic hardware in their native language, which in the case of a TPU is a 128x128 tile, being able to expose that out in the language is really quite important. It's more than just CPUs and GPUs, we've built it to have really long legs so it can bring us into the future.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1231)
+
 ### Interaction with MLIR
 Modular uses many of its own dialects internally, but the only mainline MLIR dialects we use are LLVM and Index. Nothing else was suitable, not even SCF which has tons of ties into arithmetic etc. so we built an entirely new stack.
 
@@ -1094,6 +1127,7 @@ This is also something we're likely to look into in the far future, but isn't a 
 
 - [2023-05-15 Github Chris Lattner](https://github.com/modularml/mojo/discussions/154#discussioncomment-5904870)
 
+
 ### Optimization via MLIR
 Mojo is a gateway to the whole MLIR ecosystem. It is entirely plausible that the matmul implementation for a particular piece of hardware just calls a few MLIR operations.
 
@@ -1115,17 +1149,47 @@ For that you need the Modular ai framework: you need graph level xforms and hete
 ### IOT
 yes, definitely, we want Mojo to go everywhere, and deploying to small devices is part of our design. One step at a time though 😀
 
+### Other cloud providers and Mojo
+SambaNova's chip is, from my understanding, what's called a Coarse-grain reconfigurable architecture (CGRA), which is a super parallel and has almost nothing to do with CPUs.
+Graphcores are apparently lots of things that look like CPUs, but their memories are weird and different, and the way they communicate is very structured. What our technology stack enables companies like SambaNova is a way to implement a compiler for their chip. They're the experts on their chip, they understand how it works, Modular can provide something to plug into so that they get all the benefits of TensorFlow and PyTorch.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1475)
+
+
+### Hardware Vendors
+One of the challenges with hardware accelerators is that the tools provided by non-dominant players often prove difficult to use, especially with regard to compatibility. For instance, Apple's Core ML which interacts with neural accelerators, isn't compatible with all models. This often results in complications when attempting to integrate models onto Apple devices.
+
+These issues are recognized by numerous leaders at software companies integrating AI into their products, they see firsthand the long deployment times and the need for large, specialized, and expensive teams. This is largely due to the discrepancy between the tools used for hardware deployment and those used for AI model training. Companies have to build an entire technology stack from the bottom up, there's very little code reuse across hardware. And it's very difficult to track the speed of AI, PyTorch moves fast and you need a very dedicated and responsive team.
+
+The compiler and technology problems to make the hardware work are really difficult, and so there are a lot of really smart people working on this, but if you're always focused on getting the next ship out the door, you can't take a step back and look at this whole technology stack. That's the leap that modular is driving forward.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1540)
+
+###  CUDA
+The AI industry owes a huge debt of gratitude to CUDA, if you go back to the AlexNet moment it was a confluence of ImageNet, datasets and the fact that GPUs enabled an amount of compute. People forget that CUDA enabled researchers to get a machine learning model running on a GPU, which the hardware was definitely not designed for back in the day. Now AI has taken over and it's different, but the initial breakthrough was really in a large part thanks to CUDA. A lot of technology has been built on top of CUDA and it's very powerful, flexible, and hackable and that's great,
+but it's put us into a mode where one vendor has this dominant position and it's very difficult if you're a hardware vendor to be able to play in this ecosystem.
+
+There's the XLA compiler that Modular staff worked on at Google, and there are new compilers every day being announced by different companies where they're making make ML go fast, for example on GPUs.
+The problem with that is that they've lost one of the things that made CUDA really powerful, which is the programmability.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1674)
+
+
 
 ## Modular Inference Engine
 [Official FAQ](https://docs.modular.com/engine/faq.html#do-we-really-need-yet-another-inference-engine)
 
+### General
+Modular's building what we called a unified AI engine, people are familiar with PyTorch and TensorFlow and these machine learning frameworks that provide APIs, underneath the covers there's a lot of technology for getting things onto a CPU and GPU through things like CUDA. And so our engine fits at that level of the stack, the cool thing about it particularly when you're deploying, is that it talks to a lot of different hardware.
+
+It also talks to both TensorFlow and PyTorch, so when you're taking a model from research like a nice PyTorch model off Hugging Face, and you want to deploy this thing. We don't actually want all of PyTorch in a production Docker container, you want a low dependency efficient way to serve the model. The process of going from PyTorch and into deployment is what the modular technology stack can help with.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=1391)
+
 ### Frameworks
-It’s a unified engine that enables multi-framework support - many users aren’t just using PyTorch (TensorFlow, JAX etc)
+It’s a unified engine that enables multi-framework support, many users aren’t just using PyTorch (TensorFlow, JAX etc)
 
-It integrates natively with Mojo 🔥 for a completely new high performance programming model that enables many things outside of just pure model execution performance
-
-### Implementation details
-We haven't shared much about how our inference engine works internally yet.
+It integrates natively with Mojo 🔥 for a completely new high performance programming model that enables many things outside of just pure model execution performance.
 
 ### Runtime
 Our runtime is designed to be modular. It scales down very well, supports heterogenous configs, and scales up to distributed settings in a pretty cool way, we're excited to share more about this over time.
