@@ -804,7 +804,7 @@ Check out our (multiple) blog posts talking about this philosophy
 One thing I'd say though is that you can't just do this with a PL approach, you need a whole stack ML solution to do this. This is the only way to solve the heterogenous compute problem that you're referencing
 
 ### Technology Mojo Builds on
-Mojo builds on a lot of technologies where the research has been done and implemented such as MLIR, which is an evolution of LLVM that has enabled a new generation of compiler technologies. MLIR is now widely utilized across the entire industry for AI accelerators, we built it at Google and then open sourced it, and it's now part of the LLVM. LLVM is an umbrella of technologies that includes MLIR, the Clang compiler for C/C++, and the fundamental building blocks like code generation for an x86 processor, so we build directly on top of that as well. This is the core of how we make the hardware go really fast.
+Mojo builds on a lot of technologies where the research has been done and implemented such as MLIR, which is an evolution of LLVM that has enabled a new generation of compiler technologies. MLIR is now widely utilized across the entire industry for AI accelerators, we built it at Google and then open sourced it, and it's now part of LLVM. LLVM is an umbrella of technologies that includes MLIR, the Clang compiler for C/C++, and the fundamental building blocks like code generation for an x86 processor, so we build directly on top of that as well. This is the core of how we make the hardware go really fast.
 
 - [2023-06-21 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=336)
 
@@ -903,6 +903,15 @@ Mojo references are currently second class exactly as [Graydon advocates](https:
 - [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1118249300405780541)
 
 ## General
+### Modular monetization 
+The engine itself can stand alone and you can use the engine as a drop-in replacement for running TensorFlow and PyTorch models in production. And so TensorFlow is quite good at production, but we're showing 3-5x better performance on, for example Intel CPUs, AMD CPUs or an ARM-based Graviton server in AWS. That's a massive cost savings and it's also a massive latency improvement, so many of our customers love that because then they can turn around and make their models bigger, which is a huge deal for them.
+
+One of the things also that our customers love is that Google and Meta don't actually support TensorFlow or PyTorch, people forget that these are not products, these are open source projects and more like hobbies for the megacorps. So what we're essentially offering is a supported and performance optimized version of TensorFlow and PyTorch, the enterprises we talked to that care about their costs often they want somebody that they can call. It's analogous to running your own mail server, very few companies do that, so why do we do it with AI infrastructure.
+
+Currently it's because there's no choice, there's nobody to reach out to who can actually can do this. The technology platform at Meta and Google has diverged a lot from what the rest of the industry uses, they both have their own chips and specific use cases, so they're not focused on the traditional CPU, GPU and public cloud use case. Because it's a product for us we can actually support it, invest a huge amount of energy into it, and it's why we have such phenomenal results as well. 
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=2498)
+
 ### Three World Problem
 Python has a dependence on C/C++ for performance and hardware-focused tasks, Mojo directly addresses the `three world problem` of Python, C/C++, and accelerator languages required for CPUs, GPUs, TPUs etc.
 
@@ -945,6 +954,12 @@ Broadly speaking, we see Mojo as a technology, not a product. We have AI based p
 We provide integers, floats, buffers, tensors and other things you'd expect in an ML context, honestly we need to keep designing, redesigning, and working with the community to build that out and make it better, it's not our strength right now. But the power of putting it in the library means we can have teams of experts that aren't compiler engineers that can help us design, refine, and drive this forward.
 
 [2023-06-02 Lex Fridman Interview 42:02](https://youtu.be/pdJQ8iVTwj8?t=2522)
+
+### Rewriting Libraries 
+In the case of modular and why we built Mojo, our business objective is go make ML really awesome, we care about the matrix multiplications and the convolutions and the core operations that people spend all their time on in AI. And so we rewrote all of that stuff in Mojo, this isn't like rewriting Matplotlib, this is like rewriting Intel MKL, or the CUDA implementation of these CUDA kernels equivalent. That's where we've put our energy into
+because that's what enables unlocking of the hardware, performance, and usability.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=3061)
 
 ### Standard Library Philosophy (batteries included etc.)
 Short answer: there isn't one, yet. You are right that we should develop one, however.
