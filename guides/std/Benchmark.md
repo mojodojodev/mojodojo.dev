@@ -47,8 +47,8 @@ fn bench():
 bench()
 ```
 
-    Nanoseconds: 50340985
-    Seconds: 0.050340984999999998
+    Nanoseconds: 50322420
+    Seconds: 0.05032242
 
 
 Define iterative version for comparison:
@@ -111,7 +111,7 @@ bench_args()
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 355797
+    average time 363769
 
 
 Note there is some extra logic inside `Benchmark` to help improve accuracy, so here it actually runs 6 iterations
@@ -138,7 +138,7 @@ bench_args_2()
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 359822
+    average time 364582
 
 
 ## Min Duration
@@ -162,7 +162,10 @@ bench_args()
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 364401
+    sleeping 300,000ns
+    sleeping 300,000ns
+    sleeping 300,000ns
+    average time 366545
 
 
 ## Warmup
@@ -187,5 +190,5 @@ bench_args()
     sleeping 300,000ns
     sleeping 300,000ns
     sleeping 300,000ns
-    average time 356610
+    average time 364094
 

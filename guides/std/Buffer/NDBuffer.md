@@ -154,11 +154,6 @@ This bounds checking isn't optimal because it has a runtime cost, we could creat
 
 
 ```mojo
-
-```
-
-
-```mojo
 struct Tensor[rank: Int, shape: DimList, type: DType]:
     var data: DTypePointer[type]
     var buffer: NDBuffer[rank, shape, type]
