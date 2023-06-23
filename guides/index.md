@@ -23,6 +23,9 @@
             pages.filter(p => p.path.indexOf('/guides/intro-to-mojo/') >= 0)
         )
       },
+      benchmarks() {
+            return pages.filter(p => p.path.indexOf('/guides/benchmarks/') >= 0)
+      },
     },
     methods: {
       sortByCategories(pages) {
@@ -99,6 +102,20 @@ _This guide is in the early stages, feedback welcomed [on Github](https://github
   <tr v-for="s in std">
    <td><a :href="s.path">{{ s.title }}</a></td>
    <td style="white-space: pre-wrap;">{{ s.frontmatter.categories }}</td>
+   <td style="white-space: pre-wrap;">{{ s.frontmatter.usage }}</td>
+  </tr>
+</table>
+
+## Benchmarks
+Benchmarking various conversions of Python to Mojo
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+  </tr>
+  <tr v-for="s in std">
+   <td><a :href="s.path">{{ s.title }}</a></td>
    <td style="white-space: pre-wrap;">{{ s.frontmatter.usage }}</td>
   </tr>
 </table>

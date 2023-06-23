@@ -128,6 +128,13 @@ export default defineUserConfig({
                                     '/guides/builtins/Tuple.md'
                                 ]
                             },
+                            {
+                                text: "Benchmarks",
+                                collapsible: true,
+                                children: [
+                                    '/guides/benchmarks/sudoku.md',
+                                ]
+                            },
                         ],
                     },
                     "/mojo-team-answers.md",
