@@ -2,7 +2,8 @@
 usage: Solving a Sudoku game as fast as possible
 ---
 
-# Sudoku
+# Sudoku Solver
+Speed Increase: 55x
 
 
 ```mojo
