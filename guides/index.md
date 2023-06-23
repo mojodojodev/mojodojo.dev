@@ -114,7 +114,7 @@ Benchmarking various conversions of Python to Mojo
     <th>Title</th>
     <th>Description</th>
   </tr>
-  <tr v-for="s in std">
+  <tr v-for="s in benchmarks">
    <td><a :href="s.path">{{ s.title }}</a></td>
    <td style="white-space: pre-wrap;">{{ s.frontmatter.usage }}</td>
   </tr>
