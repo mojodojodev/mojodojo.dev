@@ -929,7 +929,19 @@ But again, this is just the maturity of the AI technology space, and by solving 
 ### Logo and brand community usage
 We definitely want the community to be able to use the Mojo logo and name. We should get a proper web page up that describes this.
 
-- [2023-06-26 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/389#discussioncomment-6206675)
+We're mostly getting the details sorted out. My current understanding: we want people to be free to use the word Mojo and Mojo🔥, and using the Mojo🔥 logo is fine. The things we need to protect are: 
+
+1. Don't represent that you are speaking on behalf of modular
+2. Don't use the "Modular M" with the notch taken out without permission.
+
+It is fine to use Mojo or Mojo🔥 with a normal M.
+
+We've also seen a lot of the troubles of other communities, and want to ensure that the Mojo🔥 community has a clear understanding of our trademark rights, and the relevant community usage from the beginning.
+
+The spirit of what we want to achieve is essentially to have a "Community Logo" and a "Official Logo" that enables a flexible use for the community, but also provides us with an ability to have "Official Use" when needed. There will be subtle differences (i.e. the Notch in the M, the style of the Fire icon etc) but enabling our incredible community to use the logo is definitely our goal.
+
+- [2023-06-18 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/389#discussioncomment-6206675)
+- [2023-06-24 GitHub Tim Davis](https://github.com/modularml/mojo/discussions/389#discussioncomment-6264254)
 
 ### Self Hosting
 It will take us quite some time to get there, but yes I would like the Mojo parser to some day be written in Mojo. I would also like to see the CPython interpreter rewritten in Mojo, but have no plans to do so. One can dream 😉
