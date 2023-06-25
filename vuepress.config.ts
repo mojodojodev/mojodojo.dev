@@ -143,6 +143,7 @@ export default defineUserConfig({
                         link: '/this-week-in-mojo/',
                         collapsible: true,
                         children: [
+                            '/this-week-in-mojo/2023-06-30.md',
                             '/this-week-in-mojo/2023-06-23.md',
                             '/this-week-in-mojo/2023-06-16.md',
                             '/this-week-in-mojo/2023-06-09.md',
