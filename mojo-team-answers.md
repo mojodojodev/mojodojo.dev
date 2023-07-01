@@ -10,7 +10,7 @@ To check when new answers are added, you can follow [This Week in Mojo](/this_we
 ### Keyword Arguments
 Mojo doesn’t support keyword arguments yet, this is important but hasn’t been prioritized just because it is “syntax sugar”
 
-[2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1105395176723198102/1105467381083541594)
+- [2023-05-09 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1105395176723198102/1105467381083541594)
 
 ### Implicit Type Declaration
 Within a function, implicitly declared variables get the type of their first value assigned into them. This is probably not the right thing - within a def, we will need to maintain dynamic typing (including type transformations like python has) for compatibility. Our base object isn't super built out and set up for this yet, which is why we have a "default to the first type" approach.
@@ -48,14 +48,17 @@ We like Swift enums so Mojo enums will probably become more feature complete ove
 ### Unsafe Code
 Mojo is safe by default, but if you want to go low-level Mojo provides powerful tools, a Rust style `unsafe` block in our opinion has not been an aggregate win, it built a lot of distrust and negative feelings, even though the standard library is built on top of unsafe APIs. We prefer Swift's approach to show that an API is unsafe through naming, for example we should rename the Mojo `Pointer` to `UnsafePointer`, instead of propagating an effect that the user has to manage. Unsafe code in Rust also makes it easy to unknowingly expose Undefined Behaviour (UB) when interacting with the borrow checker if you don't follow the rules, we make different tradeoffs to expose less potential UB when writing unsafe code.
 
+Pointers serve an important function even for safe code, it allows type-erasing a reference into an arbitrary container that holds a value in memory, just like a safe reference does. This is a pretty important thing, but you really want this to be safe for the common use-case. Such a thing would not support pointer arithmetic or indexing though, this is something a Slice type would support.
+
+- [2023-07-01 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1124302001430339616/1124437937640194120)
 - [2023-05-19 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1108969825008615475)
 - [2023-05-09 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1105161023218008094/1105223842605039626)
-- [YouTube: Unsafe Rust Undefined Behavior (not Modular staff)](https://youtu.be/DG-VLezRkYQ)
+- [YouTube: Unsafe Rust Undefined Behavior](https://youtu.be/DG-VLezRkYQ)
 
 ### Loose Typing
 This is an evolving part of the language and likely another difference we pull into the `fn` vs `def` world, in a `def` we could default to getting objects for literals, but within a `fn` you get typed literals. Another potential solution is to have aggressive decay rules in `def` e.g. `True` starts out being typed to `Bool` but we allow decaying to object when an expression doesn't type check otherwise. We'll need to experiment with that when we make progress on other more basic things. The major reason to have both `def` and `fn` is to have a Python compatible world and a stricter systems programmer world, and have them coexist seamlessly.
 
-[2023-06-05 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1114818534946648165/1114971056671838350)
+- [2023-06-05 Discord Reply Chris Lattner](https://discord.com/channels/1087530497313357884/1114818534946648165/1114971056671838350)
 
 ### Float Literals
 `FloatLiteral` is backed by `Float64`, Mojo Playground is currently only printing to 6 decimal places, but the mantissa width is 52
@@ -63,7 +66,7 @@ This is an evolving part of the language and likely another difference we pull i
 ### Error Handling
 It uses variants to avoid performance cost and allows it to run on various hardware, e.g. a function can return a variant of None/Error, but it maps to Python try / except syntax.
 
-[2023-06-02 Lex Fridman Interview 2:44:41](https://youtu.be/pdJQ8iVTwj8?t=9881)
+- [2023-06-02 Lex Fridman Interview 2:44:41](https://youtu.be/pdJQ8iVTwj8?t=9881)
 
 We support the existing Python raise/try syntax, and also support with blocks etc.
 
@@ -101,7 +104,7 @@ We haven't invested in building anything here, but you can use all the existing 
 ### Mojo Types
 Python has types like strings, integers, dictionaries etc. but they all live at runtime, in Mojo you specify what the actual types are which allows the compiler to do way better optimizations, gets rid of the expensive indirections, and gives you code completion. You can progressively adopt types where you want them, but you don't have to use them if you don't want to. Our opinion is not that types are the wrong or right thing, but they're a useful thing.
 
-[2023-06-02 Lex Fridman Interview 31:09](https://youtu.be/pdJQ8iVTwj8?t=1869)
+- [2023-06-02 Lex Fridman Interview 31:09](https://youtu.be/pdJQ8iVTwj8?t=1869)
 
 ### Dynamic and static typing
 (question was on a scale of Python to Rust)
@@ -116,7 +119,7 @@ We have experienced slow and overly complex type systems and too much sugar as y
 
 It's also interesting that Rust et al made similar (but also different) mistakes and have compile time issues scaling. Mojo has a ton of core compiler improvements as well addressing the "LLVM is slow" sorts of issues that "zero abstraction" languages have when expecting LLVM to do all the work for them.
 
-[2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35811426)
+- [2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35811426)
 
 ### Ray tracer
 Question: If you can expose tensor core instructions, why not expose ray tracing instructions when you support GPUs? Then this would solve major fragmentation problems in HPC.
@@ -151,9 +154,9 @@ This isn't fully documented yet, and there are a few missing pieces we want to w
 
 One way to say this is that Mojo is taking a lot of the power out of the compiler and putting it into libraries, allowing Mojo developers to radically extend the language. Python already has this but does so with super dynamic reflective metaprogramming, so this is an old idea done in a new way
 
+- [2023-06-02 Lex Fridman Interview 16:23](https://youtu.be/pdJQ8iVTwj8?t=983)
 - [2023-06-02 Lex Fridman Interview 21:02](https://youtu.be/pdJQ8iVTwj8?t=1262)
 - [2023-06-02 Lex Fridman Interview 1:45:20](https://youtu.be/pdJQ8iVTwj8?t=6321)
-- [2023-06-02 Lex Fridman Interview 16:23](https://youtu.be/pdJQ8iVTwj8?t=983)
 
 
 ### Compile time metaprogramming relationship to MLIR
@@ -165,7 +168,7 @@ Mojo is designed "for" MLIR in this way - MLIR can talk to roughly anything that
 
 Right now many folks on the channel are excited about a Python++, but Mojo was designed to work backwards from the "speed of light" of hardware and accelerators. The syntax and applicability to Python is important for community reasons, but not particularly relevant to the accelerator side of Mojo.
 
-[2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1114406301808726138/1116540613618323517)
+- [2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1114406301808726138/1116540613618323517)
 
 ### Autotune and adaptive compilation
 Libraries like PyTorch have pushed ML towards an abstract specification of a compute problem, which then gets mapped in a whole bunch of different ways, this is why it has become a metaprogramming problem.
@@ -174,7 +177,7 @@ Hardware systems and algorithms are really complicated, most programmers don't w
 
 Instead of having humans go and test all these things with different parameters which can grow to complex multidimensional spaces, why don't we have computers do that for us. So you can specify different options and have the compiler empirically test what the fastest implementation is for the target you're compiling to.
 
-[2023-06-02 Lex Fridman Interview 21:02](https://youtu.be/pdJQ8iVTwj8?t=1262)
+- [2023-06-02 Lex Fridman Interview 21:02](https://youtu.be/pdJQ8iVTwj8?t=1262)
 
 ### Compile time function results
 Yes, you can do this in two ways: first any normal function may be used at compile time.  No need to duplicate all math that works on ints between comptime and not, and no need to explicitly label everything as being constexpr capable
@@ -243,32 +246,37 @@ The best workarounds right now are pretty ugly:
 
 sorry, this is pretty annoying to me too. I really want to get on top of this of course.
 
-[2023-05-28 Github Issue](https://github.com/modularml/mojo/issues/271#issuecomment-1565709849)
+- [2023-05-28 Github Issue](https://github.com/modularml/mojo/issues/271#issuecomment-1565709849)
 
 ### Arbitrary Precision Literals
 We don't have support for arbitrary precision literals yet, but we have ideas on that.
 
-[2023-06-05 Github Issue](https://github.com/modularml/mojo/issues/318#issuecomment-1575656080)
+- [2023-06-05 Github Issue](https://github.com/modularml/mojo/issues/318#issuecomment-1575656080)
 
 ### Built in types like C++ `int`
 I want to get magic out of the compilers and put it into the libraries, we can build an `Int` that's beautiful and has an amazing API and does all the things you expect an integer to do, but maybe you don't like it and want to build a `BigInt`, you can do that and it's not a second class citizen. This is opposed to a language like C++ where the builtins have special promotion rules and other things that are hacked into the compiler.
 
-[2023-06-02 Lex Fridman Interview 40:08](https://youtu.be/pdJQ8iVTwj8?t=2408)
+- [2023-06-02 Lex Fridman Interview 40:08](https://youtu.be/pdJQ8iVTwj8?t=2408)
 
 ### Struct Memory Layout C Compatibility
 I agree that an opt-in decorator that specifies layout is the right way to go. By default the compiler should be able to reorder fields to eliminate internal padding so programmers don't have to worry about this, but people putting bits on a wire or dealing with c compatibility should be able to get that. We will need to properly design this out.
 
-[2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
+- [2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
 
 ### Int Provenance
 Ints and pointers are different things, so no ints don't carry provenance. This is one of the major things that C/C++ got wrong that has haunted LLVM IR and many other things for a long time. Taking a hard line on this makes everything simpler, but that is only possible when you have a fresh slate like Mojo provides us.
 
-[2023-06-06 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1115452333074153653)
+- [2023-06-06 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1115452333074153653)
 
 ### Float8
 There are so many variants of Float8 representation. We need to think about which ones does Mojo represents and how to expose the variety. For now, we are removing Float8 from the DType list to avoid folks from falling into this trap.
 
-[2023-06-04 Github Abdul Dakkak](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
+- [2023-06-04 Github Abdul Dakkak](https://github.com/modularml/mojo/discussions/289#discussioncomment-6080125)
+
+### URL based imports
+Traditionally, it has been a responsibility placed on the build system, but that makes reproducible scripts harder to manage. Having first-class support for URL imports seem like the right direction for Mojo. We're still focusing on nailing down having packages first, but later on thinking about distribution and sharing will be important to building an ecosystem.
+
+- [2023-06-27 GitHub Jeff Niu](https://github.com/modularml/mojo/discussions/413#discussioncomment-6285136)
 
 ### Pure Functions
 Pureness is what is known as an "effect" in PL terminology. You can see this in the handling of async and raises in the current mojo implementation: a non-raising function is not allowed to call a raising function directly - it must wrap it in a try block.
@@ -279,7 +287,7 @@ Also, in other pure-functional languages like Haskell, you need escape hatches (
 
 Overall I can understand wanting to have this conceptually, but I can't see how it could work out well in practice. We can come back to this later as the language evolves.
 
-[Pure Functions](https://github.com/modularml/mojo/discussions/345#discussioncomment-6136537)
+- [Pure Functions](https://github.com/modularml/mojo/discussions/345#discussioncomment-6136537)
 
 ### Side Effect Propagation
 Unfortunately, it is pretty impractical to define what `side effect free` means in a general purpose language; particularly one that wants you to be able to call existing python code.
@@ -290,12 +298,12 @@ Given that, very few people would use it, and it would interfere with printf deb
 
 It's possible that there is a model here that will work and would be usable, but I'm not sure how much value it would provide.
 
-[2023-06-12 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
+- [2023-06-12 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
 
 ### Receiver / Free Floating Functions
 There are alternative ways to address the same thing, e.g. check out how extensions work in Swift. We'll need to look at this whole area as traits come in. We don't have a goal of providing the Julia multimethod dispatch thing. There isn't an efficient way to implement that other than full monomorphization, it is better to express the same thing with generics, which we haven't designed yet. Let's build out the traits system and see what the limitations are.
 
-[2023-06-13 Github Chris Lattner](https://github.com/modularml/mojo/discussions/366#discussioncomment-6155792)
+- [2023-06-13 Github Chris Lattner](https://github.com/modularml/mojo/discussions/366#discussioncomment-6155792)
 
 ### Custom Allocators
 We don't have an established policy here and this is a really complicated topic, I'm not keen on making everyone _always_ think about allocators like Zig does, I don't think that is practical in a language that cares about usability and ergonomics, but it is clearly good to _allow_ folks to care.
@@ -304,7 +312,7 @@ In my personal opinion, there is a big difference practically between `node` all
 
 It would be interesting to explore making these different APIs, possibly overloaded with a keyword argument or something. As one idea, we could make `UnsafePointer[T].allocate()` non-failable, but make `UnsafePointer[T].allocate(Int)` failable. We'd still have to decide what to do with that at the Array api level, but it too could have overloads for `arr.resize(n)` vs `arr.resize(checked = n)` or something like that.
 
-[2023-06-16 Github Chris Lattner](https://github.com/modularml/mojo/discussions/377#discussioncomment-6188353)
+- [2023-06-16 Github Chris Lattner](https://github.com/modularml/mojo/discussions/377#discussioncomment-6188353)
 
 
 ## Syntax 
@@ -314,7 +322,7 @@ Syntactic sugar is fun and exciting, but we want to avoid this after learning th
 Syntactic sugar is fun and can be exciting, but it is also dangerous, and I'd personally prefer we avoid it completely unless it is extremely highly motivated by the core use case (accelerators, systems programming etc) that Python doesn't already service.
 
 
-[2023-06-02 Lex Fridman Interview 3:04:28](https://youtu.be/pdJQ8iVTwj8?t=11068)
+- [2023-06-02 Lex Fridman Interview 3:04:28](https://youtu.be/pdJQ8iVTwj8?t=11068)
 
 
 ### `let` inside `fn` definitions
@@ -322,7 +330,7 @@ Thank you for filing this. This is known (to me) to not be supported. We have th
 
 Incidentally, this discussion will come up "real soon now" as it is all tangled into the lifetime proposal. This should be coming to the community for discussion in the next two weeks.
 
-[2023-05-29 Github Issue](https://github.com/modularml/mojo/issues/280#issuecomment-1566300145)
+- [2023-05-29 Github Issue](https://github.com/modularml/mojo/issues/280#issuecomment-1566300145)
 
 ### traits / protocols
 _currently an unimplemented feature_
@@ -362,12 +370,12 @@ Dropping the `self` keyword would diverge from Python a lot. it would also break
 ### Owned and consumed
 They're the same thing. Consume is the word we're currently using for the operator, owned is the argument convention. We may need to iterate on terminology a bit more.
 
-[2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35817237)
+- [2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35817237)
 
 ### `^` consume postfix operator
 Because it composes properly with chained expressions: `x.foo().bar().baz^.do_thing()` vs something like `(move x.foo().bar().baz).do_thing()`
 
-[2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35817237)
+- [2023-05-04 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35809658#35817237)
 
 ### `Int`
 Int is like intptr_t which is 64-bit on a 64-bit machine, 32-bit on a 32-bit machine
@@ -404,7 +412,7 @@ It still bugs me how "return" works the wrong way and break doesn't work in a "c
 ### Curly Braces
 C, C++, Java, Swift etc curly brace languages are typically run through formatting tools now to get indented, so you end up with indentation and curly braces, why not get rid of the clutter and have a more beautiful thing? Some languages allow you to do both which adds a complicated design space that you don't need with Python style indentation.
 
-[2023-06-02 Lex Fridman Interview 13:23](https://youtu.be/pdJQ8iVTwj8?t=803)
+- [2023-06-02 Lex Fridman Interview 13:23](https://youtu.be/pdJQ8iVTwj8?t=803)
 
 There are practical reasons why brackets will not work and why significant whitespace is crucial to the parser: lazy body parsing. Mojo's parser can trivially skip over the body of structs, functions, etc. because it can use the expected indentation to find the end of the indentation block.
 
@@ -421,19 +429,19 @@ The issue with adding the type builtin to Mojo is that we don't have a runtime t
 This is mostly just a placeholder for now.  This has known problems and will need to be reworked when we get traits/typeclasses/protocols filled in.  Do you have a specific interest/concern in mind?
 One problem with AnyType is that we will need to decide if it is implicitly copyable/movable, if that is trivial, etc.  There are lots of properties we'll want to be able to express elegantly; none of this has been designed, but there is a lot of prior art in rust/swift/haskell/etc.
 
-[2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
+- [2023-05-30 Discord Reply](https://discord.com/channels/1087530497313357884/1113029339500511233/1113149935773298698)
 
 ### StringRef from LLVM
 Yep that's where it came from. It is directly related to string_view in C++, the LLVM data structures predate the C++ STL growing all these things. The idea of a `pointer + extend without ownership` is more general than a `reference to a specific owning data structure` because it type erases the concrete storage type. For example, an LLVM StringRef can point into C array, an std::vector, or one of the zoo of other specialized storage types llvm has - it can even point to a scalar on the stack.
 
 Per the comments above, I think actually calling this sort of type `ArrayRef` and `StringRef` in mojo would be super confusing if we have `ref` as a different concept. Python generally uses the word "Slice" for these things, and I think that would be great to use for these.
 
-[2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145782)
+- [2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145782)
 
 ### `borrowed` keyword
 I don't have strong opinions, but I have some concern about general programmers (i.e., those without Rust experience) and the word "borrow". It is a word that can be explained and has good meaning in the rust lexicon, but doesn't connote referencing something, and doesn't even appear in the rust language (they use the & sigil instead). This isn't to say that "borrow" or "borrowed" is bad, but it does have some challenges.
 
-[2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145791)
+- [2023-06-12 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/338#discussioncomment-6145791)
 
 ## Python
 The best place for a summary about how Mojo interacts with the current Python ecosystem is in the official [Why Mojo?](https://docs.modular.com/mojo/why-mojo.html#a-member-of-the-python-family).
@@ -464,7 +472,7 @@ Now you can't ignore C extensions, MLIR and compilers can do more than one thing
 ### Python using Mojo code
 We learnt a bunch of tricks along the way converting an entire community of programmers from Objective-C to Swift, we built a lot of machinery to deeply integrate with the Objective-C runtime, we're doing the same thing with Python. When a new library gets built in Mojo people should be able to use it from Python. We need to vend Python interfaces to the Mojo types, that's what we did in Swift and it worked great, it's a huge challenge to implement for the compiler people, but it benefits millions of users and really helps adoption.
 
-[2023-06-02 Lex Fridman Interview 1:53:29](https://youtu.be/pdJQ8iVTwj8?t=6809)
+- [2023-06-02 Lex Fridman Interview 1:53:29](https://youtu.be/pdJQ8iVTwj8?t=6809)
 
 ### Speedup moving from CPython to Mojo
 Interpreters have an extra layer of bytecode that they have to read and interpret, and it makes them slow from this perspective. Converting your code to Mojo does gets a 2-10x speedup out of the gate without doing anything fancy, we haven't put any effort into optimizing untyped code yet.
@@ -501,12 +509,12 @@ I don’t expect major concerns here. Notably we don’t need to be compatible w
 ### CPython Major Updates
 Just like when the C or C++ committee adds a new feature to their languages, Clang fast follows. Mojo will follow the same model.
 
-[2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103190423033356348/1103190904031944735)
+- [2023-05-03 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103190423033356348/1103190904031944735)
 
 ### Integer Overflow on `object` (Mojo untyped object)
 It needs to eventually provide full Python semantics, so we'll need `object` to contain a `PythonObject` in its variant. We could overflow from inline `int` to Python object on demand.
 
-[2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/issues/328#issuecomment-1579468329)
+- [2023-06-04 Github Chris Lattner](https://github.com/modularml/mojo/issues/328#issuecomment-1579468329)
 
 
 ### Global Interpreter Lock (GIL)
@@ -530,14 +538,14 @@ You can import python packages and use their classes, you just can't define your
 ### `object` type in Mojo
 It's a struct that wraps a pointer to a CPython object
 
-[2023-05-11](https://discord.com/channels/1087530497313357884/1106110477228048546/1106132610410893362)
+- [2023-05-11](https://discord.com/channels/1087530497313357884/1106110477228048546/1106132610410893362)
 
 ### String to PythonObject
 Right now you can turn a `StringRef` or a `StringLiteral` into a `PythonObject`. To get a `PythonObject` from a `String`, you'd need to turn the `String` into a `StringRef`. This is available through some underscored methods, but it's currently unsafe due to some lifetime issues. Let me see if I can add a direct conversion path, though it will take a week to make its way to the playground.
 
 A direct conversion should be included in the next Playground release.
 
-[2023-06-08 Discord Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1116063443200520334/1116066258664828949)
+- [2023-06-08 Discord Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1116063443200520334/1116066258664828949)
 
 
 ### Type Erasure for Python Support
@@ -570,7 +578,7 @@ We have to implement array bound checking for our array/slice types, we just hav
 ### Migration
 Mojo is aiming to be a full superset of Python, the world went through a very long painful migration from Python 2 to Python 3, I don't want people to have to go through that if they want to move to Mojo, they shouldn't have to rewrite all their code.
 
-[2023-06-02 Lex Fridman Interview 35:25](https://youtu.be/pdJQ8iVTwj8?t=2125)
+- [2023-06-02 Lex Fridman Interview 35:25](https://youtu.be/pdJQ8iVTwj8?t=2125)
 
 ## Tooling
 ### CLI
@@ -625,23 +633,23 @@ struct MyPair:
 
 We could add `SIMD[DType.bool, 1]` as an initializer to the `Bool` type, but cannot do that currently because `Bool` is a builtin type while `SIMD` is not. We need to think about this and have a library-based solution.
 
-[2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/335)
+- [2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/335)
 
 ### `String` supporting UTF-8
 We want to enhance the `String` type to support UTF-8 encoding before starting work on file system.
 
-[2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/306#issuecomment-1579268808)
+- [2023-06-07 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/306#issuecomment-1579268808)
 
 
 ### Mutable and explicit types when iterating over collections
 This was noted as a known `sharp edge` in the [roadmap & sharp edges](https://docs.modular.com/mojo/roadmap.html) document. The behaviour here is definitely subject to change, maybe syntax like `for var i in range(3)` but I don't have a strong opinion.
 
-[2023-06-07 Github Jeff Niu](https://github.com/modularml/mojo/issues/331#issuecomment-1579122472)
+- [2023-06-07 Github Jeff Niu](https://github.com/modularml/mojo/issues/331#issuecomment-1579122472)
 
 ### Sorting Algorithm discovered by AlphaDev
 Sure, that algorithm could definitely be used inside the Mojo sort algorithm.  What they found is something you'd put into a standard library, e.g. they put it into the libc++ c++ standard library, eventually it could go into the Mojo stdlib.
 
-[2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103420074372644916/1117497920678285332)
+- [2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103420074372644916/1117497920678285332)
 
 
 ## Language comparisons
@@ -655,6 +663,30 @@ Julia is far more mature and advanced in many ways. Many folks have and will con
 
 - [2023-05-02 Hackernews Chris Lattner](https://news.ycombinator.com/item?id=35790367)
 - [2023-06-02 Lex Fridman Interview 2:06:25](https://youtu.be/pdJQ8iVTwj8?t=7583)
+
+### Typescript
+TypeScript is very popular, a lot of people use it and it fits right into the JavaScript ecosystem, Mojo has a similar relationship to Python where it's a superset. All the Python packages work in Mojo which is really important to us, we don't want to break the Python community. 
+
+There's a big difference though, Python already allows you to add types like TypeScript, but they're just for tools to identify bugs and obvious mistakes in your code, those types aren't used to improve runtime performance. Mojo takes it to the next step, we often see 10x-20x performance improvements just by adding a few type annotations.
+
+In the traditional world of Python if you run into performance problems, or if you need access to low level features you have to build a hybrid package of half C/C++ and half Python. In Mojo you can continue writing dynamically typed code, and you can also use lower-level syntax and put more effort into performance, instead of having to switch to a completely different language where the debugger no longer works on both sides.
+
+- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=747)
+
+### Rust
+I don't think that mojo has any burden to prove novelty vs rust.  We're happy to adopt good ideas from Rust as with all other existing languages. Graydon himself was very happy for Rust to pull good ideas when he started it, and wasn't ashamed to admit it.  Mojo is similar.
+
+I also don't see Rust and Mojo in competition, while I'm hoping that Mojo can learn from and improve vs Rust in various areas, they're clearly servicing different segments of the world. Yes there is some crossover, but Rust is far more mature than Mojo and Rust is continuously improving as well. If you'd like to continue using Rust, go for it 😀.
+
+If you're interested in language nerdery, then yes, there are ways in which Mojo can provide better performance than Rust. There are two categories:
+
+1. There are very low level implementation details (e.g. borrow by default instead of move, moves not implying memcpy etc) that can affect idiomatic use of the language at scale. As others say, it will be difficult to know how these work out until Mojo is more complete and there are more at-scale applications like your caching system. Mojo's trait system in particular is missing, and it's hard to write much realistic generic code without that! 
+
+2. Mojo open new frontiers for GPUs and other accelerators. We can all have different opinions about what the "end of moore's" law means for computing, but if computers keep getting weirder, and if that matters for important workloads that you care about, then Mojo will be interesting because it can talk to them in ways that other languages weren't really built for.
+
+That said if you care about Fibonacci on X86 cpus, both Rust and Mojo (and Clang and many many others) are all zero cost languages that boil down to LLVM. As such, any advantage claimed on such a workload will be more about accidental implementation details than anything else and could be easily fixed.
+
+- [2023-06-25 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1122302305438539826/1122372150146383906)
 
 ### Codon
 Codon is a cool project, but fundamentally different and doesn't meet the objectives outlined on our "why use mojo?" page. Codon (like PyPy and many other existing projects) are in the line of projects that try to use "sufficiently smart" [JITs and other compiler techniques to make python faster](https://docs.modular.com/mojo/why-mojo.html#related-work-other-approaches-to-improve-python)
@@ -706,15 +738,6 @@ Part of this decision to write a new language stems from the Swift4TensorFlow ex
 2. The ML community really loves Python. Mojo is trying very hard to preserve most (but not all) of the Python programming model, with modern takes and advancements on the core ideas of the language -- Python has a ton of great ideas from a PL perspective, but suffers from being decades old
 
 As for "why not fork an existing thing?", well like it's written in our rationale doc, we didn't set out to build a new programming language. We also have to move fast, and taking on existing systems has a cost versus building something ourselves that has to be evaluated
-
-### Typescript
-TypeScript is very popular, a lot of people use it and it fits right into the JavaScript ecosystem, Mojo has a similar relationship to Python where it's a superset. All the Python packages work in Mojo which is really important to us, we don't want to break the Python community. 
-
-There's a big difference though, Python already allows you to add types like TypeScript, but they're just for tools to identify bugs and obvious mistakes in your code, those types aren't used to improve runtime performance. Mojo takes it to the next step, we often see 10x-20x performance improvements just by adding a few type annotations.
-
-In the traditional world of Python if you run into performance problems, or if you need access to low level features you have to build a hybrid package of half C/C++ and half Python. In Mojo you can continue writing dynamically typed code, and you can also use lower-level syntax and put more effort into performance, instead of having to switch to a completely different language where the debugger no longer works on both sides.
-
-- [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=747)
 
 
 ## Interpreter, JIT and AOT
@@ -863,7 +886,7 @@ The general idea is that Mojo's compiler is not going to perform some magic to o
 ### Compiler Guidance
 Mojo already gives a couple warnings that suggest better things to do, such as using `let` instead of `var` where possible. That said, the compiler isn't good at pointing out larger design pattern changes, for this I think we'll have LLM based tools outside the compiler itself. The UI is much better for explaining things in that context.
 
-[2023-06-05 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/323#discussioncomment-6084627)
+- [2023-06-05 GitHub Chris Lattner](https://github.com/modularml/mojo/discussions/323#discussioncomment-6084627)
 
 ## Lifetimes, ownership, borrow checking
 ### Ownership System
@@ -871,7 +894,7 @@ Mojo also has a more advanced ownership system than Rust or Swift, which is also
 
 It's related to work done in the Rust, Swift, C++ and many other communities, it's a body of work that's been developing over many years. Mojo takes the best ideas and remixes them so you get the power of the Rust ownership model, but you don't have to deal with it when you don't want to, which is a major help in usability and teaching.
 
-[2023-06-02 Lex Fridman Interview 53:33](https://youtu.be/pdJQ8iVTwj8?t=3213)
+- [2023-06-02 Lex Fridman Interview 53:33](https://youtu.be/pdJQ8iVTwj8?t=3213)
 
 ### Lifetime Parallelism Support
 Our lifetime support isn't finished yet but will be in the next month or so, that is a cornerstone of that. Here is something I worked on in a former life that brought data race safety to swift, we will use some of the same approaches [but will also be very different in other ways](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
@@ -926,6 +949,12 @@ But again, this is just the maturity of the AI technology space, and by solving 
 
 - [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=2340)
 
+### Energy Efficiency
+We have not done any analysis about energy efficiency, my guess is that Mojo would be in the top 2 or 3, since Mojo does not do anything fancy behind your back. We do need to study this however.
+
+- [2023-06-26 GitHub Abdul](https://github.com/modularml/mojo/discussions/302?notification_referrer_id=NT_kwDOB-auX7Q2NjI5NTQwODg4OjEzMjU1ODQzMQ)
+
+
 ### Logo and brand community usage
 We definitely want the community to be able to use the Mojo logo and name. We should get a proper web page up that describes this.
 
@@ -953,7 +982,7 @@ Yeah just to clarify, when modular-ites use the word `kernel` they typically mea
 
 Mojo is a general purpose language and can be used to replace C use cases like Rust does etc, but that isn't where we're focusing initial development. That doesn't mean we're excluding it, just that the libraries etc aren't the focus for us to build. We hope the community will be interested in filling that in and building out the use cases in time though.
 
-[2023-06-02 Github Issue](https://github.com/modularml/mojo/discussions/302#discussioncomment-6065569)
+- [2023-06-02 Github Issue](https://github.com/modularml/mojo/discussions/302#discussioncomment-6065569)
 
 ### Paid Licenses like MATLAB
 [Plz see the faq](https://docs.modular.com/mojo/faq.html#distribution)
@@ -965,7 +994,7 @@ Broadly speaking, we see Mojo as a technology, not a product. We have AI based p
 ### Standard Library Completeness
 We provide integers, floats, buffers, tensors and other things you'd expect in an ML context, honestly we need to keep designing, redesigning, and working with the community to build that out and make it better, it's not our strength right now. But the power of putting it in the library means we can have teams of experts that aren't compiler engineers that can help us design, refine, and drive this forward.
 
-[2023-06-02 Lex Fridman Interview 42:02](https://youtu.be/pdJQ8iVTwj8?t=2522)
+- [2023-06-02 Lex Fridman Interview 42:02](https://youtu.be/pdJQ8iVTwj8?t=2522)
 
 ### Rewriting Libraries 
 In the case of modular and why we built Mojo, our business objective is go make ML really awesome, we care about the matrix multiplications and the convolutions and the core operations that people spend all their time on in AI. And so we rewrote all of that stuff in Mojo, this isn't like rewriting Matplotlib, this is like rewriting Intel MKL, or the CUDA implementation of these CUDA kernels equivalent. That's where we've put our energy into
@@ -976,7 +1005,7 @@ because that's what enables unlocking of the hardware, performance, and usabilit
 ### Standard Library Philosophy (batteries included etc.)
 Short answer: there isn't one, yet. You are right that we should develop one, however.
 
-[2023-05-31 Github Discussion](https://github.com/modularml/mojo/discussions/92#discussioncomment-6042101)
+- [2023-05-31 Github Discussion](https://github.com/modularml/mojo/discussions/92#discussioncomment-6042101)
 
 ### Investing in Modular
 There is currently no way to publicly invest in Modular I'm sorry.
@@ -997,12 +1026,12 @@ In terms of "betting on Mojo" right now, we are more focused on building Mojo to
 ### What do we call Mojo users?
 I'm fond of mojician 🪄
 
-[2023-05-29 Github Issue](https://github.com/modularml/mojo/discussions/276#discussioncomment-6023971)
+- [2023-05-29 Github Issue](https://github.com/modularml/mojo/discussions/276#discussioncomment-6023971)
 
 ### Current State
 Mojo is very useful but only if you're a super low level programmer right now, and we're working our way up the stack. Mojo is currently like a `0.1`, and in a year from now it will be way more useful to a wider variety of people, but we decided to launch it early so we can build it with the community. We have a [roadmap that's transparent about the current state](https://docs.modular.com/mojo/roadmap.html) we're optimizing for building the right thing the right way. There is a dynamic where everyone wants it yesterday, but I still think it's the right thing.
 
-[2023-06-02 Lex Fridman Interview 42:42](https://youtu.be/pdJQ8iVTwj8?t=2562)
+- [2023-06-02 Lex Fridman Interview 42:42](https://youtu.be/pdJQ8iVTwj8?t=2562)
 
 ### Solving Complexity
 A tensor is like an abstraction around a gigantic parralelizable data set, using frameworks like PyTorch and Tensorflow you can also represent the operations over those data sets, which you can then map onto parralelizable cores or machines. This has an enabled an explosion in AI and accelerators, but also an explosion in complexity.
@@ -1028,7 +1057,7 @@ In the early days of PyTorch and Tensorflow things were basically CPU and CUDA, 
 ### Hardware Complexity
 Hardware is getting very complicated, part of my thesis is that it's going to get a lot more complicated, part of what's exciting about what we're building is the universal platform to support the world as we get more exotic hardware, and they don't have to rewrite their code every time a new device comes out.
 
-[2023-06-02 Lex Fridman Interview 2:16:57](https://youtu.be/pdJQ8iVTwj8?t=8217)
+- [2023-06-02 Lex Fridman Interview 2:16:57](https://youtu.be/pdJQ8iVTwj8?t=8217)
 
 
 ### First Principles
@@ -1036,17 +1065,17 @@ There have been a number of languages that have attempted to speed up Python, wi
 
 We're not working forwards from making Python a little bit better, we're working backwards from the limits of physics.
 
-[2023-06-02 Lex Fridman Interview 1:26:50](https://youtu.be/pdJQ8iVTwj8?t=5210)
+- [2023-06-02 Lex Fridman Interview 1:26:50](https://youtu.be/pdJQ8iVTwj8?t=5210)
 
 ### Python creator [Guido van Rossums's](https://en.wikipedia.org/wiki/Guido_van_Rossum) thoughts
 We talked before Mojo launched, he found it very interesting. I have a tonne of respect for Guido in how he steered such a gigantic community towards what it is today. It was really important to get his eyes and feedback on Mojo, what he's most concerned about is how to avoid fragmenting the community. It's really important we're a good member of the community, we think Guido is interested in the path out of the reasons why Python is slow. Python can suddenly go all the places it's never been able to go before, so it can have even more impact on the world.
 
-[2023-06-02 Lex Fridman Interview 1:50:11](https://youtu.be/pdJQ8iVTwj8?t=6611)
+- [2023-06-02 Lex Fridman Interview 1:50:11](https://youtu.be/pdJQ8iVTwj8?t=6611)
 
 ### Unifying Theory
 If you look at companies like OpenAI building huge ML models, they're innovating in the data collection and model architecture side, but they're spending a lot of time writing CUDA kernels. How much faster could all that progress go if they weren't hand writing all those CUDA kernels. There are projects trying to solve subsets of this problem but it's fragmenting the space, Mojo provides a `Unifying Theory` to stop this problem slowing people down.
 
-[2023-06-02 Lex Fridman Interview 1:59:31](https://youtu.be/pdJQ8iVTwj8?t=7171)
+- [2023-06-02 Lex Fridman Interview 1:59:31](https://youtu.be/pdJQ8iVTwj8?t=7171)
 
 ### Adoption
 If the software is useful The thing that will most help adoption is you don't have to rewrite all your Python code, you can learn a new trick, and grow your knowledge that way. You can start with the world you know, and progressively learn and adopt new things where it makes sense.
@@ -1055,14 +1084,13 @@ If the software is useful The thing that will most help adoption is you don't ha
 
 
 ## Open Source
-[From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
+- [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)
 
 ### Running Locally
 A lot of the feedback we've received is that people want to run it locally, so we're working on that right now, we just want to make sure we do it right. Should be in the next `O(few months)` as of 2023-06-06.
 
-[2023-06-02 Lex Fridman Interview 2:21:56](https://youtu.be/pdJQ8iVTwj8?t=8516)
-
-[2023-06-06 Github Chris Lattner](https://github.com/modularml/mojo/discussions/327#discussioncomment-6095594)
+- [2023-06-02 Lex Fridman Interview 2:21:56](https://youtu.be/pdJQ8iVTwj8?t=8516)
+- [2023-06-06 Github Chris Lattner](https://github.com/modularml/mojo/discussions/327#discussioncomment-6095594)
 
 
 ### Releasing Source Code
@@ -1076,7 +1104,7 @@ On community, this dovetails with our open source plan.  We're getting a bit cru
 ### Community Stress
 We're tapping into some deep long held pressures in the Python, AI and hardware worlds so people want us to move faster! We decided to release early because in my experience you get something way better when you build in the open and work with the community.
 
-[2023-06-02 Lex Fridman Interview 43:57](https://youtu.be/pdJQ8iVTwj8?t=2637)
+- [2023-06-02 Lex Fridman Interview 43:57](https://youtu.be/pdJQ8iVTwj8?t=2637)
 
 ### Date to open source
 I would tell you if I knew 🙂. Our priority is to build the "right thing" not build a demo and get stuck with the wrong thing. My wild guess is that the language will be very usable for a lot of things in 18 months, but don't hold me to that.
