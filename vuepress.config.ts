@@ -7,9 +7,7 @@ import { gitPlugin } from '@vuepress/plugin-git'
 import { readFileSync } from "fs"
 import codeCopyPlugin from '@snippetors/vuepress-plugin-code-copy'
 import { commentPlugin } from "vuepress-plugin-comment2";
-
-
-
+import { addViteSsrNoExternal } from 'vuepress-shared';
 
 const compareDate = (dateA, dateB) => {
     if (!dateA || !(dateA instanceof Date)) return 1;
@@ -22,6 +20,9 @@ const mojoGrammar = JSON.parse(readFileSync("./syntax/mojo.tmLanguage.json").toS
 
 
 export default defineUserConfig({
+    extendsBundlerOptions: (config, app) => {
+        addViteSsrNoExternal(config, app, 'vuepress-shared');
+    },
     lang: 'en-US',
     title: 'Mojo Dojo',
     description: 'Learning Resources for Mojo 🔥',
