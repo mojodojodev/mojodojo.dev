@@ -81,3 +81,8 @@ test_debug_assert[1](2)
 ```
 
 debug_assert doesn't work in the playground because it's not a debug build.
+
+
+```mojo
+<CommentService />
+```

@@ -30,3 +30,5 @@ for i in range(v.size):
     20
     70
 
+
+<CommentService />

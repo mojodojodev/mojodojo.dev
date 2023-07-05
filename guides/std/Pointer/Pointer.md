@@ -246,3 +246,4 @@ print(coords[5].x)
 
 Experiment with your own safety checks and adding functions utilizing the pointer safely, Mojo gives you the power to do whatever you want with pointers, but [always remember what uncle ben said](https://youtu.be/P9qCFIVlNyM?t=12)
 
+<CommentService />

@@ -281,3 +281,5 @@ matrix.print_all()
 We've created a specific specialized data type that is optimized to perform operations on a matrix of data 8*8 bytes wide, experiment yourself, create a function to manipulate the entire matrix of 64 bytes using SIMD.
 
 Mojo gives you the power to do whatever you want with pointers, but [always remember what uncle ben said](https://youtu.be/P9qCFIVlNyM?t=12)
+
+<CommentService />

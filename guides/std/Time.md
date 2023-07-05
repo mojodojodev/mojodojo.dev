@@ -56,3 +56,5 @@ measure()
 
     sleeper took 1060233 nanoseconds to run
 
+
+<CommentService />
