@@ -36,3 +36,5 @@ Yes! There is a budding community of engineers dissatisfied with the current dee
 ## Unofficial Links
 - [This week in Mojo](/this_week_in_mojo/)
 - [Mojo team answers](/mojo_team_answers.html)
+
+<CommentService />

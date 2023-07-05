@@ -15,7 +15,7 @@ Mojo doesn’t support keyword arguments yet, this is important but hasn’t bee
 ### Implicit Type Declaration
 Within a function, implicitly declared variables get the type of their first value assigned into them. This is probably not the right thing - within a def, we will need to maintain dynamic typing (including type transformations like python has) for compatibility. Our base object isn't super built out and set up for this yet, which is why we have a "default to the first type" approach.
 
-- [2023-05-31 Github Issue](https://github.com/modularml/mojo/issues/290)
+- [2023-05-31 Github Chris Lattner](https://github.com/modularml/mojo/issues/290#issuecomment-1569131070)
 
 ### Parametric Algorithms
 Yes, Mojo provides guaranteed specialization of parametric algorithms like Julia/Rust/C++.
@@ -596,6 +596,17 @@ We care a huge amount about tooling, and will definitely be investing a lot here
 It's kind of tricky because the implementation of LSP is generally heavily tied to the language itself, the frontend, and all of the intricacies there. Having implemented ~5 LSPs now, I have found that the most reuse you get is around the protocol and surrounding utilities/setup. The implementation is almost always different (given that each language has a different frontend setup), but the way you implement things wants a lot of the same underlying bits. Other than that the only real reuse I've gotten between frontends is sharing methodology on how to actually implement the different features, like code completion/hover/etc. Having a good reference is extremely useful, given that implementing some features can be really complex if you don't know what you're doing.
 
 ## Implementation details
+
+### Init uninitialized objects in `fn`
+This is effectively how the Mojo compiler works internally, and we fudge a couple of things for sake of simplicity of model. For example, the `self` member of a `__del__` destructor is a reference, but it is "magic" in that it is required to be live-in and uninit-out. The self for a memory-only `__init__` has the opposite polarity, being uninit on entry and init on exit.
+
+- [2023-07-04 Github Chris Lattner](https://github.com/modularml/mojo/issues/372#issuecomment-1619181242)
+ 
+### Multiple Moves with `^`
+The `^` operator kills a lifetime or invokes the stealing moveinit, producing a new owned RValue, so `^^^` is just repeatedly moving 🙂. It is probably a noop in the implementation because we do move elision, I haven't checked though.
+
+- [2023-07-04 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1125596235882041464)
+
 ### Destructors
 This is intentional. Mojo uses an "ASAP" deletion policy which deallocates values much earlier than other languages.  [Please see this section of the documentation for more information and rationale](https://docs.modular.com/mojo/programming-manual.html#behavior-of-destructors)
 
@@ -645,6 +656,11 @@ We want to enhance the `String` type to support UTF-8 encoding before starting w
 This was noted as a known `sharp edge` in the [roadmap & sharp edges](https://docs.modular.com/mojo/roadmap.html) document. The behaviour here is definitely subject to change, maybe syntax like `for var i in range(3)` but I don't have a strong opinion.
 
 - [2023-06-07 Github Jeff Niu](https://github.com/modularml/mojo/issues/331#issuecomment-1579122472)
+
+### String UInt8 implementation
+It makes sense to use `UInt8` instead of `Int8`, although users should not be working directly with the bytes within a string 😀. Also, we try to match C semantics here which uses `char *` for strings. There is a plan to perform optimizations on strings for example small string optimizations, so you should never depend on its layout.
+
+- [2023-07-02 Github Abdul Dakkak](https://github.com/modularml/mojo/issues/420#issuecomment-1615472005)
 
 ### Sorting Algorithm discovered by AlphaDev
 Sure, that algorithm could definitely be used inside the Mojo sort algorithm.  What they found is something you'd put into a standard library, e.g. they put it into the libc++ c++ standard library, eventually it could go into the Mojo stdlib.
@@ -934,6 +950,11 @@ One of the things also that our customers love is that Google and Meta don't act
 Currently it's because there's no choice, there's nobody to reach out to who can actually can do this. The technology platform at Meta and Google has diverged a lot from what the rest of the industry uses, they both have their own chips and specific use cases, so they're not focused on the traditional CPU, GPU and public cloud use case. Because it's a product for us we can actually support it, invest a huge amount of energy into it, and it's why we have such phenomenal results as well. 
 
 - [2023-06-20 YouTube Chris Lattner](https://youtu.be/-8TbsCUuwQQ?t=2498)
+
+### Docs Internationalization
+We have no plans to translate our content at this time or in the near future. Our products and documentation are still in their infancy and there's a long way to go before curated translation becomes a priority.
+
+- [2023-06-30 Github Scott Main](https://github.com/modularml/mojo/issues/163#issuecomment-1613642961)
 
 ### Three World Problem
 Python has a dependence on C/C++ for performance and hardware-focused tasks, Mojo directly addresses the `three world problem` of Python, C/C++, and accelerator languages required for CPUs, GPUs, TPUs etc.
@@ -1248,3 +1269,5 @@ It integrates natively with Mojo 🔥 for a completely new high performance prog
 
 ### Runtime
 Our runtime is designed to be modular. It scales down very well, supports heterogenous configs, and scales up to distributed settings in a pretty cool way, we're excited to share more about this over time.
+
+<CommentService />

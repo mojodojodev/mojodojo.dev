@@ -6,6 +6,7 @@ import { shikiPlugin } from '@vuepress/plugin-shiki'
 import { gitPlugin } from '@vuepress/plugin-git'
 import { readFileSync } from "fs"
 import codeCopyPlugin from '@snippetors/vuepress-plugin-code-copy'
+import { commentPlugin } from "vuepress-plugin-comment2";
 
 
 
@@ -143,6 +144,7 @@ export default defineUserConfig({
                         link: '/this-week-in-mojo/',
                         collapsible: true,
                         children: [
+                            '/this-week-in-mojo/2023-07-07.md',
                             '/this-week-in-mojo/2023-06-30.md',
                             '/this-week-in-mojo/2023-06-23.md',
                             '/this-week-in-mojo/2023-06-16.md',
@@ -170,6 +172,15 @@ export default defineUserConfig({
     plugins: [
         gitPlugin({
             contributors: false
+        }),
+        commentPlugin({
+            provider: "Giscus",
+            repo: "mojodojodev/mojodojo.dev",
+            repoId: "R_kgDOJfLZPA",
+            category: "Comments",
+            categoryId: "DIC_kwDOJfLZPM4CXrxB",
+            darkTheme: 'dark_dimmed',
+            lightTheme: 'dark_dimmed',
         }),
         codeCopyPlugin(),
         docsearchPlugin({
@@ -207,7 +218,7 @@ export default defineUserConfig({
                     aliases: ["bash", "Bash"]
                 },
             ],
-            theme: 'material-theme',
+            theme: 'material-default',
         }),
         feedPlugin({
             rss: true,

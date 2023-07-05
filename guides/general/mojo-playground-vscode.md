@@ -42,3 +42,5 @@ open 'https://playground.modular.com'
 You'll likely need to restart the kernel at some point as bugs are ironed out, you can use:
 
 Command Pallette > `Jupyter: Restart Kernel`
+
+<CommentService />

@@ -72,3 +72,5 @@ If you don't mind getting your hands dirty check out these resources:
 - [This week in Mojo](/this_week_in_mojo/)
 - [Mojo team answers](/mojo_team_answers)
 - [Is Mojo for Me?](/is_mojo_for_me)
+
+<CommentService />
