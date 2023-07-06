@@ -46,7 +46,7 @@ print('values at p2:', p2.simd_load[8](0))
 
 ## rand
 
-Fill the 8 values with random integer values.
+Fill with 8 random numbers:
 
 
 ```mojo
