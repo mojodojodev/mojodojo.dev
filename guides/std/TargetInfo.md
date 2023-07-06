@@ -11,13 +11,9 @@ usage: Functions related to determining host info such as OS, CPU, width etc.
 from TargetInfo import (
     alignof,
     bitwidthof,
-    dtype_alignof,
-    dtype_bitwidthof,
-    dtype_simd_width,
-    dtype_sizeof,
+    simdwidthof,
     simd_bit_width,
     simd_byte_width,
-    simd_width,
     sizeof
 )
 
@@ -70,46 +66,13 @@ print(bitwidthof[Foo]())
 
 There will be 24 bits of padding for this type as each object can only be placed at multiples of 64 in memory
 
-### dtype_alignof
-Check the alignment of a DType in bytes
+### simdwidthof
+
+How many of the type can fit into the targets SIMD register, e.g. to see how many uint64's can be processed with a single instruction:
 
 
 ```mojo
-print(dtype_alignof[DType.address]())
-```
-
-    8
-
-
-### dtype_bitwidthof
-Check the alignment of a DType in bits
-
-
-```mojo
-print(dtype_bitwidthof[DType.address]())
-```
-
-    64
-
-
-### dtype_simd_width
-
-The vector size, e.g. to see how many uint64's can be processed with a single instruction:
-
-
-```mojo
-print(dtype_simd_width[DType.uint64]())
-```
-
-    8
-
-
-### dtype_sizeof
-The amount of memory consumed by the dtype in bytes
-
-
-```mojo
-print(dtype_sizeof[DType.address]())
+print(simdwidthof[DType.uint64]())
 ```
 
     8
@@ -138,17 +101,6 @@ print(simd_byte_width())
 ```
 
     64
-
-
-### simd_width
-Shows you how many of this type could be processed by SIMD instructions at the same time
-
-
-```mojo
-print(simd_width[UInt64]())
-```
-
-    8
 
 
 ### sizeof
