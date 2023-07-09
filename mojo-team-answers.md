@@ -193,16 +193,15 @@ We haven't built out all the concurrency features in Mojo yet, but do have the b
 
 We'll need to build this out over time, if you're not familiar with it, you might find the Swift actor and structured concurrency systems to be interesting. It is a production language today that has solved a bunch of these problems already, and while there are a few mistakes made, it has lots of good ideas that are not widely known.
 
-[You can read about the swift prior art here](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
+- [You can read about the swift prior art here](https://gist.github.com/lattner/31ed37682ef1576b16bca1432ea9f782)
 
-### Async keywords
-Python has async def, async with, and async for.
+### Async
+Python has async def, async with, and async for, only async def and await have been implemented today, but no GIL, so you can write actual parallel code with async functions.
 
-Only async def and await have been implemented today
+`async fn` and coroutines are a fairly powerful mechanism, and though at this time the only public way we're exposing to invoke them is directly on the same thread, the underlying mechanism is quite powerful and allows running in thread pools, etc. However, for the time being, you'll have to use our wrappers like parallelize, as the underlying functionality isn't otherwise public right now.
 
-But no GIL, so you can write actual parallel code with async functions
-
-[Also take a look at our parallelize docs](https://docs.modular.com/mojo/MojoStdlib/Functional.html#parallelize)
+- [Parallelize docs](https://docs.modular.com/mojo/MojoStdlib/Functional.html#parallelize)
+- [2023-07-08 Github Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1126917199551012874/1126961335423483924)
 
 ### Ternary operator
 Python has a conditional (often called ternary) operator, so Mojo, as a superset of Python, will have the same functionality with the same syntax: x if y else z (similar to y ? x : z in other languages) 
@@ -607,6 +606,11 @@ The `^` operator kills a lifetime or invokes the stealing moveinit, producing a 
 
 - [2023-07-04 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1125596235882041464)
 
+### Autoderef
+The weirder thing to me about the rust approach with `autoderef` is how it handles smart pointers etc. The safe default is to start without `autoderef` and we can see what that does for ergonomics of the resultant libraries. Any time there has to be a stumper "quiz" about a language feature, it is a sign there is something wrong 😀. In Rust, allowing impl traits on borrows themselves is "interesting". I'm not sure about why that was chosen vs just allowing nominal types to implement traits, but there is probably a good reason.
+
+- [2023-07-05 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1125597373956116492/1125832654584029204)
+
 ### Destructors
 This is intentional. Mojo uses an "ASAP" deletion policy which deallocates values much earlier than other languages.  [Please see this section of the documentation for more information and rationale](https://docs.modular.com/mojo/programming-manual.html#behavior-of-destructors)
 
@@ -876,9 +880,11 @@ A lot of people have very big pain points with Python packages, it becomes a hug
 Yes, support for low-dependence zig-like deployment scenarios is important to us and Mojo architecturally supports it, but we haven't put much effort into making that great yet. It's more of a gravel road than a paved road at this point 🙂
 
 ### WASM
-We haven't prioritized that, but it is a strong goal for sure.
+Our first downloadable deliverable won't support WASM. This is a super interesting target for sure, but we're prioritizing getting things out with a first release, rather than blocking until we solve all the problems 🙂.
 
-The Mojo stack is perfectly set up to do this. It doesn't use garbage collection, supports very small installed binaries etc. It'll be great, we just need to make a bit more progress 😄
+The Mojo stack is perfectly set up to do this. It doesn't use garbage collection, supports very small installed binaries etc. It'll be great, we just need to make a bit more progress.
+
+- [2023-07-05 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1125837200748199988/1125837669964972125)
 
 ### WebGPU
 Also have not put energy into that yet, but this is the starting point, not the ending point 🙂
