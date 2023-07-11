@@ -4,6 +4,7 @@
 node_modules
 .vuepress/dist
 env
+tmp.ipynb
 
 # My local works in progress
 wip
