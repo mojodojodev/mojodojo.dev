@@ -12,7 +12,7 @@ from TargetInfo import (
     alignof,
     bitwidthof,
     simdwidthof,
-    simd_bit_width,
+    simdbitwidth,
     simd_byte_width,
     sizeof
 )
@@ -83,7 +83,7 @@ The total amount of bits that can be processed at the same time on the host syst
 
 
 ```mojo
-print(simd_bit_width())
+print(simdbitwidth())
 ```
 
     512

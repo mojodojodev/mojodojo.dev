@@ -231,8 +231,8 @@ The SIMD register in modern CPU's is huge, let's see how big it is in the Mojo p
 
 
 ```mojo
-from TargetInfo import simd_bit_width
-print(simd_bit_width())
+from TargetInfo import simdbitwidth
+print(simdbitwidth())
 ```
 
     512

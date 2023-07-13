@@ -201,7 +201,7 @@ Python has async def, async with, and async for, only async def and await have b
 `async fn` and coroutines are a fairly powerful mechanism, and though at this time the only public way we're exposing to invoke them is directly on the same thread, the underlying mechanism is quite powerful and allows running in thread pools, etc. However, for the time being, you'll have to use our wrappers like parallelize, as the underlying functionality isn't otherwise public right now.
 
 - [Parallelize docs](https://docs.modular.com/mojo/MojoStdlib/Functional.html#parallelize)
-- [2023-07-08 Github Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1126917199551012874/1126961335423483924)
+- [2023-07-08 Discord Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1126917199551012874/1126961335423483924)
 
 ### Ternary operator
 Python has a conditional (often called ternary) operator, so Mojo, as a superset of Python, will have the same functionality with the same syntax: x if y else z (similar to y ? x : z in other languages) 
@@ -265,7 +265,7 @@ I agree that an opt-in decorator that specifies layout is the right way to go. B
 ### Int Provenance
 Ints and pointers are different things, so no ints don't carry provenance. This is one of the major things that C/C++ got wrong that has haunted LLVM IR and many other things for a long time. Taking a hard line on this makes everything simpler, but that is only possible when you have a fresh slate like Mojo provides us.
 
-- [2023-06-06 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1115452333074153653)
+- [2023-06-06 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1115452333074153653)
 
 ### Float8
 There are so many variants of Float8 representation. We need to think about which ones does Mojo represents and how to expose the variety. For now, we are removing Float8 from the DType list to avoid folks from falling into this trap.
@@ -297,7 +297,7 @@ Given that, very few people would use it, and it would interfere with printf deb
 
 It's possible that there is a model here that will work and would be usable, but I'm not sure how much value it would provide.
 
-- [2023-06-12 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
+- [2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1117003204400513054/1117495786507354233)
 
 ### Receiver / Free Floating Functions
 There are alternative ways to address the same thing, e.g. check out how extensions work in Swift. We'll need to look at this whole area as traits come in. We don't have a goal of providing the Julia multimethod dispatch thing. There isn't an efficient way to implement that other than full monomorphization, it is better to express the same thing with generics, which we haven't designed yet. Let's build out the traits system and see what the limitations are.
@@ -604,12 +604,12 @@ This is effectively how the Mojo compiler works internally, and we fudge a coupl
 ### Multiple Moves with `^`
 The `^` operator kills a lifetime or invokes the stealing moveinit, producing a new owned RValue, so `^^^` is just repeatedly moving 🙂. It is probably a noop in the implementation because we do move elision, I haven't checked though.
 
-- [2023-07-04 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1125596235882041464)
+- [2023-07-04 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1125596235882041464)
 
 ### Autoderef
 The weirder thing to me about the rust approach with `autoderef` is how it handles smart pointers etc. The safe default is to start without `autoderef` and we can see what that does for ergonomics of the resultant libraries. Any time there has to be a stumper "quiz" about a language feature, it is a sign there is something wrong 😀. In Rust, allowing impl traits on borrows themselves is "interesting". I'm not sure about why that was chosen vs just allowing nominal types to implement traits, but there is probably a good reason.
 
-- [2023-07-05 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1125597373956116492/1125832654584029204)
+- [2023-07-05 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1125597373956116492/1125832654584029204)
 
 ### Destructors
 This is intentional. Mojo uses an "ASAP" deletion policy which deallocates values much earlier than other languages.  [Please see this section of the documentation for more information and rationale](https://docs.modular.com/mojo/programming-manual.html#behavior-of-destructors)
@@ -884,7 +884,7 @@ Our first downloadable deliverable won't support WASM. This is a super interesti
 
 The Mojo stack is perfectly set up to do this. It doesn't use garbage collection, supports very small installed binaries etc. It'll be great, we just need to make a bit more progress.
 
-- [2023-07-05 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1125837200748199988/1125837669964972125)
+- [2023-07-05 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1125837200748199988/1125837669964972125)
 
 ### WebGPU
 Also have not put energy into that yet, but this is the starting point, not the ending point 🙂
