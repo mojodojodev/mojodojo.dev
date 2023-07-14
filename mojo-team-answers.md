@@ -630,7 +630,10 @@ Rewrites can be beneficial beyond the technical capabilities of the system btw. 
 But to your meta point, yes, I fully expect Mojo to be >> C++ for our usecases across the stack.  It will take a bit of time, but I would really like to stop writing c++ some day 🙂
 
 ### Global Variables
-Both `def` and `fn` cannot access variables outside their scope because Mojo as a language doesn't actually have proper global variables yet. This is a known missing feature.
+Global variables were added to the language but they have not been wired into the REPL environment yet. The REPL environment layers extra features on the language to provide redefinition and top-level variables, and using global variables to enable the code you wrote has not occurred yet. Sorry for the confusion!
+
+- [2023-07-14 Github Mogball](https://github.com/modularml/mojo/discussions/448#discussioncomment-6443661)
+
 
 ### Boolean on SIMD types
 The way to do this is by explicitly calling the bool method later:
