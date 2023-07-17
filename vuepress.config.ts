@@ -163,6 +163,7 @@ export default defineUserConfig({
                         link: '/blog/',
                         collapsible: true,
                         children: [
+                            '/blog/2023-07-17-rust-or-mojo-ai.md',
                             '/blog/2023-05-22-mojo-first-impressions.md',
                             '/blog/2023-05-08-why-use-mojo.md',
                         ]
