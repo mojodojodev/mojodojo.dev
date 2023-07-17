@@ -8,7 +8,7 @@ feed: true
 head:
   - [meta, { name: twitter:card , content: summary }]
   - [meta, { name: twitter:site , content: "@mojodojodev" }]
-  - [meta, { name: twitter:title , content: "Rewrite C and Python in Mojo or Rust?" }]
+  - [meta, { name: twitter:title , content: "Rust or Mojo for the future of AI?" }]
   - [meta, { name: twitter:description , content: "Comparing the experience of rewriting C++ and Python with Rust and Mojo" }]
   - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
 ---
