@@ -78,11 +78,10 @@ When using opencv from python, instead of a `Mat` like in C++ we get back the ul
 
 ```mojo
 %%python
-img = open("fire.png")
-print(img[0:1, 0:1, 0:4])
+print(img[0, 0, 0:4])
 ```
 
-    [[[255 255 255 255]]]
+    [255 255 255 255]
 
 
 The format is: [Red, Green, Blue, Alpha] represented by 8bit unsigned integers.
@@ -92,10 +91,10 @@ Or a middle pixel with some color:
 
 ```mojo
 %%python
-print(img[120:121, 120:121, 0:4])
+print(img[120, 120, 0:4])
 ```
 
-    [[[253 162  54 255]]]
+    [253 162  54 255]
 
 
 Let's try applying a blur using python first:
@@ -108,20 +107,13 @@ def box_blur(image, diameter):
     height, width, _ = image.shape
     radius = diameter // 2
 
-    for x in range(0, height):
-        for y in range(0, width):
-            if x - radius < 0: x = 0 + radius
-            if y - radius < 0: y = 0 + radius
-            if x + radius >= width: x = width - radius - 1
-            if y + radius >= height: y = height - radius - 1
-            # Take the average of the pixels in the neighborhood
-            avg = np.mean(image[x-radius:x+radius, y-radius:y+radius], axis=(0, 1))
+    for x in range(radius, height - radius):
+        for y in range(radius, width - radius):
+            avg = np.mean(image[x-radius:x+radius+1, y-radius:y+radius+1], axis=(0, 1))
             blurred_image[x, y] = avg
 
     return blurred_image
 
-img = cv2.imread("fire.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
 blurred = box_blur(img, 8)
 render(blurred)
 ```
@@ -140,13 +132,12 @@ This is obviously going to be a very slow operation in Python compared to what y
 
 ```mojo
 %%python
-img = cv2.imread("fire.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+img = open("fire.png")
 python_secs = timeit(lambda: box_blur(img, 8), number = 5) / 5
 print(python_secs)
 ```
 
-    0.6096093850210309
+    0.5885662619955838
 
 
 The opencv version of the operation uses C++ and one of a few hardware APIs depending on how it was compiled, which takes advantage of vectorization, first lets take a look at the result to make sure it's doing the same thing:
@@ -154,9 +145,8 @@ The opencv version of the operation uses C++ and one of a few hardware APIs depe
 
 ```mojo
 %%python
-img = cv2.imread("fire.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
-img = cv2.filter2D(img, -1, np.ones((8, 8), np.uint8)/64)
+img = open("fire.png")
+img = cv2.filter2D(img, -1, np.ones((8, 8))/64)
 render(img)
 ```
 
@@ -174,13 +164,12 @@ And now we can time it:
 
 ```mojo
 %%python
-img = cv2.imread("fire.png")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+img = open("fire.png")
 opencv_secs = timeit(lambda: cv2.filter2D(img, -1, np.ones((8, 8), np.uint8)/64), number=5) / 5
 print("Seconds:", opencv_secs)
 ```
 
-    Seconds: 0.0014448434114456177
+    Seconds: 0.001513117179274559
 
 
 That's giving us a nice speedup of around 400x over the Python version:
@@ -190,7 +179,7 @@ That's giving us a nice speedup of around 400x over the Python version:
 print("Speedup:", python_secs / opencv_secs)
 ```
 
-    Speedup: 421.9207287045001
+    Speedup: 388.97599608099284
 
 
 Going to the definition of `filter2D` we find the below code, the `...` means the C++ functions have default values, these are just for type hints in Python, the overload with `UMat` is for when you're using the GPU version of opencv:
@@ -347,8 +336,7 @@ Now we can use a similar benchmark function as Python to take the average of 5 i
 
 
 ```mojo
-var image = cv2.imread("fire.png")
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
+var image = open("fire.png")
 box_blur_mojo[8](image)
 render(image)
 
@@ -371,8 +359,8 @@ print("opencv speedup:", opencv_secs / total)
 
 
     
-    python speedup: 1364.039376232407
-    opencv speedup: 3.2329280915414254
+    python speedup: 1310.019894025165
+    opencv speedup: 3.3678682160952467
 
 
 We just replaced tens of thousands of lines of incredibly hard to understand C++ code accounting for all the different hardware API's that opencv supports, and still managed to get a 3x performance improvement. This can be further improved by splitting rows and running on separate cores, but didn't result in faster performance on my playground instance as the CPU is shared with other users, stay tuned for updates once the local compiler is released.
