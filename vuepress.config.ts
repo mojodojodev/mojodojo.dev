@@ -127,7 +127,8 @@ export default defineUserConfig({
                                     '/guides/builtins/Bool.md',
                                     '/guides/builtins/FloatLiteral.md',
                                     '/guides/builtins/ListLiteral.md',
-                                    '/guides/builtins/Tuple.md'
+                                    '/guides/builtins/Tuple.md',
+                                    '/guides/builtins/BuiltinList.md',
                                 ]
                             },
                             {
