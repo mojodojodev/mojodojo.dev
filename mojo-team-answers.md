@@ -198,7 +198,7 @@ We'll need to build this out over time, if you're not familiar with it, you migh
 ### Async
 Python has async def, async with, and async for, only async def and await have been implemented today, but no GIL, so you can write actual parallel code with async functions.
 
-`async fn` and coroutines are a fairly powerful mechanism, and though at this time the only public way we're exposing to invoke them is directly on the same thread, the underlying mechanism is quite powerful and allows running in thread pools, etc. However, for the time being, you'll have to use our wrappers like parallelize, as the underlying functionality isn't otherwise public right now.
+`async fn` and coroutines are a fairly powerful mechanism, the underlying mechanism is quite powerful and allows running in thread pools, etc.
 
 - [Parallelize docs](https://docs.modular.com/mojo/MojoStdlib/Functional.html#parallelize)
 - [2023-07-08 Discord Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1126917199551012874/1126961335423483924)
@@ -313,6 +313,19 @@ It would be interesting to explore making these different APIs, possibly overloa
 
 - [2023-06-16 Github Chris Lattner](https://github.com/modularml/mojo/discussions/377#discussioncomment-6188353)
 
+### Vales region borrow checker
+Yep, I've followed it. It is currently experimental and adds non-trivial overhead to the runtime of a program, so it will be interesting to see how it bakes out and matures in Vale. For Mojo, we're sticking with somewhat more traditional implementation approaches.
+
+This isn't to say "no, we will never do this": we need to get more experience with the planned lifetimes and other features, and if they don't work then we'd consider it. That said, I can say that "it isn't on our radar and it looks like there is more research to be done before we'd seriously consider it".
+
+- [2023-07-18 Github Chris Lattner](https://github.com/modularml/mojo/discussions/461#discussioncomment-6474092)
+
+### Only allowing `fn` in `struct`
+I can see how this might avoid some accidental use of dynamic behavior, but I'm not sure why that is something we're worried about. Further, there are other issues - we need to support top level code and other things that aren't tied to an `fn` keyword. Furthermore, we want constrained dynamic classes as well (Jeff will share a doc hopefully ~this week about this) in Mojo that aren't as dynamic as Python's.
+
+At the end of the day, we also want `fn` and `def` to be friends and get along and allow intermixing. This is a pretty important design principle - we don't want "fn to be mojo" and "def to be legacy python code", so I see this approach working...
+
+- [2023-07-18 Github Chris Lattner](https://github.com/modularml/mojo/issues/452#issuecomment-1639473356)
 
 ## Syntax 
 ### Syntactic Sugar
@@ -1110,8 +1123,12 @@ If you look at companies like OpenAI building huge ML models, they're innovating
 ### Adoption
 If the software is useful The thing that will most help adoption is you don't have to rewrite all your Python code, you can learn a new trick, and grow your knowledge that way. You can start with the world you know, and progressively learn and adopt new things where it makes sense.
 
-[2023-06-02 Lex Fridman Interview 2:14:58](https://youtu.be/pdJQ8iVTwj8?t=7834)
+- [2023-06-02 Lex Fridman Interview 2:14:58](https://youtu.be/pdJQ8iVTwj8?t=7834)
 
+### Renaming Mojo to Python++
+Just to set expectations here, we don't plan to rename Mojo - we quite like the name 😀. I agree with you that Python++ is a useful working model to think about some of Mojo's goals though!
+
+- [2023-07-18 Github Chris Lattner](https://github.com/modularml/mojo/discussions/389#discussioncomment-6474134)
 
 ## Open Source
 - [From the FAQ](https://docs.modular.com/mojo/faq.html#will-mojo-be-open-sourced)

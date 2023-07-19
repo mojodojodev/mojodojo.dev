@@ -1,69 +1,95 @@
 ---
-title: BuiltinList
+title: ListLiteral
 categories: Builtins
-usage: Implements the ListLiteral class. The type of a literal heterogenous list expression.
+usage: The primitive ListLiteral class in Mojo
 ---
 
-Contributed by [Lorenzobattistela](https://github.com/Lorenzobattistela)
+Contributed by [StitchyPie](https://github.com/StitchyPie) and [Lorenzobattistela](https://github.com/Lorenzobattistela)
 
 # ListLiteral
+The primitive ListLiteral class in Mojo.
 
-The type of a literal heterogenous list expression.
+A ListLiteral is a list of elements that are immutable, it only includes getter methods for accessing elements, nothing can be modified post-initialization.
 
-A list consists of zero or more values, separated by commas.
-
-## init
-
-Note that we have to specify the types of the elements we want in our list. It can be homogeneous or heterogeneous.
+# init
+The types can be implicit:
 
 
 ```mojo
-var a : ListLiteral[Int, Int, Int] = ListLiteral(1, 2, 3)
-print(a)
-
-var b : ListLiteral[StringLiteral, FloatLiteral, Int] = ListLiteral("hey", 1.0, 3)
-print(b)
-
-var c : ListLiteral[Int, Int] = [1, 2]
-print(c)
-
+let list = [1,2,3]
+print(list)
 ```
 
     [1, 2, 3]
-    ['hey', 1.0, 3]
-    [1, 2]
+
+
+Or explicit:
+
+
+```mojo
+let explicit_list: ListLiteral[Int, Int, Int] = [1, 2, 3]
+print(explicit_list)
+```
+
+    [1, 2, 3]
+
+
+A ListLiteral can also contain elements of different types.
+
+
+```mojo
+let mixed_list= [1, 2.0, True]
+print(mixed_list)
+```
+
+    [1, 2.0, True]
 
 
 ## fields
-
-- `storage`  The underlying storage for the list.
-
-## len
-
-Returns the length of the list.
+- storage: this is the MLIR type that stores the literals, we'll force an error to see what `mixed_list` storage looks like:
 
 
 ```mojo
-var x : ListLiteral[Int, Int] = [1, 2]
-print(x.__len__())
-print(len(x))
+mixed_list.storage = 0
 ```
 
-    2
-    2
+    error: Expression [8]:20:26: cannot implicitly convert 'Int' value to '!pop.pack<[!kgen.declref<_"$Builtin"::_"$Int"::_Int>, !kgen.declref<_"$Builtin"::_"$FloatLiteral"::_FloatLiteral>, !kgen.declref<_"$Builtin"::_"$Bool"::_Bool>]>' in assignment
+        mixed_list.storage = 0
+                             ^
+    
+    expression failed to parse (no further compiler diagnostics)
 
-
-## get
-
-Returns a list element at a given index.
-Note that we have to specify the index of the element and the type of the element we're retrieving. Refer to parametrization [here](https://docs.modular.com/mojo/programming-manual.html#defining-parameterized-types-and-functions).
+# len
 
 
 ```mojo
-var x : ListLiteral[Int, Int] = [3, 4]
-var y  = x.get[0, Int]()
-print(y)
+print(len(mixed_list))
 ```
 
     3
 
+
+# get
+
+Get a list element at the given index with the element type, note that we have to specify the index of the element and the type of the element we're retrieving, refer to [parametrization here](https://docs.modular.com/mojo/programming-manual.html#defining-parameterized-types-and-functions)
+
+
+```mojo
+print(mixed_list.get[0, Int]())
+print(mixed_list.get[2, Bool]())
+```
+
+    1
+    True
+
+
+
+```mojo
+let x = -1
+print(x.__index__())
+```
+
+    -1
+
+
+<CommentService />

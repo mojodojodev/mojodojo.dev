@@ -12,16 +12,12 @@ This type represents a string literal.
 
 String literals are all null-terminated for compatibility with C APIs, but this is subject to change. String literals store their length as an integer, and this does not include the null terminator.
 
-## aliases
-
-- `type = String`
-- `index = scalar<index>`
-
 
 ## init
 
+
 ```mojo
-var x : String = "Literal"
+var x: StringLiteral = "Literal"
 print(x)
 
 var y = "StringLiteral"
@@ -34,19 +30,33 @@ print(y)
 
 ## fields
 
-- `value`: What is stored in the string literal.
+- `value`: The MLIR storage for the string literal, lets force an error to see the type:
+
 
 ```mojo
-var my_string_lit = "test"
-print(my_string_lit.value)
+y.value = 0
 ```
 
-    test
+    error: Expression [3]:19:15: cannot implicitly convert 'Int' value to 'string' in assignment
+        y.value = 0
+                  ^
+    
+    expression failed to parse (no further compiler diagnostics)
+
+You can also print it directly:
+
+
+```mojo
+print(y.value)
+```
+
+    StringLiteral
 
 
 ## bool
 
 Convert the string to a boolean value. True if the string is not empty, false otherwise.
+
 
 ```mojo
 var x = ""
@@ -63,6 +73,7 @@ print(y.__bool__())
 ## equal
 
 Compare the equality of two strings, receiving other StringLiteral as parameter. True if equal.
+
 
 ```mojo
 var x = "abc"
@@ -83,6 +94,7 @@ print(x == y)
 
 Compare the inequality of two strings, receiving other StringLiteral as parameter. True if not equal.
 
+
 ```mojo
 var x = "abc"
 var y = "abc"
@@ -101,6 +113,7 @@ print(x != y)
 ## add
 
 Concatenate two StringLiterals.
+
 
 ```mojo
 let x = "hello "
@@ -121,6 +134,7 @@ print(d)
 
 Return the length of the string.
 
+
 ```mojo
 var x = "string"
 print(x.__len__())
@@ -139,6 +153,7 @@ Get raw pointer to the underlying data.
 
 So, if you have a StringLiteral object, you can call data() on it to get a pointer to its underlying data. This could be useful if you need to pass the string data to a function that requires a pointer, or if you want to perform low-level operations on the string data.
 
+
 ```mojo
 var x = "string"
 var y = x.data()
@@ -149,5 +164,6 @@ print(x)
 
     string
     alo
+
 
 <CommentService />
