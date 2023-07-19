@@ -125,14 +125,13 @@ export default defineUserConfig({
                                 collapsible: true,
                                 children: [
                                     '/guides/builtins/Bool.md',
-                                    '/guides/builtins/FloatLiteral.md',
-                                    '/guides/builtins/ListLiteral.md',
-                                    '/guides/builtins/Tuple.md',
                                     '/guides/builtins/BuiltinList.md',
+                                    '/guides/builtins/BuiltinSlice.md',
+                                    '/guides/builtins/Error.md',
+                                    '/guides/builtins/FloatLiteral.md',
                                     '/guides/builtins/StringLiteral.md',
                                     '/guides/builtins/StringRef.md',
-                                    '/guides/builtins/Error.md',
-                                    '/guides/builtins/BuiltinSlice.md'
+                                    '/guides/builtins/Tuple.md',
                                 ]
                             },
                             {

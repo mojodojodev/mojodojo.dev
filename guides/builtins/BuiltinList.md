@@ -1,12 +1,12 @@
 ---
-title: ListLiteral
+title: BuiltinList
 categories: Builtins
 usage: The primitive ListLiteral class in Mojo
 ---
 
 Contributed by [StitchyPie](https://github.com/StitchyPie) and [Lorenzobattistela](https://github.com/Lorenzobattistela)
 
-# ListLiteral
+# BuiltinList
 The primitive ListLiteral class in Mojo.
 
 A ListLiteral is a list of elements that are immutable, it only includes getter methods for accessing elements, nothing can be modified post-initialization.
