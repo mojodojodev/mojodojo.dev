@@ -997,6 +997,11 @@ We have not done any analysis about energy efficiency, my guess is that Mojo wou
 
 - [2023-06-26 GitHub Abdul](https://github.com/modularml/mojo/discussions/302?notification_referrer_id=NT_kwDOB-auX7Q2NjI5NTQwODg4OjEzMjU1ODQzMQ)
 
+### Top level code in REPL and Jupyter 
+The default right now is in a bit of a weird place, Mojo top-level code behaves differently than anything else. It is "strict" by default, however the problem right now is that top-level Mojo code is neither "static" in the `fn` sense or "dynamic" in the `def` sense. The goal is to make it behave like an imperative body of code.
+
+- [2023-07-20 Github Jeff Niu](https://github.com/modularml/mojo/discussions/411#discussioncomment-6491987)
+
 
 ### Logo and brand community usage
 We definitely want the community to be able to use the Mojo logo and name. We should get a proper web page up that describes this.

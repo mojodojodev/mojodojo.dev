@@ -11,7 +11,7 @@ The primitive ListLiteral class in Mojo.
 
 A ListLiteral is a list of elements that are immutable, it only includes getter methods for accessing elements, nothing can be modified post-initialization.
 
-# init
+## init
 The types can be implicit:
 
 
@@ -59,7 +59,7 @@ mixed_list.storage = 0
     
     expression failed to parse (no further compiler diagnostics)
 
-# len
+## len
 
 
 ```mojo
@@ -69,7 +69,7 @@ print(len(mixed_list))
     3
 
 
-# get
+## get
 
 Get a list element at the given index with the element type, note that we have to specify the index of the element and the type of the element we're retrieving, refer to [parametrization here](https://docs.modular.com/mojo/programming-manual.html#defining-parameterized-types-and-functions)
 
