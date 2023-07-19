@@ -128,6 +128,8 @@ export default defineUserConfig({
                                     '/guides/builtins/FloatLiteral.md',
                                     '/guides/builtins/ListLiteral.md',
                                     '/guides/builtins/Tuple.md',
+                                    '/guides/builtins/StringLiteral.md',
+                                    '/guides/builtins/StringRef.md',
                                     '/guides/builtins/Error.md',
                                     '/guides/builtins/BuiltinSlice.md'
                                 ]
