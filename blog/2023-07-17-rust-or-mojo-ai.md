@@ -342,6 +342,7 @@ fn box_blur_mojo[diameter: Int](image: PythonObject) raises:
             tmp.simd_store(y * width + x, combined)
     # Copy the data from the temporay image to the original numpy array
     memcpy(p, tmp, el)
+    tmp.free()
 
 var image = open("fire.png")
 box_blur_mojo[8](image)
@@ -395,6 +396,7 @@ fn box_blur_mojo[diameter: Int](image: PythonObject) raises:
         # Run the vectorized inner loop
         vectorize[simd_width, inner](width)
     memcpy(p, tmp, el)
+    tmp.free()
 ```
 
 Now we can use a similar benchmark function as Python to take the average of 5 iterations:
