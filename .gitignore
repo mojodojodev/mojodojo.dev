@@ -1,0 +1,11 @@
+.temp
+.cache
+.vscode
+node_modules
+.vuepress/dist
+env
+.env
+tmp.ipynb
+
+# My local works in progress
+wip

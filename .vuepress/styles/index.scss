@@ -1,0 +1,27 @@
+:root {
+	// brand colors
+	--c-brand: #65a308;
+	--c-brand-light:#ade45a;
+
+    code {
+        color: #65a308;
+    }
+
+    #app > div > main > div > div > pre > code {
+        color: #262725;
+    }
+}
+
+html.dark {
+	--c-brand: #add571;
+	--c-brand-light:  #d6f3ab;
+
+    code {
+        color: #add571;
+    }
+
+    #app > div > main > div > div > pre > code {
+        color: #f4ffe7;
+    }
+}
+

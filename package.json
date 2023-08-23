@@ -1,0 +1,25 @@
+{
+    "name": "mojodojodev.github.io",
+    "version": "0.0.1",
+    "repository": "github:mojodojodev/mojodojo.dev",
+    "author": "Mojo Dojo <mojodojodev@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@snippetors/vuepress-plugin-code-copy": "^1.2.3",
+        "@vuepress/plugin-back-to-top": "2.0.0-beta.64",
+        "@vuepress/plugin-docsearch": "2.0.0-beta.64",
+        "@vuepress/plugin-google-analytics": "2.0.0-beta.64",
+        "@vuepress/plugin-medium-zoom": "2.0.0-beta.64",
+        "@vuepress/plugin-shiki": "^2.0.0-beta.64",
+        "@vuepress/theme-default": "2.0.0-beta.64",
+        "vuepress": "2.0.0-beta.64",
+        "vuepress-plugin-comment2": "^2.0.0-beta.230",
+        "vuepress-plugin-feed2": "^2.0.0-beta.230",
+        "vuepress-shared": "^2.0.0-beta.230"
+    },
+    "scripts": {
+        "dev": "vuepress dev",
+        "build": "vuepress build",
+        "docs": "bash -c ./jupyter_to_md.sh"
+    }
+}
