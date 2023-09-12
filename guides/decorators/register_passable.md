@@ -15,10 +15,10 @@ struct Pair:
     var b: UInt32
 
     fn __init__(a: UInt32, b: UInt32) -> Self:
-        return Self{a: 2, b: 4}
+        return Self{a: a, b: b}
 
     fn __copyinit__(self) -> Self:
-        return Self{a: 2, b: 4}
+        return Self{a: self.a, b: self.b}
 
     fn __del__(owned self):
         print("running __del__")
