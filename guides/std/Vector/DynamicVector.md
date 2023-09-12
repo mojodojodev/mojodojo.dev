@@ -11,7 +11,7 @@ Contributed by [Alex1957](https://github.com/Alex19578)
 
 
 ```mojo
-from Vector import DynamicVector
+from utils.vector import DynamicVector
 ```
 
 ## init
