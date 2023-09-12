@@ -10,7 +10,7 @@ Contributed by [Alex1957](https://github.com/Alex19578)
 
 
 ```mojo
-from Vector import InlinedFixedVector
+from utils.vector import InlinedFixedVector
 ```
 
 ## init
