@@ -21,7 +21,7 @@ Statically allocate 4 elements, and reserve a capacity of 8 elements
 
 
 ```mojo
-var vec = InlinedFixedVector[4, Int](8)
+var vec = InlinedFixedVector[Int, 4](8)
 ```
 
 ## append
